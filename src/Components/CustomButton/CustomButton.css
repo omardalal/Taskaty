@@ -1,0 +1,22 @@
+.customBtnBlackBg {
+  color: #fff;
+  background-color: #161616;
+}
+.customBtnWhiteBg {
+  color: #161616;
+  background-color: #fff;
+}
+.customBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  padding: 0 15px;
+  margin: 9px 5px;
+  border-radius: 15px;
+  transition: 0.3s;
+  font-weight: 500;
+}
+.customBtn:hover {
+  opacity: 0.75;
+}

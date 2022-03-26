@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
-import LandingPage from "./LandingPage";
+import "./index.scss";
+import LandingPage from "./Views/LandingPage/LandingPage";
 
 ReactDOM.render(
   <React.StrictMode>
