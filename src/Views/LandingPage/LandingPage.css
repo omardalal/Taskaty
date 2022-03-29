@@ -1,0 +1,154 @@
+.landingPageMainContainer {
+  background-color: #161616;
+  padding-bottom: 50px;
+}
+
+.landingPageTitleContainer {
+  text-align: center;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: white;
+}
+
+.landingPageTitleContainer .taskatyTitle {
+  font-size: 78px;
+}
+
+.landingPageTitleContainer .taskatyDescription {
+  font-size: 26px;
+  margin: 7.5px 0 10px 0;
+  color: white;
+}
+
+.landingPageTitleContainer .taskatyChevronDown {
+  color: white;
+  cursor: pointer;
+}
+
+.landingPageFeatureRow {
+  display: flex;
+  margin-bottom: 70px;
+  height: 160px;
+}
+
+.landingPageFeatureRow .featureDescription {
+  color: white;
+  width: 50%;
+  display: flex;
+  align-items: center;
+}
+
+.landingPageFeatureRow .featureTitle {
+  color: #161616;
+  width: 60%;
+  display: inline-block;
+  display: flex;
+  align-items: center;
+  font-size: 45px;
+  background-color: white;
+  transform: skew(-30deg);
+}
+
+.landingPageFeatureRow .featureTitle h1 {
+  font-size: 36px;
+  z-index: 1;
+  width: 100%;
+  transform: skew(30deg);
+  font-weight: 400;
+}
+
+.transformBottomRight {
+  position: relative;
+  left: -50px;
+  padding-left: 85px;
+  padding-right: 5px;
+}
+
+.transformBottomLeft {
+  position: relative;
+  left: 50px;
+  padding-left: 50px;
+}
+
+.landingPageFeatureRow .featureDescription .paddingRight,
+.landingPageFeatureRow .featureDescription .paddingLeft {
+  font-size: 20px;
+  font-weight: 300;
+}
+
+.landingPageFeatureRow .featureDescription .paddingRight {
+  padding-right: 35px;
+}
+
+.landingPageFeatureRow .featureDescription .paddingLeft {
+  padding-left: 35px;
+}
+
+.landingPageMainContainer .landingPageSignupBox {
+  background-color: white;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+  margin: 50px auto;
+  padding: 50px;
+  text-align: center;
+  box-shadow: 0 0 10px 0 rgba(255, 255, 255, 0.25);
+  max-width: 950px;
+}
+
+.landingPageMainContainer .landingPageSignupBox h1 {
+  margin-bottom: 10px;
+  font-size: 37.5px;
+  font-weight: 400;
+}
+
+.landingPageMainContainer .landingPageSignupBox h3 {
+  margin-bottom: 15px;
+  font-size: 23px;
+  font-weight: 400;
+}
+
+.landingPageSignupBox a {
+  width: 100px;
+  height: 37.5px;
+  align-self: center;
+  margin: 0 auto 10px auto;
+}
+
+.landingPageSignupBox > p,
+.landingPageSignupBox > p > a {
+  font-weight: 450;
+}
+
+@media screen and (max-width: 620px) {
+  .landingPageFeatureRow {
+    flex-direction: column;
+    height: 250px;
+  }
+  .landingPageFeatureRow .featureTitle {
+    width: 100%;
+    margin: 25px 0;
+    height: 50%;
+  }
+  .landingPageFeatureRow .featureTitle h1 {
+    font-size: 30px;
+  }
+  .landingPageFeatureRow .featureDescription {
+    width: 100%;
+    padding: 0 25px;
+  }
+  .landingPageFeatureRow:nth-of-type(odd) {
+    flex-direction: column-reverse;
+  }
+}
+
+@media screen and (max-width: 990px) {
+  .landingPageMainContainer .landingPageSignupBox {
+    margin-left: 15px;
+    margin-right: 15px;
+  }
+}

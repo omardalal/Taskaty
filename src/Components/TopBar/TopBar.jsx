@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import "./TopBar.css";
 import strings from "../../Constants/strings";
 import {
@@ -13,17 +13,24 @@ import {
 } from "carbon-components-react";
 import { Search20, Notification20, AppSwitcher20 } from "@carbon/icons-react";
 import CustomButton from "../CustomButton/CustomButton";
+import useClickOutside from "../../CustomHooks/useClickOutside";
 
 // To-Do: Replace with actual logged in value
 const loggedIn = true;
 
 const TopBar = () => {
   const [rightMenuVisible, setRightMenuVisible] = useState(false);
+  const containerRef = useRef(null);
+  const openMenuBtnRef = useRef(null);
+
+  useClickOutside(containerRef, openMenuBtnRef, () => {
+    setRightMenuVisible(false);
+  });
 
   // Show if the user is Logged in
   const getRightMenu = () => {
     return (
-      <HeaderPanel aria-label="Header Panel" expanded>
+      <HeaderPanel ref={containerRef} aria-label="Header Panel" expanded>
         <Switcher aria-label="Switcher Container">
           <SwitcherItem href="#" aria-label="Link 1">
             Profile
@@ -59,6 +66,7 @@ const TopBar = () => {
               <Notification20 />
             </HeaderGlobalAction>
             <HeaderGlobalAction
+              ref={openMenuBtnRef}
               aria-label={strings.more}
               isActive
               onClick={() => {

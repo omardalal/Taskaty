@@ -6,6 +6,7 @@
     "@testing-library/jest-dom": "^5.16.3",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
+    "aos": "^2.3.4",
     "carbon-components": "^10.56.0",
     "carbon-components-react": "^7.56.0",
     "carbon-icons": "^7.0.7",
