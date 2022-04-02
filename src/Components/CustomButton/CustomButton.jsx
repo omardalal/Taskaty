@@ -1,24 +1,25 @@
 import React from "react";
 import "./CustomButton.css";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 
 const CustomButton = (props) => {
-  const { href, text, blackButton } = props;
+  const { to, text, blackButton } = props;
   return (
-    <a
+    <Link
       aria-label={text}
-      href={href}
+      to={to}
       className={`${
         blackButton ? "customBtnBlackBg" : "customBtnWhiteBg"
       } customBtn`}
     >
       <div>{text}</div>
-    </a>
+    </Link>
   );
 };
 
 CustomButton.propTypes = {
-  href: PropTypes.string,
+  to: PropTypes.string,
   text: PropTypes.string,
   blackButton: PropTypes.bool
 };

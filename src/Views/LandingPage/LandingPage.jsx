@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import TopBar from "../../Components/TopBar/TopBar";
 import strings from "../../Constants/strings";
 import "./LandingPage.css";
 import { ChevronDown32 } from "@carbon/icons-react";
@@ -41,7 +40,7 @@ const LandingPage = () => {
     <div className={"landingPageSignupBox"} data-aos="fade-up">
       <h1>{strings.landingPageSignUpTitle}</h1>
       <h3>{strings.landingPageSignUpDescription}</h3>
-      <CustomButton text={strings.signUp} blackButton={true} />
+      <CustomButton to="./signup" text={strings.signUp} blackButton={true} />
       <p>
         {strings.alreadyHaveAccount}
         <a>{" " + strings.login}</a>
@@ -51,7 +50,6 @@ const LandingPage = () => {
 
   return (
     <div className={"landingPageMainContainer"}>
-      <TopBar />
       <div
         className={"landingPageTitleContainer"}
         data-aos="fade-down"

@@ -1,5 +1,4 @@
 import React, { useState, useRef } from "react";
-import "./TopBar.css";
 import strings from "../../Constants/strings";
 import {
   Header,
@@ -14,6 +13,7 @@ import {
 import { Search20, Notification20, AppSwitcher20 } from "@carbon/icons-react";
 import CustomButton from "../CustomButton/CustomButton";
 import useClickOutside from "../../CustomHooks/useClickOutside";
+import { Link } from "react-router-dom";
 
 // To-Do: Replace with actual logged in value
 const loggedIn = true;
@@ -30,7 +30,11 @@ const TopBar = () => {
   // Show if the user is Logged in
   const getRightMenu = () => {
     return (
-      <HeaderPanel ref={containerRef} aria-label="Header Panel" expanded>
+      <HeaderPanel
+        ref={containerRef}
+        aria-label="Header Panel"
+        expanded={rightMenuVisible}
+      >
         <Switcher aria-label="Switcher Container">
           <SwitcherItem href="#" aria-label="Link 1">
             Profile
@@ -53,8 +57,10 @@ const TopBar = () => {
 
   return (
     <Header aria-label={strings.taskaty}>
-      <HeaderName href="#" prefix="">
-        {strings.taskaty}
+      <HeaderName prefix="">
+        <Link to={"/"} style={{ color: "white" }}>
+          {strings.taskaty}
+        </Link>
       </HeaderName>
       <HeaderGlobalBar>
         <HeaderGlobalAction aria-label={strings.search}>
@@ -76,12 +82,16 @@ const TopBar = () => {
             >
               <AppSwitcher20 />
             </HeaderGlobalAction>
-            {rightMenuVisible && getRightMenu()}
+            {getRightMenu()}
           </>
         ) : (
           <>
-            <CustomButton text={strings.login} href="#" blackButton={true} />
-            <CustomButton text={strings.signUp} href="#" blackButton={false} />
+            <CustomButton text={strings.login} to="/" blackButton={true} />
+            <CustomButton
+              text={strings.signUp}
+              to="/signup"
+              blackButton={false}
+            />
           </>
         )}
       </HeaderGlobalBar>
