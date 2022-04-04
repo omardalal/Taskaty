@@ -1,5 +1,5 @@
 import { CSSProperties } from "react";
-import { gray10 } from "@carbon/colors";
+import { blue60 } from "@carbon/colors";
 
 export const styles = {
   mainContainer: {
@@ -9,39 +9,12 @@ export const styles = {
     maxWidth: 675,
     width: "90%"
   } as CSSProperties,
-  formContainer: {
-    position: "static",
-    width: "100%",
-    padding: 16
-  } as CSSProperties,
-  signUpTitle: {
-    fontSize: 20,
-    fontWeight: 450
-  } as CSSProperties,
-  formDesc: {
-    fontSize: "14px",
-    margin: "4px 0 8px 0"
-  } as CSSProperties,
-  formButtonContainer: {
-    backgroundColor: gray10,
-    borderRadius: 10,
-    minHeight: 460,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between"
-  } as CSSProperties,
   multifieldRow: (hitBreakPoint) =>
     ({
       display: "flex",
       flexDirection: hitBreakPoint ? "column" : "row",
       marginBottom: "16px"
     } as CSSProperties),
-  submitBtn: {
-    marginLeft: "auto",
-    display: "flex",
-    width: "50%",
-    borderRadius: "0 0 10px 0"
-  } as CSSProperties,
   fieldSeparator: {
     paddingBottom: "16px"
   } as CSSProperties,
@@ -63,5 +36,13 @@ export const styles = {
     width: "50%",
     paddingLeft: 8,
     alignItems: "center"
-  } as CSSProperties
+  } as CSSProperties,
+  leftLink: {
+    marginLeft: 16,
+    paddingTop: 7.5
+  } as CSSProperties,
+  loginBtn: {
+    color: blue60,
+    cursor: "pointer"
+  }
 };

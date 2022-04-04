@@ -14,14 +14,16 @@ import { Search20, Notification20, AppSwitcher20 } from "@carbon/icons-react";
 import CustomButton from "../CustomButton/CustomButton";
 import useClickOutside from "../../CustomHooks/useClickOutside";
 import { Link } from "react-router-dom";
+import LoginModal from "../LoginModal/LoginModal";
 
 // To-Do: Replace with actual logged in value
-const loggedIn = true;
+const loggedIn = false;
 
 const TopBar = () => {
   const [rightMenuVisible, setRightMenuVisible] = useState(false);
   const containerRef = useRef(null);
   const openMenuBtnRef = useRef(null);
+  const [loginVisible, setLoginVisible] = useState(false);
 
   useClickOutside(containerRef, openMenuBtnRef, () => {
     setRightMenuVisible(false);
@@ -56,46 +58,57 @@ const TopBar = () => {
   };
 
   return (
-    <Header aria-label={strings.taskaty}>
-      <HeaderName prefix="">
-        <Link to={"/"} style={{ color: "white" }}>
-          {strings.taskaty}
-        </Link>
-      </HeaderName>
-      <HeaderGlobalBar>
-        <HeaderGlobalAction aria-label={strings.search}>
-          <Search20 />
-        </HeaderGlobalAction>
-        {loggedIn ? (
-          <>
-            <HeaderGlobalAction aria-label={strings.notifications}>
-              <Notification20 />
-            </HeaderGlobalAction>
-            <HeaderGlobalAction
-              ref={openMenuBtnRef}
-              aria-label={strings.more}
-              isActive
-              onClick={() => {
-                setRightMenuVisible(!rightMenuVisible);
-              }}
-              tooltipAlignment="end"
-            >
-              <AppSwitcher20 />
-            </HeaderGlobalAction>
-            {getRightMenu()}
-          </>
-        ) : (
-          <>
-            <CustomButton text={strings.login} to="/" blackButton={true} />
-            <CustomButton
-              text={strings.signUp}
-              to="/signup"
-              blackButton={false}
-            />
-          </>
-        )}
-      </HeaderGlobalBar>
-    </Header>
+    <>
+      <LoginModal
+        onOverlayClick={() => setLoginVisible(false)}
+        onDismissPress={() => setLoginVisible(false)}
+        visible={loginVisible}
+      />
+      <Header aria-label={strings.taskaty}>
+        <HeaderName prefix="">
+          <Link to={"/"} style={{ color: "white" }}>
+            {strings.taskaty}
+          </Link>
+        </HeaderName>
+        <HeaderGlobalBar>
+          <HeaderGlobalAction aria-label={strings.search}>
+            <Search20 />
+          </HeaderGlobalAction>
+          {loggedIn ? (
+            <>
+              <HeaderGlobalAction aria-label={strings.notifications}>
+                <Notification20 />
+              </HeaderGlobalAction>
+              <HeaderGlobalAction
+                ref={openMenuBtnRef}
+                aria-label={strings.more}
+                isActive
+                onClick={() => {
+                  setRightMenuVisible(!rightMenuVisible);
+                }}
+                tooltipAlignment="end"
+              >
+                <AppSwitcher20 />
+              </HeaderGlobalAction>
+              {getRightMenu()}
+            </>
+          ) : (
+            <>
+              <CustomButton
+                text={strings.login}
+                onClick={() => setLoginVisible(true)}
+                blackButton={true}
+              />
+              <CustomButton
+                text={strings.signUp}
+                to="/signup"
+                blackButton={false}
+              />
+            </>
+          )}
+        </HeaderGlobalBar>
+      </Header>
+    </>
   );
 };
 

@@ -1,17 +1,20 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import strings from "../../Constants/strings";
 import "./LandingPage.css";
 import { ChevronDown32 } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 import CustomButton from "../../Components/CustomButton/CustomButton";
 import AOS from "aos";
+import LoginModal from "../../Components/LoginModal/LoginModal";
 import "aos/dist/aos.css";
+import { blue60 } from "@carbon/colors";
 
 const LandingPage = () => {
   useEffect(() => {
     AOS.init();
     AOS.refresh();
   }, []);
+  const [loginVisible, setLoginVisible] = useState(false);
 
   const getFeatures = () => (
     <>
@@ -40,37 +43,49 @@ const LandingPage = () => {
     <div className={"landingPageSignupBox"} data-aos="fade-up">
       <h1>{strings.landingPageSignUpTitle}</h1>
       <h3>{strings.landingPageSignUpDescription}</h3>
-      <CustomButton to="./signup" text={strings.signUp} blackButton={true} />
+      <CustomButton to="/signup" text={strings.signUp} blackButton={true} />
       <p>
         {strings.alreadyHaveAccount}
-        <a>{" " + strings.login}</a>
+        <span
+          style={{ color: blue60, cursor: "pointer" }}
+          onClick={() => setLoginVisible(true)}
+        >
+          {" " + strings.login}
+        </span>
       </p>
     </div>
   );
 
   return (
-    <div className={"landingPageMainContainer"}>
-      <div
-        className={"landingPageTitleContainer"}
-        data-aos="fade-down"
-        data-aos-duration="1000"
-      >
-        <h1 className={"taskatyTitle"}>{strings.taskaty.toUpperCase()}</h1>
-        <h3 className={"taskatyDescription"}>
-          {strings.landingPageWelcomeSentence}
-        </h3>
-        <a
-          className={"taskatyChevronDown"}
-          onClick={() => {
-            scrollTo({ top: window.innerHeight - 100, behavior: "smooth" });
-          }}
+    <>
+      <LoginModal
+        onOverlayClick={() => setLoginVisible(false)}
+        onDismissPress={() => setLoginVisible(false)}
+        visible={loginVisible}
+      />
+      <div className={"landingPageMainContainer"}>
+        <div
+          className={"landingPageTitleContainer"}
+          data-aos="fade-down"
+          data-aos-duration="1000"
         >
-          <ChevronDown32 />
-        </a>
+          <h1 className={"taskatyTitle"}>{strings.taskaty.toUpperCase()}</h1>
+          <h3 className={"taskatyDescription"}>
+            {strings.landingPageWelcomeSentence}
+          </h3>
+          <a
+            className={"taskatyChevronDown"}
+            onClick={() => {
+              scrollTo({ top: window.innerHeight - 100, behavior: "smooth" });
+            }}
+          >
+            <ChevronDown32 />
+          </a>
+        </div>
+        {getFeatures()}
+        {getSignUpBox()}
       </div>
-      {getFeatures()}
-      {getSignUpBox()}
-    </div>
+    </>
   );
 };
 

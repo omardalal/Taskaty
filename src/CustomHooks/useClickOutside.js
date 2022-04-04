@@ -9,10 +9,17 @@ export default function useClickOutside(ref, excludedRef, callBack) {
   useEffect(() => {
     function handleClickOutside(event) {
       if (
+        excludedRef &&
         ref.current &&
         !ref.current.contains(event.target) &&
         excludedRef.current &&
         !excludedRef.current.contains(event.target)
+      ) {
+        callBack();
+      } else if (
+        !excludedRef &&
+        ref.current &&
+        !ref.current.contains(event.target)
       ) {
         callBack();
       }

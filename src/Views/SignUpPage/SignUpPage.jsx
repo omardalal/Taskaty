@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { styles } from "./styles.ts";
 import {
   TextInput,
-  Form,
-  Button,
   ProgressIndicator,
   ProgressStep,
   MultiSelect,
@@ -19,6 +17,8 @@ import {
   universities,
   cities
 } from "../../Constants/lookupConstants";
+import InputForm from "../../Components/InputForm/inputForm";
+import LoginModal from "../../Components/LoginModal/LoginModal";
 
 const SignUpPage = () => {
   const [stepOneInputValues, setStepOneInputValues] = useState({
@@ -335,37 +335,50 @@ const SignUpPage = () => {
     </ProgressIndicator>
   );
 
+  const [loginVisible, setLoginVisible] = useState(false);
   return (
     <>
       <div style={{ paddingBottom: "50px" }} />
       <div style={styles.mainContainer}>
         <h1 style={styles.createNewAccountTitle}>{strings.createNewAccount}</h1>
         {getProgressBar()}
-        <Form
-          style={styles.formButtonContainer}
-          className={"defaultBoxShadowBlack"}
-        >
-          <div style={styles.formContainer}>
-            <h3 style={styles.signUpTitle}>{strings.signUp}</h3>
-            <p style={styles.formDesc}>
-              {stepNumber === 0
-                ? strings.enterAccountInfo
-                : strings.enterLookupInfo}
+        <InputForm
+          titleText={strings.signUp}
+          descriptionText={
+            stepNumber === 0
+              ? strings.enterAccountInfo
+              : strings.enterLookupInfo
+          }
+          buttonText={
+            stepNumber === 0 ? strings.nextStep : strings.createAccount
+          }
+          buttonOnClick={() => {
+            if (stepNumber === 0) {
+              setStepNumber(stepOneValid() ? 1 : 0);
+            }
+          }}
+          FormElement={
+            stepNumber === 0 ? getStepOneFields() : getStepTwoFields()
+          }
+          minHeight={460}
+          leftBtn={
+            <p style={styles.leftLink}>
+              {strings.alreadyHaveAccount}
+              <span
+                style={styles.loginBtn}
+                onClick={() => setLoginVisible(true)}
+              >
+                {" " + strings.login}
+              </span>
             </p>
-            {stepNumber === 0 ? getStepOneFields() : getStepTwoFields()}
-          </div>
-          <Button
-            style={styles.submitBtn}
-            onClick={() => {
-              if (stepNumber === 0) {
-                setStepNumber(stepOneValid() ? 1 : 0);
-              }
-            }}
-          >
-            {stepNumber === 0 ? strings.nextStep : strings.createAccount}
-          </Button>
-        </Form>
+          }
+        />
       </div>
+      <LoginModal
+        onOverlayClick={() => setLoginVisible(false)}
+        onDismissPress={() => setLoginVisible(false)}
+        visible={loginVisible}
+      />
       <div style={{ paddingBottom: "50px" }} />
     </>
   );
