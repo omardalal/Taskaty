@@ -56,6 +56,10 @@ const LandingPage = () => {
     </div>
   );
 
+  const func = () => {
+    // hi
+  };
+
   return (
     <>
       <LoginModal
