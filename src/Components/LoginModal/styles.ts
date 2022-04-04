@@ -2,7 +2,7 @@ import { CSSProperties } from "react";
 
 export const styles = {
   formContainer: {
-    width: "100%",
+    width: "100vw",
     maxWidth: 500,
     margin: "auto"
   } as CSSProperties,

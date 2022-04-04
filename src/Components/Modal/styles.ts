@@ -9,7 +9,6 @@ export const styles = {
     height: "100%",
     display: "flex",
     alignItems: "center",
-    justifyContent: "center",
-    top: window.scrollY
+    justifyContent: "center"
   } as CSSProperties
 };

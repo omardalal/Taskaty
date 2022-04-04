@@ -1,14 +1,10 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { styles } from "./styles.ts";
 import PropTypes from "prop-types";
 import AOS from "aos";
-import useClickOutside from "../../CustomHooks/useClickOutside";
 import "aos/dist/aos.css";
 
 const Modal = ({ children, visible, onOverlayClick }) => {
-  const childrenRef = useRef(null);
-
-  useClickOutside(childrenRef, null, onOverlayClick);
   useEffect(() => {
     AOS.init();
     AOS.refresh();
@@ -19,10 +15,16 @@ const Modal = ({ children, visible, onOverlayClick }) => {
   }
 
   return (
-    <div style={styles.overlay} data-aos={"fade-in"}>
-      <div ref={childrenRef} style={{ flex: 1 }}>
-        {children}
-      </div>
+    <div
+      style={styles.overlay}
+      data-aos={"fade-in"}
+      onClick={(evt) => {
+        if (evt.target === evt.currentTarget) {
+          onOverlayClick();
+        }
+      }}
+    >
+      <div>{children}</div>
     </div>
   );
 };
