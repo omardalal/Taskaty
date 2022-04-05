@@ -6,22 +6,38 @@ import {
   signOut
 } from "firebase/auth";
 
+export const errorCode = {
+  invalidEmail: "auth/invalid-email",
+  invalidPassword: "auth/invalid-password",
+  emailAlreadyExists: "auth/email-already-exists"
+};
 export const createUser = async (email, password) => {
   if (!email || !password) return;
-  return await createUserWithEmailAndPassword(auth, email, password);
+  try {
+    return await createUserWithEmailAndPassword(auth, email, password);
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 export const signInUser = async (email, password) => {
-  return await signInWithEmailAndPassword(auth, email, password);
+  try {
+    return await signInWithEmailAndPassword(auth, email, password);
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 export const signOutUser = async () => {
-  return await signOut(auth);
+  try {
+    return await signOut(auth);
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 export const isLoggedIn = async (auth) => {
   return await auth.currentUser;
 };
 export const addUserToFirestore = async (
   email,
-  password,
   firstName,
   lastName,
   university,
@@ -33,18 +49,21 @@ export const addUserToFirestore = async (
   skills,
   interests
 ) => {
-  return await setDoc(doc(db, "users", email), {
-    email,
-    password,
-    firstName,
-    lastName,
-    university,
-    work,
-    major,
-    graduate,
-    country,
-    city,
-    skills,
-    interests
-  });
+  try {
+    return await setDoc(doc(db, "users", email), {
+      email,
+      firstName,
+      lastName,
+      university,
+      work,
+      major,
+      graduate,
+      country,
+      city,
+      skills,
+      interests
+    });
+  } catch (error) {
+    throw new Error(error);
+  }
 };
