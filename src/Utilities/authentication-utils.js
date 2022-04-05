@@ -34,7 +34,11 @@ export const signOutUser = async () => {
   }
 };
 export const isLoggedIn = async (auth) => {
-  return await auth.currentUser;
+  try {
+    return await auth.currentUser;
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 export const addUserToFirestore = async (
   email,
