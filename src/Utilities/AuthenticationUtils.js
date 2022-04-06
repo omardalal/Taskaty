@@ -1,4 +1,4 @@
-import { db, auth } from "./firebase-utils";
+import { getFirebaseAuth, getFirebaseDb } from "./FirebaseUtils";
 import { setDoc, doc } from "firebase/firestore";
 import {
   createUserWithEmailAndPassword,
@@ -6,40 +6,42 @@ import {
   signOut
 } from "firebase/auth";
 
-export const errorCode = {
-  invalidEmail: "auth/invalid-email",
-  invalidPassword: "auth/invalid-password",
-  emailAlreadyExists: "auth/email-already-exists"
+export const AuthErrorCodes = {
+  InvalidEmail: "auth/invalid-email",
+  InvalidPassword: "auth/invalid-password",
+  EmailAlreadyExists: "auth/email-already-exists"
 };
+
 export const createUser = async (email, password) => {
   if (!email || !password) return;
   try {
-    return await createUserWithEmailAndPassword(auth, email, password);
+    return await createUserWithEmailAndPassword(
+      getFirebaseAuth(),
+      email,
+      password
+    );
   } catch (error) {
     throw new Error(error);
   }
 };
+
 export const signInUser = async (email, password) => {
   try {
-    return await signInWithEmailAndPassword(auth, email, password);
+    return await signInWithEmailAndPassword(getFirebaseAuth(), email, password);
   } catch (error) {
     throw new Error(error);
   }
 };
+
 export const signOutUser = async () => {
   try {
-    return await signOut(auth);
+    return await signOut(getFirebaseAuth());
   } catch (error) {
     throw new Error(error);
   }
 };
-export const isLoggedIn = async (auth) => {
-  try {
-    return await auth.currentUser;
-  } catch (error) {
-    throw new Error(error);
-  }
-};
+
+// Test this
 export const addUserToFirestore = async (
   email,
   firstName,
@@ -54,7 +56,7 @@ export const addUserToFirestore = async (
   interests
 ) => {
   try {
-    return await setDoc(doc(db, "users", email), {
+    return await setDoc(doc(getFirebaseDb(), "users", email), {
       email,
       firstName,
       lastName,

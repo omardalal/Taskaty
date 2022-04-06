@@ -8,6 +8,13 @@ import AOS from "aos";
 import LoginModal from "../../Components/LoginModal/LoginModal";
 import "aos/dist/aos.css";
 import { blue60 } from "@carbon/colors";
+import {
+  createUser,
+  addUserToFirestore,
+  signInUser,
+  signOutUser
+} from "../../Utilities/AuthenticationUtils";
+import useAuth from "../../CustomHooks/useAuth";
 
 const LandingPage = () => {
   useEffect(() => {
@@ -56,8 +63,37 @@ const LandingPage = () => {
     </div>
   );
 
+  const lol = useAuth();
+
+  console.log(lol);
+
   return (
     <>
+      <div style={{ marginTop: 50 }}></div>
+      <CustomButton
+        text="Create Account"
+        onClick={() => {
+          createUser("omar.dalal@outlook.com", "myPassword");
+        }}
+      />
+      <CustomButton
+        text="Login"
+        onClick={() => {
+          signInUser("omar.dalal@outlook.com", "myPassword");
+        }}
+      />
+      <CustomButton
+        text="Create account with details"
+        onClick={() => {
+          addUserToFirestore("omar.dalal@outlook.com", "myPassword");
+        }}
+      />
+      <CustomButton
+        text="Sign out"
+        onClick={() => {
+          signOutUser("omar.dalal@outlook.com", "myPassword");
+        }}
+      />
       <LoginModal
         onOverlayClick={() => setLoginVisible(false)}
         onDismissPress={() => setLoginVisible(false)}
