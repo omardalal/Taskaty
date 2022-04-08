@@ -389,11 +389,11 @@ const SignUpPage = () => {
               // To-Do: Replace alert with navigation to profile page
               alert("signed up successfully");
             } catch (error) {
-              if (error.message.includes(AuthErrorCodes.EMAIL_EXISTS)) {
+              if (error.code === AuthErrorCodes.EMAIL_EXISTS) {
                 setSignUpErrorMsg(strings.emailExists);
                 return;
               }
-              if (error.message.includes(AuthErrorCodes.INVALID_EMAIL)) {
+              if (error.code === AuthErrorCodes.INVALID_EMAIL) {
                 setSignUpErrorMsg(strings.invalidEmailMsg);
                 return;
               }

@@ -9,15 +9,11 @@ import {
 
 export const createUser = async (email, password) => {
   if (!email || !password) return;
-  try {
-    return await createUserWithEmailAndPassword(
-      getFirebaseAuth(),
-      email,
-      password
-    );
-  } catch (error) {
-    throw new Error(error);
-  }
+  return await createUserWithEmailAndPassword(
+    getFirebaseAuth(),
+    email,
+    password
+  );
 };
 
 export const signInUser = async (email, password) => {
@@ -25,11 +21,7 @@ export const signInUser = async (email, password) => {
 };
 
 export const signOutUser = async () => {
-  try {
-    return await signOut(getFirebaseAuth());
-  } catch (error) {
-    throw new Error(error);
-  }
+  return await signOut(getFirebaseAuth());
 };
 
 // Test this
