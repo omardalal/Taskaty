@@ -46,7 +46,7 @@ const SignUpPage = () => {
   const [stepNumber, setStepNumber] = useState(0);
   const [showWarning, setShowWarning] = useState(false);
   const [signUpErrorMsg, setSignUpErrorMsg] = useState("");
-  useAuthRedirect();
+  useAuthRedirect(false);
 
   const stepOneValid = () => {
     if (
