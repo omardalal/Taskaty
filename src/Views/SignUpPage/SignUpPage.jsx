@@ -386,8 +386,6 @@ const SignUpPage = () => {
                 stepTwoInputValues.interests
               );
               setSignUpErrorMsg("");
-              // To-Do: Replace alert with navigation to profile page
-              alert("signed up successfully");
             } catch (error) {
               if (error.code === AuthErrorCodes.EMAIL_EXISTS) {
                 setSignUpErrorMsg(strings.emailExists);
