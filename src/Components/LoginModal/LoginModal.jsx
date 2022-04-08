@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { TextInput } from "carbon-components-react";
 import strings from "../../Constants/strings";
 import { styles } from "./styles.ts";
-import InputForm from "../InputForm/inputForm";
+import InputForm from "../InputForm/InputForm";
 import Modal from "../Modal/Modal";
 import AOS from "aos";
 import "aos/dist/aos.css";

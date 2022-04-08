@@ -65,7 +65,15 @@ const strings = {
   sendResetEmail: "Send Reset Email",
   emailSent: "Email Sent!",
   emailExists: "Email already exists!",
-  invalidEmailMsg: "Please enter a valid email address!"
+  invalidEmailMsg: "Please enter a valid email address!",
+  filters: "Filters",
+  filtersDesc:
+    "Find the perfect members for your team by using the following filters!",
+  prevPage: "Previous page",
+  nextPage: "Next page",
+  itemsPerPage: "Items per page:",
+  results: "Results",
+  noResults: "No Results!"
 };
 
 export default strings;

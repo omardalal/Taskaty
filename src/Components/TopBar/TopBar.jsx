@@ -81,9 +81,11 @@ const TopBar = () => {
           </Link>
         </HeaderName>
         <HeaderGlobalBar>
-          <HeaderGlobalAction aria-label={strings.search}>
-            <Search20 />
-          </HeaderGlobalAction>
+          <Link to={"/search"} style={{ color: "white" }}>
+            <HeaderGlobalAction aria-label={strings.search}>
+              <Search20 />
+            </HeaderGlobalAction>
+          </Link>
           {loggedUser ? (
             <>
               <HeaderGlobalAction aria-label={strings.notifications}>
