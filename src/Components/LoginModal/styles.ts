@@ -1,3 +1,4 @@
+import { blue60 } from "@carbon/colors";
 import { CSSProperties } from "react";
 
 export const styles = {
@@ -17,5 +18,13 @@ export const styles = {
     top: 0,
     height: "100%",
     borderRadius: 0
+  } as CSSProperties,
+  forgotPassword: {
+    margin: "7px 0 0 0",
+    border: "none",
+    cursor: "pointer",
+    fontWeight: 450,
+    fontSize: 14,
+    color: blue60
   } as CSSProperties
 };

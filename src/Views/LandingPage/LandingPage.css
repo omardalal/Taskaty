@@ -98,6 +98,8 @@
   text-align: center;
   box-shadow: 0 0 10px 0 rgba(255, 255, 255, 0.25);
   max-width: 950px;
+  display: flex;
+  flex-direction: column;
 }
 
 .landingPageMainContainer .landingPageSignupBox h1 {
@@ -113,7 +115,6 @@
 }
 
 .landingPageSignupBox a {
-  width: 100px;
   height: 37.5px;
   align-self: center;
   margin: 0 auto 10px auto;

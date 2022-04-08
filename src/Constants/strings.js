@@ -55,7 +55,17 @@ const strings = {
     "Taskaty organizes your files and uploads in a very user-friendly way, that will ensure that the user is always aware of the latest version of each file. ",
   landingPageSignUpTitle: "And much more!",
   landingPageSignUpDescription:
-    "Explore Taskaty and its full potential by signing up for free today!"
+    "Explore Taskaty and its full potential by signing up for free today!",
+  invalidEmail: "No user exists with this email!",
+  invalidPassword: "Email and password don't match!",
+  somethingWentWrong: "Something went wrong!",
+  visitYourProfile: "Visit your profile",
+  forgotYourPassword: "Forgot your password?",
+  back: "Back",
+  sendResetEmail: "Send Reset Email",
+  emailSent: "Email Sent!",
+  emailExists: "Email already exists!",
+  invalidEmailMsg: "Please enter a valid email address!"
 };
 
 export default strings;

@@ -10,20 +10,20 @@ import {
   SwitcherItem,
   SwitcherDivider
 } from "carbon-components-react";
+import { useSelector } from "react-redux";
 import { Search20, Notification20, AppSwitcher20 } from "@carbon/icons-react";
 import CustomButton from "../CustomButton/CustomButton";
 import useClickOutside from "../../CustomHooks/useClickOutside";
 import { Link } from "react-router-dom";
 import LoginModal from "../LoginModal/LoginModal";
-
-// To-Do: Replace with actual logged in value
-const loggedIn = false;
+import { signOutUser } from "../../Utilities/AuthenticationUtils";
 
 const TopBar = () => {
   const [rightMenuVisible, setRightMenuVisible] = useState(false);
   const containerRef = useRef(null);
   const openMenuBtnRef = useRef(null);
   const [loginVisible, setLoginVisible] = useState(false);
+  const loggedUser = useSelector((state) => state.auth);
 
   useClickOutside(containerRef, openMenuBtnRef, () => {
     setRightMenuVisible(false);
@@ -39,18 +39,27 @@ const TopBar = () => {
       >
         <Switcher aria-label="Switcher Container">
           <SwitcherItem href="#" aria-label="Link 1">
-            Profile
+            {strings.profile}
           </SwitcherItem>
           <SwitcherDivider />
           <SwitcherItem href="#" aria-label="Link 2">
-            Projects
+            {strings.projects}
           </SwitcherItem>
           <SwitcherItem href="#" aria-label="Link 3">
-            Classes
+            {strings.classes}
           </SwitcherItem>
           <SwitcherDivider />
-          <SwitcherItem href="#" aria-label="Link 6">
-            Log out
+          <SwitcherItem
+            href="#"
+            aria-label="Link 6"
+            onClick={async () => {
+              try {
+                await signOutUser();
+                setRightMenuVisible(false);
+              } catch (error) {}
+            }}
+          >
+            {strings.logOut}
           </SwitcherItem>
         </Switcher>
       </HeaderPanel>
@@ -62,6 +71,7 @@ const TopBar = () => {
       <LoginModal
         onOverlayClick={() => setLoginVisible(false)}
         onDismissPress={() => setLoginVisible(false)}
+        onLoginSucceed={() => setLoginVisible(false)}
         visible={loginVisible}
       />
       <Header aria-label={strings.taskaty}>
@@ -74,7 +84,7 @@ const TopBar = () => {
           <HeaderGlobalAction aria-label={strings.search}>
             <Search20 />
           </HeaderGlobalAction>
-          {loggedIn ? (
+          {loggedUser ? (
             <>
               <HeaderGlobalAction aria-label={strings.notifications}>
                 <Notification20 />
@@ -98,11 +108,13 @@ const TopBar = () => {
                 text={strings.login}
                 onClick={() => setLoginVisible(true)}
                 blackButton={true}
+                inTopBar
               />
               <CustomButton
                 text={strings.signUp}
                 to="/signup"
                 blackButton={false}
+                inTopBar
               />
             </>
           )}

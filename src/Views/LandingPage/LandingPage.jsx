@@ -8,6 +8,7 @@ import AOS from "aos";
 import LoginModal from "../../Components/LoginModal/LoginModal";
 import "aos/dist/aos.css";
 import { blue60 } from "@carbon/colors";
+import { useSelector } from "react-redux";
 
 const LandingPage = () => {
   useEffect(() => {
@@ -15,6 +16,7 @@ const LandingPage = () => {
     AOS.refresh();
   }, []);
   const [loginVisible, setLoginVisible] = useState(false);
+  const loggedUser = useSelector((state) => state.auth);
 
   const getFeatures = () => (
     <>
@@ -43,16 +45,26 @@ const LandingPage = () => {
     <div className={"landingPageSignupBox"} data-aos="fade-up">
       <h1>{strings.landingPageSignUpTitle}</h1>
       <h3>{strings.landingPageSignUpDescription}</h3>
-      <CustomButton to="/signup" text={strings.signUp} blackButton={true} />
-      <p>
-        {strings.alreadyHaveAccount}
-        <span
-          style={{ color: blue60, cursor: "pointer" }}
-          onClick={() => setLoginVisible(true)}
-        >
-          {" " + strings.login}
-        </span>
-      </p>
+      {loggedUser ? (
+        <CustomButton
+          to="/"
+          text={strings.visitYourProfile}
+          blackButton={true}
+        />
+      ) : (
+        <>
+          <CustomButton to="/signup" text={strings.signUp} blackButton={true} />
+          <p>
+            {strings.alreadyHaveAccount}
+            <span
+              style={{ color: blue60, cursor: "pointer" }}
+              onClick={() => setLoginVisible(true)}
+            >
+              {" " + strings.login}
+            </span>
+          </p>
+        </>
+      )}
     </div>
   );
 
@@ -61,6 +73,7 @@ const LandingPage = () => {
       <LoginModal
         onOverlayClick={() => setLoginVisible(false)}
         onDismissPress={() => setLoginVisible(false)}
+        onLoginSucceed={() => setLoginVisible(false)}
         visible={loginVisible}
       />
       <div className={"landingPageMainContainer"}>

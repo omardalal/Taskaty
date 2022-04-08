@@ -7,11 +7,80 @@ import InputForm from "../InputForm/inputForm";
 import Modal from "../Modal/Modal";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import {
+  signInUser,
+  sendResetEmail
+} from "../../Utilities/AuthenticationUtils";
+import { AuthErrorCodes } from "firebase/auth";
 
-const LoginModal = ({ visible, onOverlayClick, onDismissPress }) => {
+const LoginModal = ({
+  visible,
+  onOverlayClick,
+  onDismissPress,
+  onLoginSucceed
+}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showError, setShowError] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [inForgotPassView, setInForgotPassView] = useState(false);
+  const [successMessage, setSuccessMessage] = useState(false);
+
+  useEffect(() => {
+    setEmail("");
+    setPassword("");
+    setShowError(false);
+    setAlertMessage("");
+    setInForgotPassView(false);
+    setSuccessMessage(false);
+  }, [visible]);
+
+  useEffect(() => {
+    AOS.init();
+    AOS.refresh();
+  }, []);
+
+  const handleLoginPress = async () => {
+    if (inForgotPassView) {
+      if (!email) {
+        setShowError(true);
+        return;
+      }
+      try {
+        await sendResetEmail(email);
+        setSuccessMessage(true);
+        setAlertMessage(strings.emailSent);
+      } catch (error) {
+        if (error.code === AuthErrorCodes.INVALID_EMAIL) {
+          setSuccessMessage(false);
+          setAlertMessage(strings.invalidEmail);
+          return;
+        }
+        setAlertMessage(strings.somethingWentWrong);
+      }
+      return;
+    }
+    if (!email || !password) {
+      setShowError(true);
+      return;
+    }
+    try {
+      await signInUser(email, password);
+      setAlertMessage("");
+      onLoginSucceed();
+    } catch (error) {
+      setSuccessMessage(false);
+      if (error.code === AuthErrorCodes.INVALID_EMAIL) {
+        setAlertMessage(strings.invalidEmail);
+        return;
+      }
+      if (error.code === AuthErrorCodes.INVALID_PASSWORD) {
+        setAlertMessage(strings.invalidPassword);
+        return;
+      }
+      setAlertMessage(strings.somethingWentWrong);
+    }
+  };
 
   const getLoginForm = () => (
     <>
@@ -27,30 +96,32 @@ const LoginModal = ({ visible, onOverlayClick, onDismissPress }) => {
         light
       />
       <div style={{ marginBottom: "1rem" }} />
-      <TextInput.PasswordInput
-        invalid={showError && !password}
-        invalidText={strings.fieldRequired}
-        data-modal-primary-focus
-        labelText={strings.password}
-        placeholder={strings.password}
-        onChange={(evt) => {
-          setPassword(evt.target?.value);
+      {!inForgotPassView && (
+        <TextInput.PasswordInput
+          invalid={showError && !password}
+          invalidText={strings.fieldRequired}
+          data-modal-primary-focus
+          labelText={strings.password}
+          placeholder={strings.password}
+          onChange={(evt) => {
+            setPassword(evt.target?.value);
+          }}
+          light
+        />
+      )}
+      <p
+        style={styles.forgotPassword}
+        onClick={() => {
+          setInForgotPassView((forgotPass) => !forgotPass);
+          setAlertMessage("");
+          setPassword("");
+          setShowError(false);
         }}
-        light
-      />
+      >
+        {inForgotPassView ? strings.back : strings.forgotYourPassword}
+      </p>
     </>
   );
-
-  useEffect(() => {
-    setEmail("");
-    setPassword("");
-    setShowError(false);
-  }, [visible]);
-
-  useEffect(() => {
-    AOS.init();
-    AOS.refresh();
-  }, []);
 
   return (
     <Modal visible={visible} onOverlayClick={onOverlayClick}>
@@ -58,16 +129,15 @@ const LoginModal = ({ visible, onOverlayClick, onDismissPress }) => {
         <InputForm
           titleText={strings.login}
           descriptionText={"Enter your account credentials"}
-          buttonText={strings.login}
-          buttonOnClick={() => {
-            if (!email || !password) {
-              setShowError(true);
-            }
-          }}
+          buttonText={inForgotPassView ? strings.sendResetEmail : strings.login}
+          buttonOnClick={handleLoginPress}
           FormElement={getLoginForm()}
           minHeight={300}
           hasDismissButton
           onDismissPress={onDismissPress}
+          showAlert={alertMessage}
+          alertSuccess={successMessage}
+          alertMessage={alertMessage}
         />
       </div>
     </Modal>
@@ -77,7 +147,8 @@ const LoginModal = ({ visible, onOverlayClick, onDismissPress }) => {
 LoginModal.propTypes = {
   visible: PropTypes.bool,
   onDismissPress: PropTypes.func,
-  onOverlayClick: PropTypes.func
+  onOverlayClick: PropTypes.func,
+  onLoginSucceed: PropTypes.func
 };
 
 export default LoginModal;
