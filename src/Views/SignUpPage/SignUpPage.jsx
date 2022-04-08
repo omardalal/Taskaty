@@ -17,7 +17,7 @@ import {
   universities,
   cities
 } from "../../Constants/lookupConstants";
-import InputForm from "../../Components/InputForm/inputForm";
+import InputForm from "../../Components/InputForm/InputForm";
 import LoginModal from "../../Components/LoginModal/LoginModal";
 import {
   addUserToFirestore,
@@ -38,7 +38,7 @@ const SignUpPage = () => {
     skills: [],
     interests: [],
     major: "",
-    academicLevel: "none",
+    academicLevel: "",
     university: "",
     work: "",
     city: ""
@@ -247,7 +247,7 @@ const SignUpPage = () => {
           <RadioButtonGroup
             legendText={strings.academicLevel}
             name="academicLevel"
-            valueSelected={stepTwoInputValues.academicLevel}
+            valueSelected={stepTwoInputValues.academicLevel ?? ""}
             onChange={(selected) => {
               setStepTwoInputValues({
                 ...stepTwoInputValues,
