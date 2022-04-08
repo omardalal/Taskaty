@@ -13,7 +13,10 @@ const InputForm = ({
   minHeight,
   hasDismissButton,
   onDismissPress,
-  leftBtn
+  leftBtn,
+  showAlert,
+  alertMessage,
+  alertSuccess
 }) => {
   return (
     <Form
@@ -28,6 +31,11 @@ const InputForm = ({
           )}
         </div>
         <p style={styles.formDesc}>{descriptionText}</p>
+        {showAlert && (
+          <p style={alertSuccess ? styles.successMsg : styles.errorMsg}>
+            {alertMessage}
+          </p>
+        )}
         {FormElement}
       </div>
       <div style={styles.buttonRow}>
@@ -49,7 +57,10 @@ InputForm.propTypes = {
   minHeight: PropTypes.number,
   hasDismissButton: PropTypes.bool,
   onDismissPress: PropTypes.func,
-  leftBtn: PropTypes.element
+  leftBtn: PropTypes.element,
+  showAlert: PropTypes.bool,
+  alertMessage: PropTypes.string,
+  alertSuccess: PropTypes.bool
 };
 
 export default InputForm;

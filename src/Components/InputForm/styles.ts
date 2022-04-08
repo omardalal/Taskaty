@@ -1,5 +1,5 @@
 import { CSSProperties } from "react";
-import { gray10 } from "@carbon/colors";
+import { gray10, red60, green60 } from "@carbon/colors";
 
 export const styles = {
   formButtonContainer: (minHeight: number) =>
@@ -42,5 +42,13 @@ export const styles = {
   buttonRow: {
     display: "flex",
     alignItems: "flex-start"
+  } as CSSProperties,
+  errorMsg: {
+    color: red60,
+    marginBottom: 12
+  } as CSSProperties,
+  successMsg: {
+    color: green60,
+    marginBottom: 12
   } as CSSProperties
 };

@@ -19,6 +19,12 @@ import {
 } from "../../Constants/lookupConstants";
 import InputForm from "../../Components/InputForm/inputForm";
 import LoginModal from "../../Components/LoginModal/LoginModal";
+import {
+  addUserToFirestore,
+  createUser
+} from "../../Utilities/AuthenticationUtils";
+import { AuthErrorCodes } from "firebase/auth";
+import useAuthRedirect from "../../CustomHooks/useAuthRedirect";
 
 const SignUpPage = () => {
   const [stepOneInputValues, setStepOneInputValues] = useState({
@@ -39,6 +45,8 @@ const SignUpPage = () => {
   });
   const [stepNumber, setStepNumber] = useState(0);
   const [showWarning, setShowWarning] = useState(false);
+  const [signUpErrorMsg, setSignUpErrorMsg] = useState("");
+  useAuthRedirect();
 
   const stepOneValid = () => {
     if (
@@ -352,9 +360,44 @@ const SignUpPage = () => {
           buttonText={
             stepNumber === 0 ? strings.nextStep : strings.createAccount
           }
-          buttonOnClick={() => {
+          showAlert={signUpErrorMsg}
+          alertMessage={signUpErrorMsg}
+          buttonOnClick={async () => {
             if (stepNumber === 0) {
               setStepNumber(stepOneValid() ? 1 : 0);
+              return;
+            }
+            try {
+              await createUser(
+                stepOneInputValues.email,
+                stepOneInputValues.password
+              );
+              await addUserToFirestore(
+                stepOneInputValues.email,
+                stepOneInputValues.firstName,
+                stepOneInputValues.lastName,
+                stepTwoInputValues.university,
+                stepTwoInputValues.work,
+                stepTwoInputValues.major,
+                stepTwoInputValues.academicLevel,
+                "PL",
+                stepTwoInputValues.city,
+                stepTwoInputValues.skills,
+                stepTwoInputValues.interests
+              );
+              setSignUpErrorMsg("");
+              // To-Do: Replace alert with navigation to profile page
+              alert("signed up successfully");
+            } catch (error) {
+              if (error.message.includes(AuthErrorCodes.EMAIL_EXISTS)) {
+                setSignUpErrorMsg(strings.emailExists);
+                return;
+              }
+              if (error.message.includes(AuthErrorCodes.INVALID_EMAIL)) {
+                setSignUpErrorMsg(strings.invalidEmailMsg);
+                return;
+              }
+              setSignUpErrorMsg(strings.somethingWentWrong);
             }
           }}
           FormElement={
