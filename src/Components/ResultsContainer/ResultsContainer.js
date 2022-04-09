@@ -5,8 +5,7 @@ import {
   User32,
   Task32,
   Notebook32,
-  NotAvailable32,
-  ChevronRight24
+  NotAvailable32
 } from "@carbon/icons-react";
 import strings from "../../Constants/strings";
 import PropTypes from "prop-types";
@@ -24,28 +23,26 @@ const ResultsContainer = ({ resultsTitle, results, resultIconType }) => {
 
   const getIcon = () => {
     if (resultIconType === ResultIconTypes.User) {
-      return <User32 />;
+      return <User32 style={styles.resultItemIcon} />;
     }
     if (resultIconType === ResultIconTypes.Project) {
-      return <Task32 />;
+      return <Task32 style={styles.resultItemIcon} />;
     }
     if (resultIconType === ResultIconTypes.Project) {
-      return <Notebook32 />;
+      return <Notebook32 style={styles.resultItemIcon} />;
     }
-    return <NotAvailable32 />;
+    return <NotAvailable32 style={styles.resultItemIcon} />;
   };
 
   const getResultItem = (key, title, subtitle, extraInfo) => (
     <div key={key} style={styles.resultItem}>
       {getIcon()}
       <div style={styles.resultItemText}>
-        <h4>{title}</h4>
+        <h4 style={styles.resultItemTitle}>{title}</h4>
         <h5 style={styles.resultItemSubtitle}>{subtitle}</h5>
         <h5 style={styles.resultItemSubtitle}>{extraInfo}</h5>
       </div>
-      <div style={styles.resultItemChevronContainer}>
-        <ChevronRight24 style={{ color: "white" }} />
-      </div>
+      <div style={styles.resultItemVisitBtn}>{strings.visitProfile}</div>
     </div>
   );
 

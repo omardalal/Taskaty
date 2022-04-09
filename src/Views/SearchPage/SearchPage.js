@@ -187,8 +187,9 @@ const SearchPage = () => {
     const results = [];
     for (let i = 0; i < 75; i++) {
       const title = names[Math.floor(Math.random() * names.length)];
-      const subtitle = universities[Math.floor(Math.random() * names.length)];
-      const extraInfo = cities[Math.floor(Math.random() * names.length)];
+      const subtitle =
+        universities[Math.floor(Math.random() * universities.length)];
+      const extraInfo = cities[Math.floor(Math.random() * cities.length)];
       results.push({ title: title, subtitle: subtitle, extraInfo: extraInfo });
     }
     return results;

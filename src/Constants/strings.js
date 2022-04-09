@@ -60,6 +60,7 @@ const strings = {
   invalidPassword: "Email and password don't match!",
   somethingWentWrong: "Something went wrong!",
   visitYourProfile: "Visit your profile",
+  visitProfile: "Visit Profile",
   forgotYourPassword: "Forgot your password?",
   back: "Back",
   sendResetEmail: "Send Reset Email",
