@@ -15,9 +15,5 @@ export const styles = {
   filtersBox: (columnView) =>
     ({
       minWidth: columnView ? "100%" : 375
-    } as CSSProperties),
-  radioButtonsContainer: {
-    display: "flex",
-    flexWrap: "wrap"
-  } as CSSProperties
+    } as CSSProperties)
 };

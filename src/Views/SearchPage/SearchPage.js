@@ -9,7 +9,12 @@ import {
   MultiSelect,
   Dropdown
 } from "carbon-components-react";
-import { generalSkills, majors } from "../../Constants/lookupConstants";
+import {
+  generalSkills,
+  majors,
+  universities,
+  cities
+} from "../../Constants/lookupConstants";
 import ResultsContainer, {
   ResultIconTypes
 } from "../../Components/ResultsContainer/ResultsContainer";
@@ -59,14 +64,12 @@ const SearchPage = () => {
             });
           }}
         >
-          <div style={styles.radioButtonsContainer}>
-            <RadioButton labelText={strings.graduate} value="graduate" />
-            <RadioButton
-              labelText={strings.undergraduate}
-              value="undergraduate"
-            />
-            <RadioButton labelText={strings.none} value="none" />
-          </div>
+          <RadioButton labelText={strings.graduate} value="graduate" />
+          <RadioButton
+            labelText={strings.undergraduate}
+            value="undergraduate"
+          />
+          <RadioButton labelText={strings.none} value="none" />
         </RadioButtonGroup>
       </div>
 
@@ -121,18 +124,34 @@ const SearchPage = () => {
       </div>
 
       <div style={styles.inputElement}>
-        <TextInput
-          data-modal-primary-focus
-          labelText={strings.university}
-          placeholder={strings.university}
-          onChange={(evt) => {
+        <Dropdown
+          titleText={strings.university}
+          label={`${strings.select} ${strings.university}`}
+          items={universities.sort()}
+          itemToString={(item) => item || ""}
+          onChange={(item) => {
             setFiltersValues({
               ...filtersValues,
-              ...{ university: evt.target?.value }
+              ...{ university: item.selectedItem }
             });
           }}
           light
-          required
+        />
+      </div>
+
+      <div style={styles.inputElement}>
+        <Dropdown
+          titleText={strings.city}
+          label={`${strings.select} ${strings.city}`}
+          items={cities.sort()}
+          itemToString={(item) => item || ""}
+          onChange={(item) => {
+            setFiltersValues({
+              ...filtersValues,
+              ...{ city: item.selectedItem }
+            });
+          }}
+          light
         />
       </div>
 
@@ -151,24 +170,29 @@ const SearchPage = () => {
           required
         />
       </div>
-
-      <div style={styles.inputElement}>
-        <TextInput
-          data-modal-primary-focus
-          labelText={strings.city}
-          placeholder={strings.city}
-          onChange={(evt) => {
-            setFiltersValues({
-              ...filtersValues,
-              ...{ city: evt.target?.value }
-            });
-          }}
-          light
-          required
-        />
-      </div>
     </>
   );
+
+  const getRandomResults = () => {
+    const names = [
+      "Oliver Jack",
+      "Liam John",
+      "Harry Callum",
+      "Jacob Reece",
+      "Michael Richards",
+      "Oscar Rhys",
+      "James Damain",
+      "William Thomas"
+    ];
+    const results = [];
+    for (let i = 0; i < 75; i++) {
+      const title = names[Math.floor(Math.random() * names.length)];
+      const subtitle = universities[Math.floor(Math.random() * names.length)];
+      const extraInfo = cities[Math.floor(Math.random() * names.length)];
+      results.push({ title: title, subtitle: subtitle, extraInfo: extraInfo });
+    }
+    return results;
+  };
 
   return (
     <div style={styles.mainContainer(columnView)}>
@@ -185,7 +209,7 @@ const SearchPage = () => {
       <div style={styles.midSeparator(columnView)} />
       <ResultsContainer
         resultsTitle={strings.results}
-        results={[]} // Replace with results array
+        results={getRandomResults()} // Replace with real results
         resultIconType={ResultIconTypes.User}
       />
       <div style={styles.midSeparator(columnView)} />
