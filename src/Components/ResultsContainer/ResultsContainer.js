@@ -17,7 +17,12 @@ export const ResultIconTypes = {
   Class: "class"
 };
 
-const ResultsContainer = ({ resultsTitle, results, resultIconType }) => {
+const ResultsContainer = ({
+  resultsTitle,
+  results,
+  resultIconType,
+  rightButtons
+}) => {
   const [currentPageNumber, setCurrentPageNumber] = useState(1);
   const [currentPageSize, setCurrentPageSize] = useState(DEFAUT_PAGE_SIZE);
 
@@ -28,13 +33,13 @@ const ResultsContainer = ({ resultsTitle, results, resultIconType }) => {
     if (resultIconType === ResultIconTypes.Project) {
       return <Task32 style={styles.resultItemIcon} />;
     }
-    if (resultIconType === ResultIconTypes.Project) {
+    if (resultIconType === ResultIconTypes.Class) {
       return <Notebook32 style={styles.resultItemIcon} />;
     }
     return <NotAvailable32 style={styles.resultItemIcon} />;
   };
 
-  const getResultItem = (key, title, subtitle, extraInfo) => (
+  const getResultItem = (key, title, subtitle, extraInfo, buttonText) => (
     <div key={key} style={styles.resultItem}>
       {getIcon()}
       <div style={styles.resultItemText}>
@@ -42,13 +47,16 @@ const ResultsContainer = ({ resultsTitle, results, resultIconType }) => {
         <h5 style={styles.resultItemSubtitle}>{subtitle}</h5>
         <h5 style={styles.resultItemSubtitle}>{extraInfo}</h5>
       </div>
-      <div style={styles.resultItemVisitBtn}>{strings.visitProfile}</div>
+      <div style={styles.resultItemVisitBtn}>{buttonText}</div>
     </div>
   );
 
   const getResultsBox = () => (
     <div style={styles.resultsBox}>
-      <h2 style={styles.resultsTitle}>{resultsTitle}</h2>
+      <div style={styles.titleBar}>
+        <h2 style={styles.resultsTitle}>{resultsTitle}</h2>
+        <div style={styles.rightButtonsContainer}>{rightButtons}</div>
+      </div>
       <div style={styles.resultItemsContainer}>
         {results?.length ? (
           results
@@ -61,7 +69,8 @@ const ResultsContainer = ({ resultsTitle, results, resultIconType }) => {
                 index,
                 result.title,
                 result.subtitle,
-                result.extraInfo
+                result.extraInfo,
+                result.buttonText
               );
             })
         ) : (
@@ -113,7 +122,8 @@ const ResultsContainer = ({ resultsTitle, results, resultIconType }) => {
 ResultsContainer.propTypes = {
   resultsTitle: PropTypes.string,
   results: PropTypes.array,
-  resultIconType: PropTypes.string
+  resultIconType: PropTypes.string,
+  rightButtons: PropTypes.element
 };
 
 export default ResultsContainer;
