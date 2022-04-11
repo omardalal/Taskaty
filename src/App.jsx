@@ -8,6 +8,8 @@ import SignUpPage from "./Views/SignUpPage/SignUpPage";
 import useAuth from "./CustomHooks/useAuth";
 import { setUser } from "./Redux/Actions";
 import SearchPage from "./Views/SearchPage/SearchPage";
+import ClassesPage from "./Views/ClassesPage/ClassesPage";
+import ProjectsPage from "./Views/ProjectsPage/ProjectsPage";
 
 const App = () => {
   const loginState = useAuth();
@@ -21,6 +23,8 @@ const App = () => {
       <Routes>
         <Route path="/search" element={<SearchPage />} />
         <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/classes" element={<ClassesPage />} />
+        <Route path="/projects" element={<ProjectsPage />} />
         <Route exact path="/" element={<LandingPage />} />
         <Route path="*" element={<LandingPage />} />
       </Routes>

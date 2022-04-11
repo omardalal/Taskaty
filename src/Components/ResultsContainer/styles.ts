@@ -76,5 +76,13 @@ export const styles = {
     borderRadius: "0 10px 10px 0",
     cursor: "pointer"
   } as CSSProperties,
-  resultItemIcon: { width: 64, height: 64 } as CSSProperties
+  resultItemIcon: { width: 64, height: 64 } as CSSProperties,
+  titleBar: {
+    display: "flex",
+    justifyContent: "space-between"
+  } as CSSProperties,
+  rightButtonsContainer: {
+    borderRadius: "0 10px 0 0",
+    overflow: "hidden"
+  } as CSSProperties
 };

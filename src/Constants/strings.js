@@ -74,7 +74,14 @@ const strings = {
   nextPage: "Next page",
   itemsPerPage: "Items per page:",
   results: "Results",
-  noResults: "No Results!"
+  noResults: "No Results!",
+  myClasses: "My Classes",
+  visitClass: "Visit Class",
+  visitProject: "Visit Project",
+  createNewClass: "Create new class",
+  createNewProject: "Create new project",
+  joinClass: "Join Class",
+  myProjects: "My Projects"
 };
 
 export default strings;

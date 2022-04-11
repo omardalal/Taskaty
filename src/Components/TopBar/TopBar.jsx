@@ -10,6 +10,7 @@ import {
   SwitcherItem,
   SwitcherDivider
 } from "carbon-components-react";
+import { styles } from "./styles.ts";
 import { useSelector } from "react-redux";
 import { Search20, Notification20, AppSwitcher20 } from "@carbon/icons-react";
 import CustomButton from "../CustomButton/CustomButton";
@@ -38,26 +39,53 @@ const TopBar = () => {
         expanded={rightMenuVisible}
       >
         <Switcher aria-label="Switcher Container">
-          <SwitcherItem href="#" aria-label="Link 1">
-            {strings.profile}
-          </SwitcherItem>
+          <Link
+            to={"/"}
+            style={styles.rightBoxLink}
+            onClick={() => setRightMenuVisible(false)}
+          >
+            <SwitcherItem
+              aria-label={strings.profile}
+              style={styles.rightBoxLink}
+            >
+              {strings.profile}
+            </SwitcherItem>
+          </Link>
           <SwitcherDivider />
-          <SwitcherItem href="#" aria-label="Link 2">
-            {strings.projects}
-          </SwitcherItem>
-          <SwitcherItem href="#" aria-label="Link 3">
-            {strings.classes}
-          </SwitcherItem>
+          <Link
+            to={"/classes"}
+            style={styles.rightBoxLink}
+            onClick={() => setRightMenuVisible(false)}
+          >
+            <SwitcherItem
+              aria-label={strings.classes}
+              style={styles.rightBoxLink}
+            >
+              {strings.classes}
+            </SwitcherItem>
+          </Link>
+          <Link
+            to={"/projects"}
+            style={styles.rightBoxLink}
+            onClick={() => setRightMenuVisible(false)}
+          >
+            <SwitcherItem
+              aria-label={strings.projects}
+              style={styles.rightBoxLink}
+            >
+              {strings.projects}
+            </SwitcherItem>
+          </Link>
           <SwitcherDivider />
           <SwitcherItem
-            href="#"
-            aria-label="Link 6"
+            aria-label={strings.logOut}
             onClick={async () => {
               try {
                 await signOutUser();
                 setRightMenuVisible(false);
               } catch (error) {}
             }}
+            style={styles.rightBoxLink}
           >
             {strings.logOut}
           </SwitcherItem>

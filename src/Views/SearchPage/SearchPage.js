@@ -190,7 +190,12 @@ const SearchPage = () => {
       const subtitle =
         universities[Math.floor(Math.random() * universities.length)];
       const extraInfo = cities[Math.floor(Math.random() * cities.length)];
-      results.push({ title: title, subtitle: subtitle, extraInfo: extraInfo });
+      results.push({
+        title: title,
+        subtitle: subtitle,
+        extraInfo: extraInfo,
+        buttonText: strings.visitProfile
+      });
     }
     return results;
   };
