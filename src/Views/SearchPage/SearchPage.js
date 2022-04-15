@@ -19,6 +19,7 @@ import ResultsContainer, {
   ResultIconTypes
 } from "../../Components/ResultsContainer/ResultsContainer";
 import useMediaQuery from "../../CustomHooks/useMediaQuery";
+import { getSearchResultsByFilters } from "../../Utilities/SearchUtils";
 
 const SearchPage = () => {
   const [filtersValues, setFiltersValues] = useState({
@@ -210,6 +211,9 @@ const SearchPage = () => {
           buttonText={strings.search}
           minHeight={700}
           FormElement={getFiltersForm()}
+          buttonOnClick={() => {
+            getSearchResultsByFilters(filtersValues);
+          }}
         />
       </div>
       <div style={styles.midSeparator(columnView)} />
