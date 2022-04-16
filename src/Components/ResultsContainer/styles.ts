@@ -37,6 +37,7 @@ export const styles = {
     width: 200,
     borderRadius: 10,
     paddingTop: 35,
+    height: 200,
     boxShadow: "0 0 5px 0 rgba(0 0 0 / 0.25)"
   } as CSSProperties,
   resultItemVisitBtn: {

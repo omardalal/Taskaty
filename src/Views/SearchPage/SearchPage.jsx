@@ -32,6 +32,7 @@ const SearchPage = () => {
     work: "",
     city: ""
   });
+  const [results, setResults] = useState();
 
   const columnView = useMediaQuery("max-width: 950px");
 
@@ -174,33 +175,6 @@ const SearchPage = () => {
     </>
   );
 
-  const getRandomResults = () => {
-    const names = [
-      "Oliver Jack",
-      "Liam John",
-      "Harry Callum",
-      "Jacob Reece",
-      "Michael Richards",
-      "Oscar Rhys",
-      "James Damain",
-      "William Thomas"
-    ];
-    const results = [];
-    for (let i = 0; i < 75; i++) {
-      const title = names[Math.floor(Math.random() * names.length)];
-      const subtitle =
-        universities[Math.floor(Math.random() * universities.length)];
-      const extraInfo = cities[Math.floor(Math.random() * cities.length)];
-      results.push({
-        title: title,
-        subtitle: subtitle,
-        extraInfo: extraInfo,
-        buttonText: strings.visitProfile
-      });
-    }
-    return results;
-  };
-
   return (
     <div style={styles.mainContainer(columnView)}>
       <div style={styles.midSeparator(columnView)} />
@@ -211,15 +185,27 @@ const SearchPage = () => {
           buttonText={strings.search}
           minHeight={700}
           FormElement={getFiltersForm()}
-          buttonOnClick={() => {
-            getSearchResultsByFilters(filtersValues);
+          buttonOnClick={async () => {
+            const searchResults = await getSearchResultsByFilters(
+              filtersValues
+            );
+            const users = [];
+            searchResults.forEach((result) => {
+              users.push({
+                title: `${result.firstName} ${result.lastName}`,
+                subtitle: result.university,
+                city: result.city,
+                buttonText: strings.visitProfile
+              });
+            });
+            setResults(users);
           }}
         />
       </div>
       <div style={styles.midSeparator(columnView)} />
       <ResultsContainer
         resultsTitle={strings.results}
-        results={getRandomResults()} // Replace with real results
+        results={results}
         resultIconType={ResultIconTypes.User}
       />
       <div style={styles.midSeparator(columnView)} />
