@@ -8,7 +8,7 @@ import { Button } from "carbon-components-react";
 import useAuthRedirect from "../../CustomHooks/useAuthRedirect";
 
 const ClassesPage = () => {
-  const getRandomResults = async () => {
+  const getRandomResults = () => {
     const results = [];
     for (let i = 1; i <= 15; i++) {
       const title = "Course #" + i;
