@@ -36,7 +36,8 @@ export const getSearchResultsByFilters = async ({
     results = results.filter((result) => {
       return (
         result.firstName.toLowerCase().includes(name.toLowerCase()) ||
-        result.lastName.toLowerCase().includes(name.toLowerCase())
+        result.lastName.toLowerCase().includes(name.toLowerCase()) ||
+        (result.firstName+result.lastName).toLowerCase().includes(name.toLowerCase())
       );
     });
   }
