@@ -1,20 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import strings from "../../Constants/strings";
 import "./LandingPage.css";
 import { ChevronDown32 } from "@carbon/icons-react";
 import PropTypes from "prop-types";
 import CustomButton from "../../Components/CustomButton/CustomButton";
-import AOS from "aos";
 import LoginModal from "../../Components/LoginModal/LoginModal";
-import "aos/dist/aos.css";
 import { blue60 } from "@carbon/colors";
 import { useSelector } from "react-redux";
+import { useAOS } from "../../CustomHooks/useAOS";
 
 const LandingPage = () => {
-  useEffect(() => {
-    AOS.init();
-    AOS.refresh();
-  }, []);
+  useAOS();
   const [loginVisible, setLoginVisible] = useState(false);
   const loggedUser = useSelector((state) => state.auth);
 

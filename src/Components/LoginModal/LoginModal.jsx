@@ -5,13 +5,12 @@ import strings from "../../Constants/strings";
 import { styles } from "./styles.ts";
 import InputForm from "../InputForm/InputForm";
 import Modal from "../Modal/Modal";
-import AOS from "aos";
-import "aos/dist/aos.css";
 import {
   signInUser,
   sendResetEmail
 } from "../../Utilities/AuthenticationUtils";
 import { AuthErrorCodes } from "firebase/auth";
+import { useAOS } from "../../CustomHooks/useAOS";
 
 const LoginModal = ({
   visible,
@@ -35,10 +34,7 @@ const LoginModal = ({
     setSuccessMessage(false);
   }, [visible]);
 
-  useEffect(() => {
-    AOS.init();
-    AOS.refresh();
-  }, []);
+  useAOS();
 
   const handleLoginPress = async () => {
     if (inForgotPassView) {

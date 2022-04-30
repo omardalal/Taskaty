@@ -1,14 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { styles } from "./styles.ts";
 import PropTypes from "prop-types";
-import AOS from "aos";
-import "aos/dist/aos.css";
+import { useAOS } from "../../CustomHooks/useAOS";
 
 const Modal = ({ children, visible, onOverlayClick }) => {
-  useEffect(() => {
-    AOS.init();
-    AOS.refresh();
-  }, []);
+  useAOS();
 
   if (!visible) {
     return null;
