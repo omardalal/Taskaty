@@ -81,7 +81,13 @@ const strings = {
   createNewClass: "Create new class",
   createNewProject: "Create new project",
   joinClass: "Join Class",
-  myProjects: "My Projects"
+  myProjects: "My Projects",
+  create: "Create",
+  courseName: "Course name",
+  courseCode: "Course code",
+  enterAccountCredentials: "Enter your account credentials",
+  enterCourseInfo: "Enter course information",
+  courseDescription: "Course Description"
 };
 
 export default strings;

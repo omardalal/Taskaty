@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { styles } from "./styles.ts";
 import ResultsContainer, {
   ResultIconTypes
@@ -6,8 +6,12 @@ import ResultsContainer, {
 import strings from "../../Constants/strings";
 import { Button } from "carbon-components-react";
 import useAuthRedirect from "../../CustomHooks/useAuthRedirect";
+import CreateClassModal from "../../Components/ClassModals/CreateClassModal/CreateClassModal";
 
 const ClassesPage = () => {
+  useAuthRedirect(true);
+
+  const [createClassModalVisible, setCreateClassModalVisible] = useState(false);
   const getRandomResults = () => {
     const results = [];
     for (let i = 1; i <= 15; i++) {
@@ -24,24 +28,36 @@ const ClassesPage = () => {
     return results;
   };
 
-  useAuthRedirect(true);
-
   const getRightButtons = () => (
     <>
       <Button kind="secondary">{strings.joinClass}</Button>
-      <Button>{strings.createNewClass}</Button>
+      <Button
+        onClick={() => {
+          setCreateClassModalVisible(true);
+        }}
+      >
+        {strings.createNewClass}
+      </Button>
     </>
   );
 
   return (
-    <div style={styles.classesContainer}>
-      <ResultsContainer
-        resultsTitle={strings.myClasses}
-        resultIconType={ResultIconTypes.Class}
-        results={getRandomResults()}
-        rightButtons={getRightButtons()}
+    <>
+      <CreateClassModal
+        onOverlayClick={() => setCreateClassModalVisible(false)}
+        onDismissPress={() => setCreateClassModalVisible(false)}
+        onLoginSucceed={() => setCreateClassModalVisible(false)}
+        visible={createClassModalVisible}
       />
-    </div>
+      <div style={styles.classesContainer}>
+        <ResultsContainer
+          resultsTitle={strings.myClasses}
+          resultIconType={ResultIconTypes.Class}
+          results={getRandomResults()}
+          rightButtons={getRightButtons()}
+        />
+      </div>
+    </>
   );
 };
 

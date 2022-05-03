@@ -1,22 +1,17 @@
-import React, { useEffect } from "react";
+import React from "react";
 import LandingPage from "./Views/LandingPage/LandingPage";
 import TopBar from "./Components/TopBar/TopBar";
 import "./App.css";
-import { useDispatch } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import SignUpPage from "./Views/SignUpPage/SignUpPage";
 import useAuth from "./CustomHooks/useAuth";
-import { setUser } from "./Redux/Actions";
 import SearchPage from "./Views/SearchPage/SearchPage";
 import ClassesPage from "./Views/ClassesPage/ClassesPage";
 import ProjectsPage from "./Views/ProjectsPage/ProjectsPage";
 
 const App = () => {
-  const loginState = useAuth();
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(setUser(loginState.user));
-  }, [loginState]);
+  useAuth();
+
   return (
     <BrowserRouter>
       <TopBar />
