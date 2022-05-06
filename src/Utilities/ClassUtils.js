@@ -45,7 +45,7 @@ export const returnGroups = async (classSectionId, classRoomId) => {
   const classDoc = await getDoc(classDocRef);
   const classData = classDoc.data();
   const sections = classData.Sections;
-  console.log(sections[classSectionId - 1]);
+  return sections[classSectionId - 1];
 };
 // add user to class
 export const addToClass = async (classId, sectionNumber, userId) => {
@@ -104,8 +104,48 @@ export const addGroupInvitation = async (fromUserId, toUserId, groupId) => {
   });
 };
 
-export const createClass = async () => {
-  return await addDoc(collection(getFirebaseDb(), "Class"), {});
+export const createClass = async (
+  className,
+  classCode,
+  description,
+  instructorId
+) => {
+  const instructorRef = doc(getFirebaseDb(), "users", instructorId);
+  return await addDoc(collection(getFirebaseDb(), "Class"), {
+    courseCode: classCode,
+    courseDesc: description,
+    courseName: className,
+    instructor: instructorRef
+  });
+};
+// create announcement for specific class
+export const createAnnouncement = async (title, body, classId) => {
+  const classRef = doc(getFirebaseDb(), "Class", classId);
+  return await updateDoc(classRef, {
+    announcements: arrayUnion({
+      title: title,
+      body: body
+    })
+  });
+};
+// create section for specific class
+export const createSection = async (
+  maxNumOfGroups,
+  maxStudentInGroup,
+  classId
+) => {
+  const classRef = doc(getFirebaseDb(), "Class", classId);
+  const classDoc = await getDoc(classRef);
+  const classes = classDoc.data();
+  const sections = classes.Sections;
+  console.log(sections.length);
+  return await updateDoc(classRef, {
+    Sections: arrayUnion({
+      maxNumOfGroups: maxNumOfGroups,
+      maxStudentsInGroup: maxStudentInGroup,
+      sectionNumber: sections.length + 1
+    })
+  });
 };
 // create group for specific section in a class
 export const createGroupForSection = async (
