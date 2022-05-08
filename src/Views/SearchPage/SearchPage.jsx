@@ -15,9 +15,8 @@ import {
   universities,
   cities
 } from "../../Constants/lookupConstants";
-import ResultsContainer, {
-  ResultIconTypes
-} from "../../Components/ResultsContainer/ResultsContainer";
+import ResultsContainer from "../../Components/ResultsContainer/ResultsContainer";
+import { ResultIconTypes } from "../../Components/ResultItem/ResultItem";
 import useMediaQuery from "../../CustomHooks/useMediaQuery";
 import { getSearchResultsByFilters } from "../../Utilities/SearchUtils";
 

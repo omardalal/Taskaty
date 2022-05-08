@@ -6,13 +6,13 @@ import PropTypes from "prop-types";
 import CustomButton from "../../Components/CustomButton/CustomButton";
 import LoginModal from "../../Components/LoginModal/LoginModal";
 import { blue60 } from "@carbon/colors";
-import { useSelector } from "react-redux";
 import { useAOS } from "../../CustomHooks/useAOS";
+import useAuth from "../../CustomHooks/useAuth";
 
 const LandingPage = () => {
   useAOS();
   const [loginVisible, setLoginVisible] = useState(false);
-  const loggedUser = useSelector((state) => state.auth);
+  const loggedUser = useAuth();
 
   const getFeatures = () => (
     <>
@@ -41,7 +41,7 @@ const LandingPage = () => {
     <div className={"landingPageSignupBox"} data-aos="fade-up">
       <h1>{strings.landingPageSignUpTitle}</h1>
       <h3>{strings.landingPageSignUpDescription}</h3>
-      {loggedUser ? (
+      {loggedUser?.user ? (
         <CustomButton
           to="/"
           text={strings.visitYourProfile}

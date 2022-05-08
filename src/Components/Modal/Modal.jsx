@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { styles } from "./styles.ts";
 import PropTypes from "prop-types";
 import { useAOS } from "../../CustomHooks/useAOS";
@@ -6,13 +6,28 @@ import { useAOS } from "../../CustomHooks/useAOS";
 const Modal = ({ children, visible, onOverlayClick }) => {
   useAOS();
 
-  if (!visible) {
+  const [hidden, setHidden] = useState(visible);
+
+  useEffect(() => {
+    if (!visible) {
+      const timeout = setTimeout(() => {
+        setHidden(true);
+      }, 200);
+
+      return () => {
+        clearTimeout(timeout);
+      };
+    }
+    setHidden(false);
+  }, [visible]);
+
+  if (hidden) {
     return null;
   }
 
   return (
     <div
-      style={styles.overlay}
+      style={styles.overlay(visible)}
       data-aos={"fade-in"}
       onClick={(evt) => {
         if (evt.target === evt.currentTarget) {

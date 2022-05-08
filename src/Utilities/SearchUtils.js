@@ -37,7 +37,9 @@ export const getSearchResultsByFilters = async ({
       return (
         result.firstName.toLowerCase().includes(name.toLowerCase()) ||
         result.lastName.toLowerCase().includes(name.toLowerCase()) ||
-        (result.firstName+result.lastName).toLowerCase().includes(name.toLowerCase())
+        (result.firstName + " " + result.lastName)
+          .toLowerCase()
+          .includes(name.toLowerCase())
       );
     });
   }

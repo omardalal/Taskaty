@@ -34,6 +34,20 @@ const LoginModal = ({
     setSuccessMessage(false);
   }, [visible]);
 
+  useEffect(() => {
+    document.addEventListener("keydown", (e) => {
+      if (e.code === "Enter") {
+        handleLoginPress();
+      }
+    });
+    return () =>
+      document.removeEventListener("keydown", (e) => {
+        if (e.code === "Enter") {
+          handleLoginPress();
+        }
+      });
+  });
+
   useAOS();
 
   const handleLoginPress = async () => {
@@ -124,7 +138,7 @@ const LoginModal = ({
       <div style={styles.formContainer} data-aos="fade-up">
         <InputForm
           titleText={strings.login}
-          descriptionText={"Enter your account credentials"}
+          descriptionText={strings.enterAccountCredentials}
           buttonText={inForgotPassView ? strings.sendResetEmail : strings.login}
           buttonOnClick={handleLoginPress}
           FormElement={getLoginForm()}
