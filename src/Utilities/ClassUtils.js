@@ -192,3 +192,28 @@ export const returnProject = async (projectRef) => {
   const projectDoc = await getDoc(projectDocRef);
   return projectDoc.data();
 };
+// return the name and the section number of the student if exists in the class
+export const isInClass = async (classId, userId) => {
+  const userRef = doc(getFirebaseDb(), "users", userId);
+  const classRef = doc(getFirebaseDb(), "Class", classId);
+  const classDoc = await getDoc(classRef);
+  const userDoc = await getDoc(userRef);
+  const userData = userDoc.data();
+  const classData = classDoc.data();
+  const students = classData.students;
+
+  let student;
+  students.forEach(async (Student) => {
+    const studentId = Student.studentRef;
+
+    if (studentId.path === userRef.path) {
+      const studentInfo = {
+        name: userData.firstName + " " + userData.lastName,
+        sectionNumber: Student.sectionNumber
+      };
+
+      student = studentInfo;
+    }
+  });
+  return await student;
+};
