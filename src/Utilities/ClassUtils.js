@@ -104,7 +104,7 @@ export const addGroupInvitation = async (fromUserId, toUserId, groupId) => {
     toUser: toUserRef
   });
 };
-
+// create class , has empty sections and announcements
 export const createClass = async (
   className,
   classCode,
