@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore";
 import { getFirebaseDb } from "./FirebaseUtils";
 
+// return the classes using the user ID
 export const getClasses = async (userId) => {
   if (!userId) {
     return;
