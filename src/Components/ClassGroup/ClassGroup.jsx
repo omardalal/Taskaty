@@ -5,8 +5,17 @@ import PropTypes from "prop-types";
 import { UserFollow20 } from "@carbon/icons-react";
 
 // usersArray: Array of {firstName, lastName, userId}
-const ClassGroup = ({ groupId, groupName, usersArray, long }) => {
-  const [focused, setFocused] = useState(false);
+const ClassGroup = ({
+  groupId,
+  groupName,
+  usersArray,
+  long,
+  hideLeftBtn,
+  hideRightBtn,
+  rightBtnDisabled
+}) => {
+  const [rightBtnFocused, setRightBtnFocused] = useState(false);
+  const [leftBtnFocused, setLeftBtnFocused] = useState(false);
 
   const getUserRow = (username, userId) => (
     <div style={styles.nameRow}>
@@ -29,19 +38,38 @@ const ClassGroup = ({ groupId, groupName, usersArray, long }) => {
       </div>
       <div style={styles.namesContainer(long)}>
         {usersArray.map((user) =>
-          getUserRow(`${user.firstName} ${user.lastName}`, user.userId)
+          getUserRow(`${user.firstName} ${user.lastName}`, user.id)
         )}
       </div>
       {groupId && (
-        <div
-          style={styles.requestToJoinBtn(focused)}
-          onMouseEnter={() => setFocused(true)}
-          onMouseLeave={() => setFocused(false)}
-          onClick={() => {
-            console.log(`Request to join group with Id: ${groupId}`);
-          }}
-        >
-          {strings.requestToJoin}
+        <div style={styles.bottomButtonsContainer}>
+          {!hideLeftBtn && (
+            <div
+              style={styles.leftBtn(leftBtnFocused)}
+              onMouseEnter={() => setLeftBtnFocused(true)}
+              onMouseLeave={() => setLeftBtnFocused(false)}
+              onClick={() => {
+                console.log("Visit Project");
+              }}
+            >
+              {strings.visitProject}
+            </div>
+          )}
+          {!hideRightBtn && (
+            <div
+              style={styles.rightBtn(rightBtnFocused, rightBtnDisabled)}
+              onMouseEnter={() => setRightBtnFocused(true)}
+              onMouseLeave={() => setRightBtnFocused(false)}
+              onClick={() => {
+                if (rightBtnDisabled) {
+                  return;
+                }
+                console.log(`Request to join group with Id: ${groupId}`);
+              }}
+            >
+              {strings.requestToJoin}
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -52,7 +80,10 @@ ClassGroup.propTypes = {
   usersArray: PropTypes.array,
   groupId: PropTypes.string,
   groupName: PropTypes.string,
-  long: PropTypes.boolean
+  long: PropTypes.bool,
+  hideLeftBtn: PropTypes.bool,
+  hideRightBtn: PropTypes.bool,
+  rightBtnDisabled: PropTypes.bool
 };
 
 export default ClassGroup;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import useAuthRedirect from "../../CustomHooks/useAuthRedirect";
 import { styles } from "./styles.ts";
@@ -8,10 +8,59 @@ import AnnouncementsPage from "./AnnouncementsPage";
 import CreateAnnouncementModal from "../../Components/ClassModals/CreateAnnouncementModal";
 import CreateGroupModal from "../../Components/ClassModals/CreateGroupModal";
 import GroupsPage from "./GroupsPage";
+import { useFetchClasses } from "../../CustomHooks/useFetchClasses";
+import { getGroup } from "../../Utilities/ClassUtils";
 
 const SectionPage = () => {
-  useAuthRedirect(true);
+  const loggedUser = useAuthRedirect(true);
+
   const { classId, sectionId } = useParams();
+  const classDetails = useFetchClasses(classId);
+
+  const [sectionGroups, setSectionGroups] = useState([]);
+  const [availableList, setAvailableList] = useState([]);
+
+  useEffect(() => {
+    if (!classDetails) {
+      return;
+    }
+
+    if (sectionGroups.length) {
+      return;
+    }
+
+    const sectionDetails = classDetails.Sections?.[Number(sectionId) - 1];
+    let allStudentsInSection = classDetails.students?.filter(
+      (student) => student.sectionNumber === sectionDetails?.sectionNumber
+    );
+
+    const getGroupsBySection = async (studentsArray, groupsArray) => {
+      const groups = await Promise.all(
+        groupsArray?.map(async (group) => {
+          const groupInfo = await getGroup(group.id);
+          const groupStudents = groupInfo?.students
+            ?.map((groupStudent) => {
+              allStudentsInSection = allStudentsInSection.filter(
+                (student) => groupStudent.userRef.id !== student.id
+              );
+              return studentsArray?.find(
+                (student) => student.id === groupStudent.userRef.id
+              );
+            })
+            ?.filter((student) => student != null);
+          return { ...groupInfo, students: groupStudents, id: group.id };
+        })
+      );
+      return { groups: groups, availableList: allStudentsInSection };
+    };
+
+    getGroupsBySection(classDetails.students, sectionDetails?.groups)
+      .then((groupsInfo) => {
+        setSectionGroups(groupsInfo.groups);
+        setAvailableList(groupsInfo.availableList);
+      })
+      .catch((err) => console.error(`Failed to fetch groups, Error=${err}`));
+  }, [classDetails]);
 
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -56,21 +105,33 @@ const SectionPage = () => {
         />
         <div style={styles.tabPage}>
           {selectedIndex === 0 && (
-            <SectionHomePage classId={classId} sectionId={sectionId} />
+            <SectionHomePage
+              classDetails={classDetails}
+              sectionId={sectionId}
+            />
           )}
           {selectedIndex === 1 && (
             <GroupsPage
+              classDetails={classDetails}
               setCreateGroupModalVisible={setCreateGroupModalVisible}
-              classId={classId}
               sectionId={sectionId}
+              availableList={availableList}
+              sectionGroups={sectionGroups}
+              loggedUser={loggedUser}
+              isInstructor={
+                classDetails.instructor?.id === loggedUser?.user?.email
+              }
             />
           )}
           {selectedIndex === 2 && (
             <AnnouncementsPage
-              classId={classId}
-              sectionId={sectionId}
+              classDetails={classDetails}
+              loggedUser={loggedUser}
               setCreateAnnouncementModalVisible={
                 setCreateAnnouncementModalVisible
+              }
+              isInstructor={
+                classDetails.instructor?.id === loggedUser?.user?.email
               }
             />
           )}

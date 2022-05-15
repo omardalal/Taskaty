@@ -6,12 +6,14 @@ import { styles } from "./styles.ts";
 import InputForm from "../InputForm/InputForm";
 import Modal from "../Modal/Modal";
 import { useAOS } from "../../CustomHooks/useAOS";
+import { createClass } from "../../Utilities/ClassUtils";
 
 const CreateClassModal = ({
   visible,
   onOverlayClick,
   onDismissPress,
-  onSuccess
+  onSuccess,
+  loggedUser
 }) => {
   const formInitialState = {
     courseName: "",
@@ -40,6 +42,22 @@ const CreateClassModal = ({
       !formData.courseDescription
     ) {
       setShowError(true);
+      return;
+    }
+    try {
+      await createClass(
+        formData.courseName,
+        formData.courseCode,
+        formData.courseDescription,
+        loggedUser?.user?.email
+      );
+      setSuccessMessage(true);
+      setAlertMessage("Class Created!");
+      setTimeout(() => {
+        onSuccess?.();
+      }, 1000);
+    } catch (error) {
+      setAlertMessage("Something went wrong!");
     }
   };
 
@@ -108,7 +126,8 @@ CreateClassModal.propTypes = {
   visible: PropTypes.bool,
   onDismissPress: PropTypes.func,
   onOverlayClick: PropTypes.func,
-  onSuccess: PropTypes.func
+  onSuccess: PropTypes.func,
+  loggedUser: PropTypes.object
 };
 
 export default CreateClassModal;

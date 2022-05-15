@@ -1,5 +1,5 @@
 import { CSSProperties } from "react";
-import { gray10 } from "@carbon/colors";
+import { gray10, gray20 } from "@carbon/colors";
 
 export const styles = {
   mainContainer: {
@@ -76,6 +76,12 @@ export const styles = {
   announcementH5: {
     fontSize: 18,
     fontWeight: "500",
+    marginTop: 15,
+    marginBottom: 7.5
+  } as CSSProperties,
+  descH5: {
+    fontSize: 18,
+    fontWeight: "500",
     marginTop: 15
   } as CSSProperties,
   announcementAttachments: {
@@ -103,5 +109,18 @@ export const styles = {
   availableListContainer: {
     display: "flex",
     flex: 1
+  } as CSSProperties,
+  homeMainContainer: {
+    width: "100%"
+  } as CSSProperties,
+  joinCode: {
+    backgroundColor: gray20,
+    padding: "0 10px",
+    margin: "10px 0 5px 0",
+    width: "fit-content"
+  } as CSSProperties,
+  joinHint: {
+    opacity: 0.75,
+    fontSize: 14
   } as CSSProperties
 };

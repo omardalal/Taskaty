@@ -7,29 +7,14 @@ import { Button } from "carbon-components-react";
 import useAuthRedirect from "../../CustomHooks/useAuthRedirect";
 import CreateClassModal from "../../Components/ClassModals/CreateClassModal";
 import JoinClassModal from "../../Components/ClassModals/JoinClassModal";
+import { useFetchClasses } from "../../CustomHooks/useFetchClasses";
 
 const ClassesPage = () => {
-  useAuthRedirect(true);
+  const loggedUser = useAuthRedirect(true);
 
   const [createClassModalVisible, setCreateClassModalVisible] = useState(false);
   const [joinClassModalVisible, setJoinClassModalVisible] = useState(false);
-  const getRandomResults = () => {
-    const results = [];
-    for (let i = 1; i <= 15; i++) {
-      const title = "Course #" + i;
-      const subtitle = "COMP00" + i < 10 ? `0${i}` : i;
-      const extraInfo = "Section #" + Math.floor(Math.random() * 5);
-      const visitURL = "/class/123";
-      results.push({
-        title: title,
-        subtitle: subtitle,
-        extraInfo: extraInfo,
-        buttonText: strings.visitClass,
-        visitURL: visitURL
-      });
-    }
-    return results;
-  };
+  const userClasses = useFetchClasses();
 
   const getRightButtons = () => (
     <>
@@ -56,20 +41,22 @@ const ClassesPage = () => {
       <CreateClassModal
         onOverlayClick={() => setCreateClassModalVisible(false)}
         onDismissPress={() => setCreateClassModalVisible(false)}
-        onLoginSucceed={() => setCreateClassModalVisible(false)}
+        onSuccess={() => setJoinClassModalVisible(false)}
         visible={createClassModalVisible}
+        loggedUser={loggedUser}
       />
       <JoinClassModal
         onOverlayClick={() => setJoinClassModalVisible(false)}
         onDismissPress={() => setJoinClassModalVisible(false)}
-        onLoginSucceed={() => setJoinClassModalVisible(false)}
+        onSuccess={() => setJoinClassModalVisible(false)}
         visible={joinClassModalVisible}
+        loggedUser={loggedUser}
       />
       <div style={styles.classesContainer}>
         <ResultsContainer
           resultsTitle={strings.myClasses}
           resultIconType={ResultIconTypes.Class}
-          results={getRandomResults()}
+          results={userClasses}
           rightButtons={getRightButtons()}
         />
       </div>

@@ -8,21 +8,26 @@ import {
   updateDoc,
   arrayUnion
 } from "firebase/firestore";
-import { getFirebaseAuth, getFirebaseDb } from "./FirebaseUtils";
+import { getFirebaseDb } from "./FirebaseUtils";
 
-export const getClasses = async () => {
-  const user = getFirebaseAuth().currentUser;
-
-  const userRef = doc(getFirebaseDb(), "users", user.email);
+export const getClasses = async (userId) => {
+  if (!userId) {
+    return;
+  }
+  const userRef = doc(getFirebaseDb(), "users", userId);
   const q = query(collection(getFirebaseDb(), "Class"));
   const querySnapshot = await getDocs(q);
   const classes = [];
   querySnapshot.forEach((doc) => {
     const data = doc.data();
     const arr = data.students;
+    if (data.instructor.id === userId) {
+      classes.push({ ...doc.data(), ...{ id: doc.id } });
+      return;
+    }
     arr.forEach((index) => {
       if (index.studentRef.id === userRef.id) {
-        classes.push(doc.data());
+        classes.push({ ...doc.data(), ...{ id: doc.id } });
       }
     });
   });
@@ -30,21 +35,26 @@ export const getClasses = async () => {
   return classes;
 };
 
-export const getSections = (classRoom) => {
-  return classRoom.Sections;
+// return sections in specific class
+export const returnSections = async (classRoomID) => {
+  const classDocRef = doc(getFirebaseDb(), "Class", classRoomID);
+  const classDoc = await getDoc(classDocRef);
+  const classData = classDoc.data();
+  return classData.Sections;
 };
 
-export const getGroups = (classSection) => {
-  return classSection.groups;
+// return the groups in specific section
+export const returnGroups = async (classSectionId, classRoomId) => {
+  const classDocRef = doc(getFirebaseDb(), "Class", classRoomId);
+  const classDoc = await getDoc(classDocRef);
+  const classData = classDoc.data();
+  const sections = classData.Sections;
+  return sections[classSectionId - 1];
 };
 
-export const addToClass = async (link1) => {
-  const paramString = link1.split("?")[1];
-  const queryString = new URLSearchParams(paramString);
-  const classId = queryString.get("classroomId");
-  const sectionNumber = queryString.get("sectionNumber");
-  const user = getFirebaseAuth().currentUser;
-  const userRef = doc(getFirebaseDb(), "users", user.email);
+// add user to class
+export const addToClass = async (classId, sectionNumber, userId) => {
+  const userRef = doc(getFirebaseDb(), "users", userId);
   return await updateDoc(doc(getFirebaseDb(), "Class", classId), {
     students: arrayUnion({
       sectionNumber: parseInt(sectionNumber),
@@ -53,15 +63,11 @@ export const addToClass = async (link1) => {
   });
 };
 
-export const addToGroup = async (link1) => {
-  const paramString = link1.split("?")[1];
-  const queryString = new URLSearchParams(paramString);
-  const groupId = queryString.get("groupId");
+// add user to group
+export const addToGroup = async (groupId, user) => {
   const groupRef = doc(getFirebaseDb(), "Group", groupId);
-  const fromUser = queryString.get("fromUser");
-  const fromUserRef = doc(getFirebaseDb(), "users", fromUser);
-  const user = getFirebaseAuth().currentUser;
-  const userRef = doc(getFirebaseDb(), "users", user.email);
+
+  const userRef = doc(getFirebaseDb(), "users", user);
 
   const q = query(collection(getFirebaseDb(), "Class"));
   const querySnapshot = await getDocs(q);
@@ -88,14 +94,9 @@ export const addToGroup = async (link1) => {
   });
 };
 
-export const addGroupInvitation = async (groupLink) => {
-  const paramString = groupLink.split("?")[1];
-  const queryString = new URLSearchParams(paramString);
-  const fromUser = queryString.get("fromUser");
-  const toUser = queryString.get("toUser");
-  const groupId = queryString.get("groupId");
-  const fromUserRef = doc(getFirebaseDb(), "users", fromUser);
-  const toUserRef = doc(getFirebaseDb(), "users", toUser);
+export const addGroupInvitation = async (fromUserId, toUserId, groupId) => {
+  const fromUserRef = doc(getFirebaseDb(), "users", fromUserId);
+  const toUserRef = doc(getFirebaseDb(), "users", toUserId);
   const groupRef = doc(getFirebaseDb(), "Group", groupId);
   return await addDoc(collection(getFirebaseDb(), "Group Invitation"), {
     fromUser: fromUserRef,
@@ -104,28 +105,63 @@ export const addGroupInvitation = async (groupLink) => {
   });
 };
 
-// pass the sections array, announcements array and students array
-export const createClass = async (sections, announcements, students) => {
+export const createClass = async (
+  className,
+  classCode,
+  description,
+  instructorId
+) => {
+  const instructorRef = doc(getFirebaseDb(), "users", instructorId);
   return await addDoc(collection(getFirebaseDb(), "Class"), {
-    Sections: sections,
-    announcements: announcements,
-    students: students
+    courseCode: classCode,
+    courseDesc: description,
+    courseName: className,
+    instructor: instructorRef
   });
 };
 
+// create announcement for specific class
+export const createAnnouncement = async (title, body, classId) => {
+  const classRef = doc(getFirebaseDb(), "Class", classId);
+  return await updateDoc(classRef, {
+    announcements: arrayUnion({
+      title: title,
+      body: body
+    })
+  });
+};
+
+// create section for specific class
+export const createSection = async (
+  maxNumOfGroups,
+  maxStudentInGroup,
+  classId
+) => {
+  const classRef = doc(getFirebaseDb(), "Class", classId);
+  const classDoc = await getDoc(classRef);
+  const classes = classDoc.data();
+  const sections = classes.Sections;
+  return await updateDoc(classRef, {
+    Sections: arrayUnion({
+      maxNumOfGroups: maxNumOfGroups,
+      maxStudentsInGroup: maxStudentInGroup,
+      sectionNumber: sections?.length + 1 ?? 1
+    })
+  });
+};
+
+// create group for specific section in a class
 export const createGroupForSection = async (
   groupName,
-  project,
-  students,
+  projectId,
   classId,
   sectionNumber
 ) => {
   const classRef = doc(getFirebaseDb(), "Class", classId);
-
+  const projectRef = doc(getFirebaseDb(), "Project", projectId);
   const groupRef = await addDoc(collection(getFirebaseDb(), "Group"), {
     groupName: groupName,
-    project: project,
-    students: students
+    project: projectRef
   });
   const sectionArr = (await getDoc(classRef)).data().Sections;
   const groupArr = sectionArr[sectionNumber - 1].groups;
@@ -138,20 +174,23 @@ export const createGroupForSection = async (
   });
 };
 
+// returns group data from Group collection
 export const getGroup = async (groupRef) => {
-  const groupDoc = doc(getFirebaseDb(), "Group", groupRef);
-  const docSnap = await getDoc(groupDoc);
-  return docSnap.data();
+  const groupDocRef = doc(getFirebaseDb(), "Group", groupRef);
+  const groupDoc = await getDoc(groupDocRef);
+  return groupDoc.data();
 };
 
-export const getStudent = async (studentRef) => {
-  const studentDoc = await doc(getFirebaseDb(), "users", studentRef);
-  const docSnap = await getDoc(studentDoc);
-  return docSnap.data();
+// returns user information from users collection
+export const getUser = async (userRef) => {
+  const usersDocRef = doc(getFirebaseDb(), "users", userRef);
+  const usersDoc = await getDoc(usersDocRef);
+  return usersDoc.data();
 };
 
+// returns project information from Project collection
 export const getProject = async (projectRef) => {
-  const projectDoc = await doc(getFirebaseDb(), "Project", projectRef);
-  const docSnap = await getDoc(projectDoc);
-  return docSnap.data();
+  const projectDocRef = doc(getFirebaseDb(), "Project", projectRef);
+  const projectDoc = await getDoc(projectDocRef);
+  return projectDoc.data();
 };

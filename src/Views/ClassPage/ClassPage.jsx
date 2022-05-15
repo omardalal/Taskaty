@@ -6,9 +6,12 @@ import AnnouncementsPage from "../SectionPage/AnnouncementsPage";
 import { useParams } from "react-router-dom";
 import ClassSectionsPage from "./ClassSectionsPage";
 import CreateSectionModal from "../../Components/ClassModals/CreateSectionModal";
+import { useFetchClasses } from "../../CustomHooks/useFetchClasses";
+import useAuthRedirect from "../../CustomHooks/useAuthRedirect";
 
 const ClassPage = () => {
   const { classId } = useParams();
+  const loggedUser = useAuthRedirect(true);
 
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -16,6 +19,8 @@ const ClassPage = () => {
     useState(false);
   const [createSectionModalVisible, setCreateSectionModalVisible] =
     useState(false);
+
+  const classDetails = useFetchClasses(classId);
 
   const getCreateAnnouncementModal = () => (
     <CreateAnnouncementModal
@@ -32,12 +37,10 @@ const ClassPage = () => {
   const getCreateSectionModal = () => (
     <CreateSectionModal
       visible={createSectionModalVisible}
-      courseCode={"COMP334"}
-      newSectionId={"4"}
+      classId={classDetails?.id}
       onDismissPress={() => setCreateSectionModalVisible(false)}
       onOverlayClick={() => setCreateSectionModalVisible(false)}
       onSuccess={() => {
-        console.log("Create Section!");
         setCreateSectionModalVisible(false);
       }}
     />
@@ -56,13 +59,21 @@ const ClassPage = () => {
         <div style={styles.tabPage}>
           {selectedIndex === 0 && (
             <ClassSectionsPage
-              classId={classId}
+              classDetails={classDetails}
               setCreateSectionModalVisible={setCreateSectionModalVisible}
+              isInstructor={
+                classDetails.instructor?.id === loggedUser?.user?.email
+              }
+              loggedUser={loggedUser}
             />
           )}
           {selectedIndex === 1 && (
             <AnnouncementsPage
-              classId={classId}
+              loggedUser={loggedUser}
+              classDetails={classDetails}
+              isInstructor={
+                classDetails.instructor?.id === loggedUser?.user?.email
+              }
               setCreateAnnouncementModalVisible={
                 setCreateAnnouncementModalVisible
               }

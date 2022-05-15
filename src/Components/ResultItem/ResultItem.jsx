@@ -21,7 +21,8 @@ const ResultItem = ({
   title,
   subtitle,
   extraInfo,
-  onPressGoToUrl
+  onPressGoToUrl,
+  btnDisabled
 }) => {
   const [mouseOver, setMouseOver] = useState(false);
 
@@ -47,16 +48,20 @@ const ResultItem = ({
         <h5 style={styles.resultItemSubtitle}>{extraInfo}</h5>
       </div>
       <div
-        style={styles.resultItemVisitBtn(mouseOver, !!onPressGoToUrl)}
+        style={styles.resultItemVisitBtn(
+          mouseOver,
+          !!onPressGoToUrl,
+          btnDisabled
+        )}
         onMouseEnter={() => setMouseOver(true)}
         onMouseLeave={() => setMouseOver(false)}
       >
-        {onPressGoToUrl ? (
+        {onPressGoToUrl && !btnDisabled ? (
           <Link to={onPressGoToUrl} style={styles.btnLink}>
             {buttonText}
           </Link>
         ) : (
-          <>{buttonText}</>
+          <div style={styles.btnLink}>{buttonText}</div>
         )}
       </div>
     </div>
@@ -69,7 +74,8 @@ ResultItem.propTypes = {
   title: PropTypes.string,
   subtitle: PropTypes.string,
   extraInfo: PropTypes.string,
-  onPressGoToUrl: PropTypes.string
+  onPressGoToUrl: PropTypes.string,
+  btnDisabled: PropTypes.bool
 };
 
 export default ResultItem;

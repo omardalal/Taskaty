@@ -1,5 +1,5 @@
 import { CSSProperties } from "react";
-import { blue60, blue60Hover } from "@carbon/colors";
+import { blue60, blue60Hover, gray60 } from "@carbon/colors";
 
 export const styles = {
   resultItemIcon: {
@@ -38,17 +38,24 @@ export const styles = {
     fontWeight: 300,
     fontSize: 14
   } as CSSProperties,
-  resultItemVisitBtn: (focused: boolean, hasLink: boolean) =>
+  resultItemVisitBtn: (
+    focused: boolean,
+    hasLink: boolean,
+    btnDisabled: boolean
+  ) =>
     ({
       marginTop: "auto",
       padding: hasLink ? 0 : "15px 0",
-      background: focused ? blue60Hover : blue60,
       color: "white",
       width: "100%",
       borderRadius: "0 0 10px 10px",
       fontWeight: 500,
-      cursor: "pointer",
-      transition: "0.3s"
+      transition: "0.3s",
+      ...(!btnDisabled && {
+        backgroundColor: focused ? blue60Hover : blue60,
+        cursor: "pointer"
+      }),
+      ...(btnDisabled && { backgroundColor: gray60, cursor: "default" })
     } as CSSProperties),
   btnLink: {
     color: "white",

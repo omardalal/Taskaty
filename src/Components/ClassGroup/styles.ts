@@ -1,4 +1,11 @@
-import { gray10, gray80, gray80Hover } from "@carbon/colors";
+import {
+  gray10,
+  gray80,
+  gray80Hover,
+  green50,
+  gray40,
+  green50Hover
+} from "@carbon/colors";
 import { CSSProperties } from "react";
 
 export const styles = {
@@ -38,9 +45,13 @@ export const styles = {
       maxHeight: long ? "100%" : 191,
       overflowY: "auto"
     } as CSSProperties),
-  requestToJoinBtn: (focused: boolean) =>
+  rightBtn: (focused: boolean, disabled: boolean) =>
     ({
-      backgroundColor: focused ? gray80Hover : gray80,
+      ...(!disabled && {
+        backgroundColor: focused ? gray80Hover : gray80,
+        cursor: "pointer"
+      }),
+      ...(disabled && { backgroundColor: gray40, cursor: "default" }),
       color: "white",
       fontSize: 14,
       width: 132,
@@ -48,11 +59,27 @@ export const styles = {
       marginTop: "auto",
       padding: "10px 16px",
       borderRadius: "0 0 10px 0",
+
+      transition: "0.3s"
+    } as CSSProperties),
+  leftBtn: (focused: boolean) =>
+    ({
+      backgroundColor: focused ? green50Hover : green50,
+      color: "white",
+      fontSize: 14,
+      width: 132,
+      marginRight: "auto",
+      padding: "10px 16px",
+      borderRadius: "0 0 0 10px",
       cursor: "pointer",
       transition: "0.3s"
     } as CSSProperties),
   iconBtnContainer: {
     padding: "5px 10px",
     cursor: "pointer"
+  } as CSSProperties,
+  bottomButtonsContainer: {
+    marginTop: "auto",
+    display: "flex"
   } as CSSProperties
 };

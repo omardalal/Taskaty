@@ -20,6 +20,8 @@ const useAuthRedirect = (requiresAuth) => {
       navigate("/signUp", { replace: true });
     }
   }, [loggedUser]);
+
+  return loggedUser;
 };
 
 export default useAuthRedirect;

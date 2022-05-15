@@ -6,15 +6,17 @@ import { styles } from "./styles.ts";
 import InputForm from "../InputForm/InputForm";
 import Modal from "../Modal/Modal";
 import { useAOS } from "../../CustomHooks/useAOS";
+import { addToClass } from "../../Utilities/ClassUtils";
 
 const JoinClassModal = ({
   visible,
   onOverlayClick,
   onDismissPress,
-  onSuccess
+  onSuccess,
+  loggedUser
 }) => {
   const formInitialState = {
-    invitationUrl: ""
+    joinCode: ""
   };
 
   const [formData, setFormData] = useState(formInitialState);
@@ -32,21 +34,36 @@ const JoinClassModal = ({
   useAOS();
 
   const handleSubmitPress = async () => {
-    if (!formData.invitationUrl) {
+    if (!formData.joinCode) {
       setShowError(true);
+      return;
+    }
+
+    const input = atob(formData.joinCode).split("-");
+    try {
+      await addToClass(input[0], input[1], loggedUser?.user?.email);
+      setSuccessMessage(true);
+      setAlertMessage("Joined Section!");
+      setTimeout(() => {
+        onSuccess?.();
+      }, 1000);
+    } catch (error) {
+      setAlertMessage(
+        "Something went wrong! Please make sure the code is valid!"
+      );
     }
   };
 
   const getForm = () => (
     <>
       <TextInput
-        invalid={showError && !formData.invitationUrl}
+        invalid={showError && !formData.joinCode}
         invalidText={strings.fieldRequired}
         data-modal-primary-focus
-        labelText={strings.invitationLink}
-        placeholder={strings.invitationLink}
+        labelText={strings.joinCode}
+        placeholder={strings.joinCode}
         onChange={(evt) => {
-          setFormData({ ...formData, invitationUrl: evt.target?.value });
+          setFormData({ ...formData, joinCode: evt.target?.value });
         }}
         light
       />
@@ -57,8 +74,8 @@ const JoinClassModal = ({
     <Modal visible={visible} onOverlayClick={onOverlayClick}>
       <div style={styles.formContainer} data-aos="fade-up">
         <InputForm
-          titleText={strings.invitationLink}
-          descriptionText={strings.enterInvitationLink}
+          titleText={strings.joinClass}
+          descriptionText={strings.enterJoinCode}
           buttonText={strings.join}
           buttonOnClick={handleSubmitPress}
           FormElement={getForm()}
@@ -78,7 +95,8 @@ JoinClassModal.propTypes = {
   visible: PropTypes.bool,
   onDismissPress: PropTypes.func,
   onOverlayClick: PropTypes.func,
-  onSuccess: PropTypes.func
+  onSuccess: PropTypes.func,
+  loggedUser: PropTypes.object
 };
 
 export default JoinClassModal;

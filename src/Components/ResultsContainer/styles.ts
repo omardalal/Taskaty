@@ -7,7 +7,8 @@ export const styles = {
     flexDirection: "column",
     backgroundColor: gray10,
     borderRadius: 10,
-    minHeight: 850
+    minHeight: 850,
+    flex: 1
   } as CSSProperties,
   paginationContainer: {
     borderRadius: "0 0 10px 10px",

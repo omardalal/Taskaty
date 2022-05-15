@@ -55,7 +55,7 @@ const Attachment = ({
 Attachment.propTypes = {
   fileName: PropTypes.string,
   fileType: PropTypes.string,
-  showDeleteBtn: PropTypes.boolean,
+  showDeleteBtn: PropTypes.bool,
   onDeletePress: PropTypes.func,
   onDownloadPress: PropTypes.func,
   light: PropTypes.bool,

@@ -6,26 +6,40 @@ import ResultItem, {
   ResultIconTypes
 } from "../../Components/ResultItem/ResultItem";
 
-const ClassSectionsPage = ({ classId, setCreateSectionModalVisible }) => {
+const ClassSectionsPage = ({
+  classDetails,
+  setCreateSectionModalVisible,
+  isInstructor,
+  loggedUser
+}) => {
+  const getUserSection = () =>
+    classDetails.students?.find(
+      (student) => student.id === loggedUser.user?.email
+    )?.sectionNumber;
+
   const getSections = () => {
-    const sectionsArray = [
-      { sectionId: "123", studentsCount: 24, groupsCount: 12 },
-      { sectionId: "345", studentsCount: 35, groupsCount: 7 },
-      { sectionId: "678", studentsCount: 40, groupsCount: 14 }
-    ];
+    const studentsCount = classDetails.students?.length;
     return (
       <>
-        {sectionsArray.map((section, index) => (
-          <ResultItem
-            key={index}
-            title={`Section ${section.sectionId}`}
-            subtitle={`${section.studentsCount} Students`}
-            extraInfo={`${section.groupsCount} Groups`}
-            buttonText={"Visit Section"}
-            resultIconType={ResultIconTypes.Class}
-            onPressGoToUrl={"/class/123/456"}
-          />
-        ))}
+        {classDetails.Sections?.map((section, index) => {
+          const groupCount = section.groups?.length ?? 0;
+          return (
+            <ResultItem
+              key={index}
+              btnDisabled={getUserSection() !== index + 1 && !isInstructor}
+              title={`Section ${section.sectionNumber}`}
+              subtitle={`${studentsCount} ${
+                studentsCount === 1 ? "Student" : "Students"
+              }`}
+              extraInfo={`${groupCount} ${
+                groupCount === 1 ? "Group" : "Groups"
+              }`}
+              buttonText={"Visit Section"}
+              resultIconType={ResultIconTypes.Class}
+              onPressGoToUrl={`/class/${classDetails.id}/${section.sectionNumber}`}
+            />
+          );
+        })}
       </>
     );
   };
@@ -35,13 +49,15 @@ const ClassSectionsPage = ({ classId, setCreateSectionModalVisible }) => {
       <div style={styles.tabPageMainContainer}>
         <div style={styles.pageTitleContainer}>
           <h1 style={styles.pageTitle}>{"Class Sections"}</h1>
-          <div style={styles.titleRightBtnContainer}>
-            <CustomButton
-              blackButton
-              text="Create new section"
-              onClick={() => setCreateSectionModalVisible(true)}
-            />
-          </div>
+          {isInstructor && (
+            <div style={styles.titleRightBtnContainer}>
+              <CustomButton
+                blackButton
+                text="Create new section"
+                onClick={() => setCreateSectionModalVisible(true)}
+              />
+            </div>
+          )}
         </div>
         <div style={styles.groupsContainer}>{getSections()}</div>
       </div>
@@ -50,8 +66,10 @@ const ClassSectionsPage = ({ classId, setCreateSectionModalVisible }) => {
 };
 
 ClassSectionsPage.propTypes = {
-  classId: PropTypes.string,
-  setCreateSectionModalVisible: PropTypes.func
+  classDetails: PropTypes.object,
+  setCreateSectionModalVisible: PropTypes.func,
+  isInstructor: PropTypes.bool,
+  loggedUser: PropTypes.object
 };
 
 export default ClassSectionsPage;

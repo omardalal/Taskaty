@@ -4,40 +4,46 @@ import PropTypes from "prop-types";
 import CustomButton from "../../Components/CustomButton/CustomButton";
 import ClassGroup from "../../Components/ClassGroup/ClassGroup";
 
-const GroupsPage = ({ classId, sectionId, setCreateGroupModalVisible }) => {
-  const getAvailableList = () => {
-    const usersArray = [];
-    for (let i = 0; i < 25; i++) {
-      usersArray.push({ firstName: "Omar", lastName: "Dalal", userId: "123" });
-    }
-    return (
-      <ClassGroup
-        usersArray={usersArray}
-        groupName={"Available Students"}
-        long
-      />
-    );
-  };
+const GroupsPage = ({
+  classDetails,
+  sectionId,
+  loggedUser,
+  isInstructor,
+  availableList,
+  sectionGroups,
+  setCreateGroupModalVisible
+}) => {
+  const getAvailableList = () => (
+    <ClassGroup
+      usersArray={availableList}
+      groupName={"Available Students"}
+      long
+    />
+  );
 
-  const getGroups = () => {
-    const usersArray = [
-      { firstName: "Omar", lastName: "Dalal", userId: "123" },
-      { firstName: "Ahmad", lastName: "Hamzah", userId: "345" },
-      { firstName: "Mohamed", lastName: "Adra", userId: "678" }
-    ];
-    return (
-      <>
-        {Array.apply(null, Array(12)).map((_, index) => (
-          <ClassGroup
-            usersArray={usersArray}
-            groupId={"12"}
-            groupName={"Group A"}
-            key={index}
-          />
-        ))}
-      </>
-    );
-  };
+  const getSectionDetails = () =>
+    classDetails.Sections?.[Number(sectionId) - 1];
+
+  const getGroups = () => (
+    <>
+      {sectionGroups.map((group, index) => (
+        <ClassGroup
+          usersArray={group.students}
+          groupId={group.id}
+          groupName={group.groupName}
+          key={index}
+          hideLeftBtn={
+            !group.students?.some(
+              (student) => student.id === loggedUser?.user?.email
+            ) && !isInstructor
+          }
+          rightBtnDisabled={
+            group.students?.length >= getSectionDetails().maxStudentsInGroup
+          }
+        />
+      ))}
+    </>
+  );
 
   return (
     <>
@@ -47,6 +53,9 @@ const GroupsPage = ({ classId, sectionId, setCreateGroupModalVisible }) => {
           <div style={styles.titleRightBtnContainer}>
             <CustomButton
               blackButton
+              disabled={
+                sectionGroups?.length >= getSectionDetails().maxNumOfGroups
+              }
               text="Create new group"
               onClick={() => setCreateGroupModalVisible(true)}
             />
@@ -62,9 +71,13 @@ const GroupsPage = ({ classId, sectionId, setCreateGroupModalVisible }) => {
 };
 
 GroupsPage.propTypes = {
-  classId: PropTypes.string,
+  classDetails: PropTypes.object,
   sectionId: PropTypes.string,
-  setCreateGroupModalVisible: PropTypes.func
+  setCreateGroupModalVisible: PropTypes.func,
+  availableList: PropTypes.array,
+  sectionGroups: PropTypes.array,
+  loggedUser: PropTypes.object,
+  isInstructor: PropTypes.bool
 };
 
 export default GroupsPage;
