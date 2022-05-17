@@ -19,17 +19,19 @@ const ClassPage = () => {
     useState(false);
   const [createSectionModalVisible, setCreateSectionModalVisible] =
     useState(false);
+  const [refreshFetch, setRefreshFetch] = useState(0);
 
-  const classDetails = useFetchClasses(classId);
+  const classDetails = useFetchClasses(classId, refreshFetch);
 
   const getCreateAnnouncementModal = () => (
     <CreateAnnouncementModal
       visible={createAnnouncementModalVisible}
+      classId={classId}
       onDismissPress={() => setCreateAnnouncementModalVisible(false)}
       onOverlayClick={() => setCreateAnnouncementModalVisible(false)}
-      onSuccess={(announcement) => {
-        console.log(announcement);
+      onSuccess={() => {
         setCreateAnnouncementModalVisible(false);
+        setRefreshFetch((val) => val + 1);
       }}
     />
   );
@@ -42,6 +44,7 @@ const ClassPage = () => {
       onOverlayClick={() => setCreateSectionModalVisible(false)}
       onSuccess={() => {
         setCreateSectionModalVisible(false);
+        setRefreshFetch((prevVal) => prevVal + 1);
       }}
     />
   );

@@ -6,12 +6,15 @@ import { styles } from "./styles.ts";
 import InputForm from "../InputForm/InputForm";
 import Modal from "../Modal/Modal";
 import { useAOS } from "../../CustomHooks/useAOS";
+import { createGroupForSection } from "../../Utilities/ClassUtils";
 
 const CreateGroupModal = ({
   visible,
   onOverlayClick,
   onDismissPress,
-  onSuccess
+  onSuccess,
+  classId,
+  sectionNumber
 }) => {
   const formInitialState = {
     groupName: ""
@@ -36,7 +39,12 @@ const CreateGroupModal = ({
       setShowError(true);
       return;
     }
-    onSuccess(formData.groupName);
+    try {
+      await createGroupForSection(formData.groupName, classId, sectionNumber);
+      onSuccess(formData.groupName);
+    } catch (err) {
+      console.error("Failed to fetch groups, Error: " + err);
+    }
   };
 
   const getForm = () => (
@@ -80,7 +88,9 @@ CreateGroupModal.propTypes = {
   visible: PropTypes.bool,
   onDismissPress: PropTypes.func,
   onOverlayClick: PropTypes.func,
-  onSuccess: PropTypes.func
+  onSuccess: PropTypes.func,
+  classId: PropTypes.string,
+  sectionNumber: PropTypes.string
 };
 
 export default CreateGroupModal;

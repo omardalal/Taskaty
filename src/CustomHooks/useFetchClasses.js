@@ -3,7 +3,7 @@ import { getClasses, getUser } from "../Utilities/ClassUtils";
 import useAuth from "./useAuth";
 import strings from "../Constants/strings";
 
-export const useFetchClasses = (classId) => {
+export const useFetchClasses = (classId, refreshState, setDoneFetch) => {
   const loggedUser = useAuth();
   const [userClasses, setUserClasses] = useState([]);
 
@@ -73,11 +73,12 @@ export const useFetchClasses = (classId) => {
     getUserClasses()
       .then((classes) => {
         setUserClasses(classes);
+        setDoneFetch(true);
       })
       .catch((err) =>
         console.error(`Failed to get user classes, Error: ${err}`)
       );
-  }, [loggedUser]);
+  }, [loggedUser, refreshState]);
 
   return userClasses;
 };

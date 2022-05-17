@@ -3,7 +3,6 @@ import { styles } from "./styles.ts";
 import PropTypes from "prop-types";
 import { Tag } from "carbon-components-react";
 import { User16 } from "@carbon/icons-react";
-import CustomButton from "../../Components/CustomButton/CustomButton";
 
 const SectionHomePage = ({ classDetails, sectionId }) => {
   const getDescBox = () => {
@@ -55,8 +54,8 @@ const SectionHomePage = ({ classDetails, sectionId }) => {
 
   const getInfoBox = () => {
     const sectionDetails = classDetails.Sections?.[Number(sectionId) - 1];
-    const groupsLength = sectionDetails?.groups?.length;
-    const studentsLength = sectionDetails?.groups?.length;
+    const groupsLength = sectionDetails?.groups?.length ?? 0;
+    const studentsLength = getStudentsBySection()?.length ?? 0;
 
     return (
       <div style={styles.boxContainer} className={"defaultBoxShadowBlack"}>
@@ -64,9 +63,11 @@ const SectionHomePage = ({ classDetails, sectionId }) => {
           <div style={styles.homeInfoCol}>
             <h2 style={styles.homeHeader2}>{"Section Information"}</h2>
             <p>{`${studentsLength} ${
-              studentsLength ? "Students" : "Student"
+              studentsLength === 1 ? "Student" : "Students"
             }`}</p>
-            <p>{`${groupsLength} ${groupsLength > 1 ? "Groups" : "Group"}`}</p>
+            <p>{`${groupsLength} ${
+              groupsLength === 1 ? "Group" : "Groups"
+            }`}</p>
           </div>
           <div style={styles.homeInfoCol}>
             <h2 style={styles.homeHeader2}>{"Section join code"}</h2>

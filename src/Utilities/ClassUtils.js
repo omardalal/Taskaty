@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore";
 import { getFirebaseDb } from "./FirebaseUtils";
 
+// return the classes using the user ID
 export const getClasses = async (userId) => {
   if (!userId) {
     return;
@@ -25,7 +26,7 @@ export const getClasses = async (userId) => {
       classes.push({ ...doc.data(), ...{ id: doc.id } });
       return;
     }
-    arr.forEach((index) => {
+    arr?.forEach((index) => {
       if (index.studentRef.id === userRef.id) {
         classes.push({ ...doc.data(), ...{ id: doc.id } });
       }
@@ -104,7 +105,7 @@ export const addGroupInvitation = async (fromUserId, toUserId, groupId) => {
     toUser: toUserRef
   });
 };
-
+// create class , has empty sections and announcements
 export const createClass = async (
   className,
   classCode,
@@ -113,6 +114,8 @@ export const createClass = async (
 ) => {
   const instructorRef = doc(getFirebaseDb(), "users", instructorId);
   return await addDoc(collection(getFirebaseDb(), "Class"), {
+    Sections: [],
+    announcements: [],
     courseCode: classCode,
     courseDesc: description,
     courseName: className,
@@ -145,7 +148,8 @@ export const createSection = async (
     Sections: arrayUnion({
       maxNumOfGroups: maxNumOfGroups,
       maxStudentsInGroup: maxStudentInGroup,
-      sectionNumber: sections?.length + 1 ?? 1
+      sectionNumber: sections?.length + 1 ?? 1,
+      groups: []
     })
   });
 };
@@ -153,15 +157,16 @@ export const createSection = async (
 // create group for specific section in a class
 export const createGroupForSection = async (
   groupName,
-  projectId,
+  // projectId,
   classId,
   sectionNumber
 ) => {
   const classRef = doc(getFirebaseDb(), "Class", classId);
-  const projectRef = doc(getFirebaseDb(), "Project", projectId);
+  // const projectRef = doc(getFirebaseDb(), "Project", projectId);
   const groupRef = await addDoc(collection(getFirebaseDb(), "Group"), {
     groupName: groupName,
-    project: projectRef
+    students: []
+    // project: projectRef
   });
   const sectionArr = (await getDoc(classRef)).data().Sections;
   const groupArr = sectionArr[sectionNumber - 1].groups;
@@ -193,4 +198,30 @@ export const getProject = async (projectRef) => {
   const projectDocRef = doc(getFirebaseDb(), "Project", projectRef);
   const projectDoc = await getDoc(projectDocRef);
   return projectDoc.data();
+};
+
+// return the name and the section number of the student if exists in the class
+export const isInClass = async (classId, userId) => {
+  const userRef = doc(getFirebaseDb(), "users", userId);
+  const classRef = doc(getFirebaseDb(), "Class", classId);
+  const classDoc = await getDoc(classRef);
+  const userDoc = await getDoc(userRef);
+  const userData = userDoc.data();
+  const classData = classDoc.data();
+  const students = classData.students;
+
+  let student;
+  students.forEach((Student) => {
+    const studentId = Student.studentRef;
+
+    if (studentId.path === userRef.path) {
+      const studentInfo = {
+        name: userData.firstName + " " + userData.lastName,
+        sectionNumber: Student.sectionNumber
+      };
+
+      student = studentInfo;
+    }
+  });
+  return student;
 };

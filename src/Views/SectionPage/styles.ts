@@ -63,7 +63,8 @@ export const styles = {
   announcementContainer: {
     borderRadius: 10,
     padding: "20px 15px",
-    backgroundColor: "white"
+    backgroundColor: "white",
+    marginBottom: 15
   } as CSSProperties,
   announcementTitle: {
     fontSize: 26,

@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import React from "react";
 import { styles } from "./styles.ts";
 import PropTypes from "prop-types";
@@ -26,22 +27,26 @@ const GroupsPage = ({
 
   const getGroups = () => (
     <>
-      {sectionGroups.map((group, index) => (
-        <ClassGroup
-          usersArray={group.students}
-          groupId={group.id}
-          groupName={group.groupName}
-          key={index}
-          hideLeftBtn={
-            !group.students?.some(
-              (student) => student.id === loggedUser?.user?.email
-            ) && !isInstructor
-          }
-          rightBtnDisabled={
-            group.students?.length >= getSectionDetails().maxStudentsInGroup
-          }
-        />
-      ))}
+      {sectionGroups?.length > 0 ? (
+        sectionGroups.map((group, index) => (
+          <ClassGroup
+            usersArray={group.students}
+            groupId={group.id}
+            groupName={group.groupName}
+            key={index}
+            hideLeftBtn={
+              !group.students?.some(
+                (student) => student.id === loggedUser?.user?.email
+              ) && !isInstructor
+            }
+            rightBtnDisabled={
+              group.students?.length >= getSectionDetails()?.maxStudentsInGroup
+            }
+          />
+        ))
+      ) : (
+        <h5 style={{ fontWeight: "400" }}>{"Groups will appear here!"}</h5>
+      )}
     </>
   );
 
@@ -54,7 +59,7 @@ const GroupsPage = ({
             <CustomButton
               blackButton
               disabled={
-                sectionGroups?.length >= getSectionDetails().maxNumOfGroups
+                sectionGroups?.length >= getSectionDetails()?.maxNumOfGroups
               }
               text="Create new group"
               onClick={() => setCreateGroupModalVisible(true)}

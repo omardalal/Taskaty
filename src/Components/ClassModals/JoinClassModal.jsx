@@ -46,7 +46,7 @@ const JoinClassModal = ({
       setAlertMessage("Joined Section!");
       setTimeout(() => {
         onSuccess?.();
-      }, 1000);
+      }, 600);
     } catch (error) {
       setAlertMessage(
         "Something went wrong! Please make sure the code is valid!"

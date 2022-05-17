@@ -7,12 +7,14 @@ import InputForm from "../InputForm/InputForm";
 import Modal from "../Modal/Modal";
 import { useAOS } from "../../CustomHooks/useAOS";
 import FileUploader from "../FileUploader/FileUploader";
+import { createAnnouncement } from "../../Utilities/ClassUtils";
 
 const CreateAnnouncementModal = ({
   visible,
   onOverlayClick,
   onDismissPress,
-  onSuccess
+  onSuccess,
+  classId
 }) => {
   const formInitialState = {
     subject: "",
@@ -40,6 +42,11 @@ const CreateAnnouncementModal = ({
     if (!formData.subject || !formData.description) {
       setShowError(true);
       return;
+    }
+    try {
+      await createAnnouncement(formData.subject, formData.description, classId);
+    } catch (error) {
+      console.error("Failed to create announcement, Error: " + error);
     }
     onSuccess({ ...formData, uploadedFiles: uploadedFiles });
   };
@@ -104,7 +111,8 @@ CreateAnnouncementModal.propTypes = {
   visible: PropTypes.bool,
   onDismissPress: PropTypes.func,
   onOverlayClick: PropTypes.func,
-  onSuccess: PropTypes.func
+  onSuccess: PropTypes.func,
+  classId: PropTypes.func
 };
 
 export default CreateAnnouncementModal;

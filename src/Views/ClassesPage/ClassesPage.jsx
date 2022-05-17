@@ -14,7 +14,8 @@ const ClassesPage = () => {
 
   const [createClassModalVisible, setCreateClassModalVisible] = useState(false);
   const [joinClassModalVisible, setJoinClassModalVisible] = useState(false);
-  const userClasses = useFetchClasses();
+  const [refreshFetch, setRefreshFetch] = useState(0);
+  const userClasses = useFetchClasses(undefined, refreshFetch);
 
   const getRightButtons = () => (
     <>
@@ -41,14 +42,20 @@ const ClassesPage = () => {
       <CreateClassModal
         onOverlayClick={() => setCreateClassModalVisible(false)}
         onDismissPress={() => setCreateClassModalVisible(false)}
-        onSuccess={() => setJoinClassModalVisible(false)}
+        onSuccess={() => {
+          setCreateClassModalVisible(false);
+          setRefreshFetch((prev) => prev + 1);
+        }}
         visible={createClassModalVisible}
         loggedUser={loggedUser}
       />
       <JoinClassModal
         onOverlayClick={() => setJoinClassModalVisible(false)}
         onDismissPress={() => setJoinClassModalVisible(false)}
-        onSuccess={() => setJoinClassModalVisible(false)}
+        onSuccess={() => {
+          setJoinClassModalVisible(false);
+          setRefreshFetch((prev) => prev + 1);
+        }}
         visible={joinClassModalVisible}
         loggedUser={loggedUser}
       />

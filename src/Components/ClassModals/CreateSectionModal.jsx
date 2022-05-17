@@ -42,10 +42,10 @@ const CreateSectionModal = ({
         formData.maxNumberOfGroups > 0 ? formData.maxNumberOfGroups : 9999999;
       await createSection(maxGroups, maxInGroup, classId);
       setSuccessMessage(true);
-      setAlertMessage("Created Section!");
+      setAlertMessage("Section Created!");
       setTimeout(() => {
         onSuccess?.();
-      }, 1000);
+      }, 600);
     } catch (error) {
       console.log(error);
       setAlertMessage("Something went wrong!");

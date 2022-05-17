@@ -37,8 +37,14 @@ const ClassGroup = ({
         <h2 style={styles.groupTitleText}>{groupName}</h2>
       </div>
       <div style={styles.namesContainer(long)}>
-        {usersArray.map((user) =>
-          getUserRow(`${user.firstName} ${user.lastName}`, user.id)
+        {usersArray?.length > 0 ? (
+          usersArray.map((user) =>
+            getUserRow(`${user.firstName} ${user.lastName}`, user.id)
+          )
+        ) : (
+          <h5 style={{ fontWeight: "450", marginLeft: 15 }}>
+            {"No members yet."}
+          </h5>
         )}
       </div>
       {groupId && (

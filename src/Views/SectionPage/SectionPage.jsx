@@ -15,17 +15,19 @@ const SectionPage = () => {
   const loggedUser = useAuthRedirect(true);
 
   const { classId, sectionId } = useParams();
-  const classDetails = useFetchClasses(classId);
+  const [refreshFetch, setRefreshFetch] = useState(0);
+  const [doneFetchClassDetails, setDoneFetchClassDetails] = useState(false);
+  const classDetails = useFetchClasses(
+    classId,
+    refreshFetch,
+    setDoneFetchClassDetails
+  );
 
   const [sectionGroups, setSectionGroups] = useState([]);
   const [availableList, setAvailableList] = useState([]);
 
   useEffect(() => {
-    if (!classDetails) {
-      return;
-    }
-
-    if (sectionGroups.length) {
+    if (!classDetails || !doneFetchClassDetails) {
       return;
     }
 
@@ -35,6 +37,9 @@ const SectionPage = () => {
     );
 
     const getGroupsBySection = async (studentsArray, groupsArray) => {
+      if (!groupsArray || !studentsArray) {
+        return;
+      }
       const groups = await Promise.all(
         groupsArray?.map(async (group) => {
           const groupInfo = await getGroup(group.id);
@@ -51,7 +56,7 @@ const SectionPage = () => {
           return { ...groupInfo, students: groupStudents, id: group.id };
         })
       );
-      return { groups: groups, availableList: allStudentsInSection };
+      return { groups: groups ?? [], availableList: allStudentsInSection };
     };
 
     getGroupsBySection(classDetails.students, sectionDetails?.groups)
@@ -60,7 +65,7 @@ const SectionPage = () => {
         setAvailableList(groupsInfo.availableList);
       })
       .catch((err) => console.error(`Failed to fetch groups, Error=${err}`));
-  }, [classDetails]);
+  }, [classDetails, refreshFetch, doneFetchClassDetails]);
 
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -72,11 +77,12 @@ const SectionPage = () => {
   const getCreateAnnouncementModal = () => (
     <CreateAnnouncementModal
       visible={createAnnouncementModalVisible}
+      classId={classId}
       onDismissPress={() => setCreateAnnouncementModalVisible(false)}
       onOverlayClick={() => setCreateAnnouncementModalVisible(false)}
-      onSuccess={(announcement) => {
-        console.log(announcement);
+      onSuccess={() => {
         setCreateAnnouncementModalVisible(false);
+        setRefreshFetch((val) => val + 1);
       }}
     />
   );
@@ -84,11 +90,13 @@ const SectionPage = () => {
   const getCreateGroupModal = () => (
     <CreateGroupModal
       visible={createGroupModalVisible}
+      classId={classId}
+      sectionNumber={sectionId}
       onDismissPress={() => setCreateGroupModalVisible(false)}
       onOverlayClick={() => setCreateGroupModalVisible(false)}
-      onSuccess={(groupName) => {
-        console.log(groupName);
+      onSuccess={() => {
         setCreateGroupModalVisible(false);
+        setRefreshFetch((val) => val + 1);
       }}
     />
   );

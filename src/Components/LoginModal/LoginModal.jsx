@@ -34,20 +34,6 @@ const LoginModal = ({
     setSuccessMessage(false);
   }, [visible]);
 
-  useEffect(() => {
-    document.addEventListener("keydown", (e) => {
-      if (e.code === "Enter") {
-        handleLoginPress();
-      }
-    });
-    return () =>
-      document.removeEventListener("keydown", (e) => {
-        if (e.code === "Enter") {
-          handleLoginPress();
-        }
-      });
-  });
-
   useAOS();
 
   const handleLoginPress = async () => {

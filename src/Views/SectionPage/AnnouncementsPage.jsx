@@ -12,32 +12,38 @@ const AnnouncementsPage = ({
   const getAnnouncements = () => {
     return (
       <>
-        {classDetails.announcements?.map((announcement, index) => (
-          <div
-            key={index}
-            className="defaultBoxShadowBlack"
-            style={styles.announcementContainer}
-          >
-            <h1 style={styles.announcementTitle}>{announcement.title}</h1>
-            <h5
-              style={styles.announcementInstructorName}
-            >{`${classDetails.instructor?.firstName} ${classDetails.instructor?.lastName}`}</h5>
-            <h5 style={styles.descH5}>{"Description"}</h5>
-            <p>{announcement.body}</p>
-            <h5 style={styles.announcementH5}>{"Attachments"}</h5>
-            <div style={styles.announcementAttachments}>
-              {announcement.files?.map((file, index) => (
-                <Attachment
-                  key={index}
-                  fileName={file.fileName}
-                  fileType={file.fileType}
-                  showDownloadBtn
-                  showDeleteBtn={false}
-                />
-              ))}
+        {classDetails.announcements?.length > 0 ? (
+          classDetails.announcements?.map((announcement, index) => (
+            <div
+              key={index}
+              className="defaultBoxShadowBlack"
+              style={styles.announcementContainer}
+            >
+              <h1 style={styles.announcementTitle}>{announcement.title}</h1>
+              <h5
+                style={styles.announcementInstructorName}
+              >{`${classDetails.instructor?.firstName} ${classDetails.instructor?.lastName}`}</h5>
+              <h5 style={styles.descH5}>{"Description"}</h5>
+              <p>{announcement.body}</p>
+              <h5 style={styles.announcementH5}>{"Attachments"}</h5>
+              <div style={styles.announcementAttachments}>
+                {announcement.files?.map((file, index) => (
+                  <Attachment
+                    key={index}
+                    fileName={file.fileName}
+                    fileType={file.fileType}
+                    showDownloadBtn
+                    showDeleteBtn={false}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <h5 style={{ fontWeight: "400" }}>
+            {"Announcements will appear here!"}
+          </h5>
+        )}
       </>
     );
   };

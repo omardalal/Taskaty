@@ -55,7 +55,7 @@ const CreateClassModal = ({
       setAlertMessage("Class Created!");
       setTimeout(() => {
         onSuccess?.();
-      }, 1000);
+      }, 600);
     } catch (error) {
       setAlertMessage("Something went wrong!");
     }
