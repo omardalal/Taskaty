@@ -146,10 +146,10 @@ export const createSection = async (
   const sections = classes.Sections;
   return await updateDoc(classRef, {
     Sections: arrayUnion({
+      groups: [],
       maxNumOfGroups: maxNumOfGroups,
       maxStudentsInGroup: maxStudentInGroup,
-      sectionNumber: sections?.length + 1 ?? 1,
-      groups: []
+      sectionNumber: sections?.length + 1 ?? 1
     })
   });
 };
@@ -157,16 +157,18 @@ export const createSection = async (
 // create group for specific section in a class
 export const createGroupForSection = async (
   groupName,
+  userId,
   // projectId,
   classId,
   sectionNumber
 ) => {
   const classRef = doc(getFirebaseDb(), "Class", classId);
   // const projectRef = doc(getFirebaseDb(), "Project", projectId);
+  const userRef = doc(getFirebaseDb(), "users", userId);
   const groupRef = await addDoc(collection(getFirebaseDb(), "Group"), {
     groupName: groupName,
-    students: []
-    // project: projectRef
+    // project: projectRef,
+    students: [{ userRef: userRef }]
   });
   const sectionArr = (await getDoc(classRef)).data().Sections;
   const groupArr = sectionArr[sectionNumber - 1].groups;

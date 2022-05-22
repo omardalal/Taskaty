@@ -14,6 +14,7 @@ const CreateGroupModal = ({
   onDismissPress,
   onSuccess,
   classId,
+  loggedUser,
   sectionNumber
 }) => {
   const formInitialState = {
@@ -40,7 +41,12 @@ const CreateGroupModal = ({
       return;
     }
     try {
-      await createGroupForSection(formData.groupName, classId, sectionNumber);
+      await createGroupForSection(
+        formData.groupName,
+        loggedUser?.user?.email,
+        classId,
+        sectionNumber
+      );
       onSuccess(formData.groupName);
     } catch (err) {
       console.error("Failed to fetch groups, Error: " + err);
@@ -90,7 +96,8 @@ CreateGroupModal.propTypes = {
   onOverlayClick: PropTypes.func,
   onSuccess: PropTypes.func,
   classId: PropTypes.string,
-  sectionNumber: PropTypes.string
+  sectionNumber: PropTypes.string,
+  loggedUser: PropTypes.string
 };
 
 export default CreateGroupModal;

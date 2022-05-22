@@ -48,9 +48,16 @@ const SectionPage = () => {
               allStudentsInSection = allStudentsInSection.filter(
                 (student) => groupStudent.userRef.id !== student.id
               );
-              return studentsArray?.find(
+              let res = studentsArray?.find(
                 (student) => student.id === groupStudent.userRef.id
               );
+              if (!res) {
+                res =
+                  groupStudent.userRef.id === classDetails.instructor.email
+                    ? classDetails.instructor
+                    : undefined;
+              }
+              return res;
             })
             ?.filter((student) => student != null);
           return { ...groupInfo, students: groupStudents, id: group.id };
@@ -98,6 +105,7 @@ const SectionPage = () => {
         setCreateGroupModalVisible(false);
         setRefreshFetch((val) => val + 1);
       }}
+      loggedUser={loggedUser}
     />
   );
 
