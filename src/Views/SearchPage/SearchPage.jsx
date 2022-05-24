@@ -15,9 +15,8 @@ import {
   universities,
   cities
 } from "../../Constants/lookupConstants";
-import ResultsContainer, {
-  ResultIconTypes
-} from "../../Components/ResultsContainer/ResultsContainer";
+import ResultsContainer from "../../Components/ResultsContainer/ResultsContainer";
+import { ResultIconTypes } from "../../Components/ResultItem/ResultItem";
 import useMediaQuery from "../../CustomHooks/useMediaQuery";
 import { getSearchResultsByFilters } from "../../Utilities/SearchUtils";
 
@@ -186,19 +185,21 @@ const SearchPage = () => {
           minHeight={700}
           FormElement={getFiltersForm()}
           buttonOnClick={async () => {
-            const searchResults = await getSearchResultsByFilters(
-              filtersValues
-            );
-            const users = [];
-            searchResults.forEach((result) => {
-              users.push({
-                title: `${result.firstName} ${result.lastName}`,
-                subtitle: result.university,
-                city: result.city,
-                buttonText: strings.visitProfile
+            try {
+              const searchResults = await getSearchResultsByFilters(
+                filtersValues
+              );
+              const users = [];
+              searchResults.forEach((result) => {
+                users.push({
+                  title: `${result.firstName} ${result.lastName}`,
+                  subtitle: result.university,
+                  city: result.city,
+                  buttonText: strings.visitProfile
+                });
               });
-            });
-            setResults(users);
+              setResults(users);
+            } catch (err) {}
           }}
         />
       </div>

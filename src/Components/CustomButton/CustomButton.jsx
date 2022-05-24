@@ -4,21 +4,25 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
 const CustomButton = (props) => {
-  const { to, text, blackButton, onClick, inTopBar } = props;
+  const { to, text, blackButton, onClick, inTopBar, disabled } = props;
   const [opacity, setOpacity] = useState(1);
 
   return (
     <>
-      {to ? (
+      {to && !disabled ? (
         <Link
           aria-label={text}
           to={to}
           style={{
-            ...styles.customBtn(opacity, inTopBar),
-            ...(blackButton ? styles.customBtnBlackBg : styles.customBtnWhiteBg)
+            ...styles.customBtn(opacity, inTopBar, disabled),
+            ...(blackButton
+              ? styles.customBtnBlackBg(disabled)
+              : styles.customBtnWhiteBg(disabled))
           }}
-          onClick={onClick}
-          onMouseEnter={() => setOpacity(0.75)}
+          onClick={disabled ? undefined : onClick}
+          onMouseEnter={() => {
+            if (!disabled) setOpacity(0.75);
+          }}
           onMouseLeave={() => setOpacity(1)}
         >
           {text}
@@ -27,11 +31,15 @@ const CustomButton = (props) => {
         <a
           aria-label={text}
           style={{
-            ...styles.customBtn(opacity, inTopBar),
-            ...(blackButton ? styles.customBtnBlackBg : styles.customBtnWhiteBg)
+            ...styles.customBtn(opacity, inTopBar, disabled),
+            ...(blackButton
+              ? styles.customBtnBlackBg(disabled)
+              : styles.customBtnWhiteBg(disabled))
           }}
-          onClick={onClick}
-          onMouseEnter={() => setOpacity(0.75)}
+          onClick={disabled ? undefined : onClick}
+          onMouseEnter={() => {
+            if (!disabled) setOpacity(0.75);
+          }}
           onMouseLeave={() => setOpacity(1)}
         >
           {text}
@@ -46,7 +54,8 @@ CustomButton.propTypes = {
   text: PropTypes.string,
   blackButton: PropTypes.bool,
   onClick: PropTypes.func,
-  inTopBar: PropTypes.bool
+  inTopBar: PropTypes.bool,
+  disabled: PropTypes.bool
 };
 
 export default CustomButton;

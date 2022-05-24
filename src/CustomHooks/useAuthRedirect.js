@@ -1,22 +1,27 @@
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import useAuth from "./useAuth";
 
 const useAuthRedirect = (requiresAuth) => {
-  const loggedUser = useSelector((state) => state.auth);
+  const loggedUser = useAuth();
   const navigate = useNavigate();
   useEffect(() => {
-    if (requiresAuth && loggedUser) {
+    if (loggedUser?.pending) {
       return;
     }
-    if (!requiresAuth && loggedUser) {
+    if (requiresAuth && loggedUser?.user) {
+      return;
+    }
+    if (!requiresAuth && loggedUser?.user) {
       navigate("/", { replace: true });
       return;
     }
-    if (requiresAuth && !loggedUser) {
+    if (requiresAuth && !loggedUser?.user) {
       navigate("/signUp", { replace: true });
     }
   }, [loggedUser]);
+
+  return loggedUser;
 };
 
 export default useAuthRedirect;

@@ -1,8 +1,7 @@
 import React from "react";
 import { styles } from "./styles.ts";
-import ResultsContainer, {
-  ResultIconTypes
-} from "../../Components/ResultsContainer/ResultsContainer";
+import { ResultIconTypes } from "../../Components/ResultItem/ResultItem";
+import ResultsContainer from "../../Components/ResultsContainer/ResultsContainer";
 import strings from "../../Constants/strings";
 import { Button } from "carbon-components-react";
 import useAuthRedirect from "../../CustomHooks/useAuthRedirect";

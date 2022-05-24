@@ -1,16 +1,18 @@
-import { gray100 } from "@carbon/colors";
+import { gray100, gray60 } from "@carbon/colors";
 import { CSSProperties } from "react";
 
 export const styles = {
-  customBtnBlackBg: {
-    color: "white",
-    backgroundColor: gray100
-  } as CSSProperties,
-  customBtnWhiteBg: {
-    backgroundColor: "white",
-    color: gray100
-  } as CSSProperties,
-  customBtn: (opacity: number, inTopBar: boolean) =>
+  customBtnBlackBg: (disabled: boolean) =>
+    ({
+      color: "white",
+      backgroundColor: disabled ? gray60 : gray100
+    } as CSSProperties),
+  customBtnWhiteBg: (disabled: boolean) =>
+    ({
+      backgroundColor: disabled ? gray60 : "white",
+      color: gray100
+    } as CSSProperties),
+  customBtn: (opacity: number, inTopBar: boolean, disabled: boolean) =>
     ({
       display: "flex",
       alignItems: "center",
@@ -20,8 +22,8 @@ export const styles = {
       borderRadius: 15,
       transition: "0.3s",
       fontWeight: 500,
-      cursor: "pointer",
       opacity: opacity,
-      ...(inTopBar ? { margin: "9px 5px" } : {})
+      cursor: disabled ? "context-menu" : "pointer",
+      ...(inTopBar && { margin: "9px 5px" })
     } as CSSProperties)
 };

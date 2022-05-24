@@ -11,20 +11,20 @@ import {
   SwitcherDivider
 } from "carbon-components-react";
 import { styles } from "./styles.ts";
-import { useSelector } from "react-redux";
 import { Search20, Notification20, AppSwitcher20 } from "@carbon/icons-react";
 import CustomButton from "../CustomButton/CustomButton";
 import useClickOutside from "../../CustomHooks/useClickOutside";
 import { Link } from "react-router-dom";
 import LoginModal from "../LoginModal/LoginModal";
 import { signOutUser } from "../../Utilities/AuthenticationUtils";
+import useAuth from "../../CustomHooks/useAuth";
 
 const TopBar = () => {
   const [rightMenuVisible, setRightMenuVisible] = useState(false);
   const containerRef = useRef(null);
   const openMenuBtnRef = useRef(null);
   const [loginVisible, setLoginVisible] = useState(false);
-  const loggedUser = useSelector((state) => state.auth);
+  const loggedUser = useAuth();
 
   useClickOutside(containerRef, openMenuBtnRef, () => {
     setRightMenuVisible(false);
@@ -114,7 +114,7 @@ const TopBar = () => {
               <Search20 />
             </HeaderGlobalAction>
           </Link>
-          {loggedUser ? (
+          {loggedUser?.user ? (
             <>
               <HeaderGlobalAction aria-label={strings.notifications}>
                 <Notification20 />

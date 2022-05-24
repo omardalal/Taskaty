@@ -124,7 +124,7 @@ const LoginModal = ({
       <div style={styles.formContainer} data-aos="fade-up">
         <InputForm
           titleText={strings.login}
-          descriptionText={"Enter your account credentials"}
+          descriptionText={strings.enterAccountCredentials}
           buttonText={inForgotPassView ? strings.sendResetEmail : strings.login}
           buttonOnClick={handleLoginPress}
           FormElement={getLoginForm()}

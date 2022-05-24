@@ -23,8 +23,8 @@ a {
   background: rgba(0, 0, 0, 0.85);
 }
 .defaultBoxShadowBlack {
-  box-shadow: 0 0 10px 0 rgb(0 0 0 / 25%);
+  box-shadow: 0 0 7.5px 0 rgb(0 0 0 / 25%);
 }
 .defaultBoxShadowWhite {
-  box-shadow: 0 0 10px 0 rgb(255 255 255 / 25%);
+  box-shadow: 0 0 7.5px 0 rgb(255 255 255 / 25%);
 }

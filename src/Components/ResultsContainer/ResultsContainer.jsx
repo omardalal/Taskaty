@@ -1,21 +1,11 @@
 import React, { useState } from "react";
 import { styles } from "./styles.ts";
 import { Pagination } from "carbon-components-react";
-import {
-  User32,
-  Task32,
-  Notebook32,
-  NotAvailable32
-} from "@carbon/icons-react";
 import strings from "../../Constants/strings";
 import PropTypes from "prop-types";
+import ResultItem from "../ResultItem/ResultItem";
 
-const DEFAUT_PAGE_SIZE = 20;
-export const ResultIconTypes = {
-  User: "user",
-  Project: "project",
-  Class: "class"
-};
+const DEFAULT_PAGE_SIZE = 20;
 
 const ResultsContainer = ({
   resultsTitle,
@@ -24,33 +14,7 @@ const ResultsContainer = ({
   rightButtons
 }) => {
   const [currentPageNumber, setCurrentPageNumber] = useState(1);
-  const [currentPageSize, setCurrentPageSize] = useState(DEFAUT_PAGE_SIZE);
-
-  const getIcon = () => {
-    if (resultIconType === ResultIconTypes.User) {
-      return <User32 style={styles.resultItemIcon} />;
-    }
-    if (resultIconType === ResultIconTypes.Project) {
-      return <Task32 style={styles.resultItemIcon} />;
-    }
-    if (resultIconType === ResultIconTypes.Class) {
-      return <Notebook32 style={styles.resultItemIcon} />;
-    }
-    return <NotAvailable32 style={styles.resultItemIcon} />;
-  };
-
-  const getResultItem = (key, title, subtitle, extraInfo, buttonText) => (
-    <div key={key} style={styles.resultItem}>
-      {getIcon()}
-      <div style={styles.resultItemText}>
-        <h4 style={styles.resultItemTitle}>{title}</h4>
-        <h5 style={styles.resultItemSubtitle}>{subtitle}</h5>
-        <h5 style={styles.resultItemSubtitle}>{extraInfo}</h5>
-      </div>
-      <div style={styles.resultItemVisitBtn}>{buttonText}</div>
-    </div>
-  );
-
+  const [currentPageSize, setCurrentPageSize] = useState(DEFAULT_PAGE_SIZE);
   const getResultsBox = () => (
     <div style={styles.resultsBox}>
       <div style={styles.titleBar}>
@@ -64,15 +28,17 @@ const ResultsContainer = ({
               (currentPageNumber - 1) * currentPageSize,
               currentPageNumber * currentPageSize
             )
-            .map((result, index) => {
-              return getResultItem(
-                index,
-                result.title,
-                result.subtitle,
-                result.extraInfo,
-                result.buttonText
-              );
-            })
+            .map((result, index) => (
+              <ResultItem
+                key={index}
+                title={result.title}
+                subtitle={result.subtitle}
+                extraInfo={result.extraInfo}
+                buttonText={result.buttonText}
+                onPressGoToUrl={result.visitURL ?? undefined}
+                resultIconType={resultIconType}
+              />
+            ))
         ) : (
           <h5>{strings.noResults}</h5>
         )}
@@ -91,7 +57,7 @@ const ResultsContainer = ({
           setCurrentPageSize(page.pageSize);
         }}
         page={currentPageNumber}
-        pageSize={DEFAUT_PAGE_SIZE}
+        pageSize={DEFAULT_PAGE_SIZE}
         pageSizes={[
           {
             text: "20",

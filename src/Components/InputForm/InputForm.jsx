@@ -22,6 +22,13 @@ const InputForm = ({
     <Form
       style={styles.formButtonContainer(minHeight)}
       className={"defaultBoxShadowBlack"}
+      onKeyDown={(event) => {
+        if (event.key === "Enter") {
+          buttonOnClick();
+          event.preventDefault();
+          return false;
+        }
+      }}
     >
       <div style={styles.formContainer}>
         <div style={styles.titleRow}>
