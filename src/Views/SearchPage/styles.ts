@@ -4,7 +4,7 @@ export const styles = {
   mainContainer: (columnView) =>
     ({
       display: "flex",
-      margin: "auto",
+      margin: "auto 0",
       padding: "65px 15px",
       justifyContent: "center",
       flexDirection: columnView ? "column" : "row"
