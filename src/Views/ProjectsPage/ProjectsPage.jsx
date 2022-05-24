@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { styles } from "./styles.ts";
 import { ResultIconTypes } from "../../Components/ResultItem/ResultItem";
 import ResultsContainer from "../../Components/ResultsContainer/ResultsContainer";
 import strings from "../../Constants/strings";
 import { Button } from "carbon-components-react";
 import useAuthRedirect from "../../CustomHooks/useAuthRedirect";
+import CreateProjectModal from "../../Components/ProjectModals/CreateProjectModal";
 
 const ProjectsPage = () => {
   const getRandomResults = () => {
@@ -17,29 +18,46 @@ const ProjectsPage = () => {
         title: title,
         subtitle: subtitle,
         extraInfo: extraInfo,
-        buttonText: strings.visitClass
+        buttonText: strings.visitProject
       });
     }
     return results;
   };
 
+  const [createProjectModalVisible, setCreateProjectModalVisible] =
+    useState(false);
+
   useAuthRedirect(true);
 
   const getRightButtons = () => (
     <>
-      <Button>{strings.createNewProject}</Button>
+      <Button onClick={() => setCreateProjectModalVisible(true)}>
+        {strings.createNewProject}
+      </Button>
     </>
   );
 
+  const getCreateProjectModal = () => (
+    <CreateProjectModal
+      visible={createProjectModalVisible}
+      onDismissPress={() => setCreateProjectModalVisible(false)}
+      onOverlayClick={() => setCreateProjectModalVisible(false)}
+      onSuccess={() => setCreateProjectModalVisible(false)}
+    />
+  );
+
   return (
-    <div style={styles.classesContainer}>
-      <ResultsContainer
-        resultsTitle={strings.myProjects}
-        resultIconType={ResultIconTypes.Project}
-        results={getRandomResults()}
-        rightButtons={getRightButtons()}
-      />
-    </div>
+    <>
+      {getCreateProjectModal()}
+      <div style={styles.classesContainer}>
+        <ResultsContainer
+          resultsTitle={strings.myProjects}
+          resultIconType={ResultIconTypes.Project}
+          results={getRandomResults()}
+          rightButtons={getRightButtons()}
+        />
+      </div>
+    </>
   );
 };
 

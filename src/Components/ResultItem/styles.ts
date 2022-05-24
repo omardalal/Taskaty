@@ -38,14 +38,9 @@ export const styles = {
     fontWeight: 300,
     fontSize: 14
   } as CSSProperties,
-  resultItemVisitBtn: (
-    focused: boolean,
-    hasLink: boolean,
-    btnDisabled: boolean
-  ) =>
+  resultItemVisitBtn: (focused: boolean, btnDisabled: boolean) =>
     ({
       marginTop: "auto",
-      padding: hasLink ? 0 : "15px 0",
       color: "white",
       width: "100%",
       borderRadius: "0 0 10px 10px",
