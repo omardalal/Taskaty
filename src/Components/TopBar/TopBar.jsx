@@ -116,9 +116,11 @@ const TopBar = () => {
           </Link>
           {loggedUser?.user ? (
             <>
-              <HeaderGlobalAction aria-label={strings.notifications}>
-                <Notification20 />
-              </HeaderGlobalAction>
+              <Link to={"/notifications"} style={{ color: "white" }}>
+                <HeaderGlobalAction aria-label={strings.notifications}>
+                  <Notification20 />
+                </HeaderGlobalAction>
+              </Link>
               <HeaderGlobalAction
                 ref={openMenuBtnRef}
                 aria-label={strings.more}

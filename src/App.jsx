@@ -10,6 +10,7 @@ import ClassesPage from "./Views/ClassesPage/ClassesPage";
 import ProjectsPage from "./Views/ProjectsPage/ProjectsPage";
 import SectionPage from "./Views/SectionPage/SectionPage";
 import ClassPage from "./Views/ClassPage/ClassPage";
+import NotificationsPage from "./Views/NotificationsPage/NotificationsPage";
 
 const App = () => {
   useAuth();
@@ -24,6 +25,7 @@ const App = () => {
         <Route path="/class/:classId" element={<ClassPage />} />
         <Route path="/class/:classId/:sectionId" element={<SectionPage />} />
         <Route path="/projects" element={<ProjectsPage />} />
+        <Route path="/notifications" element={<NotificationsPage />} />
         <Route exact path="/" element={<LandingPage />} />
         <Route path="*" element={<LandingPage />} />
       </Routes>
