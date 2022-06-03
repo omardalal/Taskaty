@@ -68,3 +68,5 @@ export const cities = [
   "Hebron",
   "Jericho"
 ];
+
+export const projectTypes = ["Personal", "Educational", "Work"];

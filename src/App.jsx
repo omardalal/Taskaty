@@ -11,6 +11,9 @@ import ProjectsPage from "./Views/ProjectsPage/ProjectsPage";
 import SectionPage from "./Views/SectionPage/SectionPage";
 import ClassPage from "./Views/ClassPage/ClassPage";
 import NotificationsPage from "./Views/NotificationsPage/NotificationsPage";
+import ProjectPage from "./Views/ProjectPage/ProjectPage";
+import TaskPage from "./Views/TaskPage/TaskPage";
+import SubmissionPage from "./Views/SubmissionPage/SubmissionPage";
 
 const App = () => {
   useAuth();
@@ -24,8 +27,11 @@ const App = () => {
         <Route path="/classes" element={<ClassesPage />} />
         <Route path="/class/:classId" element={<ClassPage />} />
         <Route path="/class/:classId/:sectionId" element={<SectionPage />} />
+        <Route path="/project/:projectId" element={<ProjectPage />} />
         <Route path="/projects" element={<ProjectsPage />} />
         <Route path="/notifications" element={<NotificationsPage />} />
+        <Route path="/task/:taskId" element={<TaskPage />} />
+        <Route path="/submission/:submissionId" element={<SubmissionPage />} />
         <Route exact path="/" element={<LandingPage />} />
         <Route path="*" element={<LandingPage />} />
       </Routes>

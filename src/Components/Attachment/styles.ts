@@ -27,12 +27,14 @@ export const styles = {
   downloadButton: (focused: boolean) =>
     ({
       backgroundColor: focused ? blue50Hover : blue50,
-      borderRadius: "0 10px 10px 0"
+      borderRadius: "0 10px 10px 0",
+      transition: "0.3s"
     } as CSSProperties),
   deleteButton: (focused: boolean, showDownloadBtn: boolean) =>
     ({
       backgroundColor: focused ? red50Hover : red50,
-      ...(!showDownloadBtn && { borderRadius: "0 10px 10px 0" })
+      ...(!showDownloadBtn && { borderRadius: "0 10px 10px 0" }),
+      transition: "0.3s"
     } as CSSProperties),
   attachmentButton: {
     padding: "0 25px",

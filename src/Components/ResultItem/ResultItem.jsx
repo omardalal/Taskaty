@@ -48,11 +48,7 @@ const ResultItem = ({
         <h5 style={styles.resultItemSubtitle}>{extraInfo}</h5>
       </div>
       <div
-        style={styles.resultItemVisitBtn(
-          mouseOver,
-          !!onPressGoToUrl,
-          btnDisabled
-        )}
+        style={styles.resultItemVisitBtn(mouseOver, btnDisabled)}
         onMouseEnter={() => setMouseOver(true)}
         onMouseLeave={() => setMouseOver(false)}
       >
