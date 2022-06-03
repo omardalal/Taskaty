@@ -36,6 +36,12 @@ export const styles = {
     display: "flex",
     paddingTop: 15
   } as CSSProperties,
+  gradesMainContainer: {
+    width: "100%",
+    display: "flex",
+    padding: 15,
+    flexDirection: "column"
+  } as CSSProperties,
   boxContainer: {
     borderRadius: 10,
     padding: "28px 18px",
@@ -76,5 +82,52 @@ export const styles = {
     maxHeight: 200,
     overflow: "auto"
   } as CSSProperties,
-  tagsTitle: { marginBottom: 10 } as CSSProperties
+  tagsTitle: { marginBottom: 10 } as CSSProperties,
+  // Tasks Page
+  tasksPageContainer: {
+    display: "flex",
+    flexDirection: "column",
+    flex: 1,
+    margin: "0 20px"
+  } as CSSProperties,
+  taskBoardsContainer: {
+    display: "flex",
+    justifyContent: "space-around",
+    flexWrap: "wrap",
+    flex: 1
+  } as CSSProperties,
+  taskBoard: {
+    borderRadius: 10,
+    overflow: "hidden",
+    backgroundColor: gray10,
+    display: "flex",
+    flexDirection: "column",
+    minWidth: 400,
+    flex: 1,
+    margin: "10px 7.5px",
+    paddingBottom: 10,
+    minHeight: 500
+  } as CSSProperties,
+  taskBoardTitle: {
+    padding: "15px 0",
+    backgroundColor: "white",
+    textAlign: "center",
+    fontSize: 24,
+    marginBottom: 10
+  } as CSSProperties,
+  // Grading Page
+  gradingAttachments: {
+    display: "flex",
+    flex: 1,
+    flexWrap: "wrap"
+  } as CSSProperties,
+  gradingBoxTitle: {
+    fontSize: 22,
+    fontWeight: 450,
+    marginBottom: 15
+  } as CSSProperties,
+  gradeRow: {
+    display: "flex",
+    justifyContent: "space-between"
+  } as CSSProperties
 };

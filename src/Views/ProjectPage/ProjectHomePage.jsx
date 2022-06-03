@@ -1,6 +1,5 @@
 import React from "react";
 import { styles } from "./styles.ts";
-import PropTypes from "prop-types";
 import { Tag } from "carbon-components-react";
 import { User16 } from "@carbon/icons-react";
 
