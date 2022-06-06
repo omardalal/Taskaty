@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import CustomButton from "../../Components/CustomButton/CustomButton";
 import TaskBox from "../../Components/TaskBox/TaskBox";
 import { styles } from "./styles.ts";
@@ -10,7 +10,10 @@ export const TaskStatus = {
   Closed: "Closed"
 };
 
-const TasksPage = ({ setCreateTaskModalVisible }) => {
+const TasksPage = ({ setCreateTaskModalVisible, projectData }) => {
+  useEffect(() => {
+    console.log(projectData);
+  }, []);
   const getTaskBoard = (taskStatus) => {
     const task = {
       username: "Omar Dalal",
@@ -61,7 +64,8 @@ const TasksPage = ({ setCreateTaskModalVisible }) => {
 };
 
 TasksPage.propTypes = {
-  setCreateTaskModalVisible: PropTypes.func
+  setCreateTaskModalVisible: PropTypes.func,
+  projectData: PropTypes.object
 };
 
 export default TasksPage;

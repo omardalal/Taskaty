@@ -2,12 +2,12 @@ import React from "react";
 import { styles } from "./styles.ts";
 import CustomButton from "../../Components/CustomButton/CustomButton";
 import Attachment from "../../Components/Attachment/Attachment";
-import { PropTypes } from "prop-types";
+import PropTypes from "prop-types";
 
 const INS = true;
 const beforeDeadline = true;
 
-const GradesPage = ({ setGradeModalVisible }) => {
+const GradesPage = ({ setGradeModalVisible, projectData }) => {
   const getSubmittedFilesBox = () => {
     return (
       <div style={styles.boxContainer} className={"defaultBoxShadowBlack"}>
@@ -83,7 +83,8 @@ const GradesPage = ({ setGradeModalVisible }) => {
 };
 
 GradesPage.propTypes = {
-  setGradeModalVisible: PropTypes.func
+  setGradeModalVisible: PropTypes.func,
+  projectData: PropTypes.object
 };
 
 export default GradesPage;

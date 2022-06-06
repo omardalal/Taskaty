@@ -42,8 +42,8 @@ const ClassGroup = ({
             getUserRow(`${user.firstName} ${user.lastName}`, user.id)
           )
         ) : (
-          <h5 style={{ fontWeight: "450", marginLeft: 15 }}>
-            {"No members yet."}
+          <h5 style={{ fontWeight: "450", marginLeft: 15, marginBottom: 15 }}>
+            {"No users found."}
           </h5>
         )}
       </div>
