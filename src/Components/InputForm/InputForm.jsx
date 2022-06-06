@@ -16,11 +16,12 @@ const InputForm = ({
   leftBtn,
   showAlert,
   alertMessage,
-  alertSuccess
+  alertSuccess,
+  light
 }) => {
   return (
     <Form
-      style={styles.formButtonContainer(minHeight)}
+      style={styles.formButtonContainer(minHeight, !!light)}
       className={"defaultBoxShadowBlack"}
       onKeyDown={(event) => {
         if (event.key === "Enter") {
@@ -67,7 +68,8 @@ InputForm.propTypes = {
   leftBtn: PropTypes.element,
   showAlert: PropTypes.bool,
   alertMessage: PropTypes.string,
-  alertSuccess: PropTypes.bool
+  alertSuccess: PropTypes.bool,
+  light: PropTypes.bool
 };
 
 export default InputForm;

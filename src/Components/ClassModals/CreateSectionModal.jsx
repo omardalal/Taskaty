@@ -55,6 +55,7 @@ const CreateSectionModal = ({
   const getForm = () => (
     <>
       <NumberInput
+        hideSteppers
         data-modal-primary-focus
         invalidText={strings.fieldRequired}
         min={0}
@@ -69,6 +70,7 @@ const CreateSectionModal = ({
       />
       <div style={{ marginBottom: "1rem" }} />
       <NumberInput
+        hideSteppers
         data-modal-primary-focus
         min={0}
         invalidText={strings.fieldRequired}

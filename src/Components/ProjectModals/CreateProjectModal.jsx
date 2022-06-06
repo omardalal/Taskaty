@@ -12,6 +12,7 @@ import InputForm from "../InputForm/InputForm";
 import Modal from "../Modal/Modal";
 import { useAOS } from "../../CustomHooks/useAOS";
 import { generalSkills, projectTypes } from "../../Constants/lookupConstants";
+import { addNewProject } from "../../Utilities/ProjectUtils";
 
 const CreateProjectModal = ({
   visible,
@@ -53,7 +54,14 @@ const CreateProjectModal = ({
       return;
     }
     try {
-      //
+      await addNewProject(
+        formData.projectName,
+        formData.projectDescription,
+        formData.projectSkills,
+        formData.projectSubject,
+        formData.projectType,
+        loggedUser?.user?.email
+      );
       setSuccessMessage(true);
       setAlertMessage("Project Created!");
       setTimeout(() => {
@@ -103,8 +111,8 @@ const CreateProjectModal = ({
       />
       <div style={{ marginBottom: "1rem" }} />
       <Dropdown
-        titleText={strings.major}
-        label={`${strings.select} ${strings.major}`}
+        titleText={"Type"}
+        label={"Select Type"}
         items={projectTypes}
         itemToString={(item) => item || ""}
         onChange={(item) => {

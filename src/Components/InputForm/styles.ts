@@ -2,9 +2,9 @@ import { CSSProperties } from "react";
 import { gray10, red60, green60 } from "@carbon/colors";
 
 export const styles = {
-  formButtonContainer: (minHeight: number) =>
+  formButtonContainer: (minHeight: number, light: boolean) =>
     ({
-      backgroundColor: gray10,
+      backgroundColor: light ? "white" : gray10,
       borderRadius: 10,
       minHeight: minHeight,
       display: "flex",
