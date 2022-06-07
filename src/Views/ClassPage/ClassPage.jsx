@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { styles } from "./styles.ts";
 import CreateAnnouncementModal from "../../Components/ClassModals/CreateAnnouncementModal";
 import TabsManager from "../../Components/TabsManager/TabsManager";
@@ -8,6 +8,7 @@ import ClassSectionsPage from "./ClassSectionsPage";
 import CreateSectionModal from "../../Components/ClassModals/CreateSectionModal";
 import { useFetchClasses } from "../../CustomHooks/useFetchClasses";
 import useAuthRedirect from "../../CustomHooks/useAuthRedirect";
+import { isInClass } from "../../Utilities/ClassUtils";
 
 const ClassPage = () => {
   const { classId } = useParams();
@@ -48,6 +49,14 @@ const ClassPage = () => {
       }}
     />
   );
+
+  if (!classDetails || classDetails?.length === 0) {
+    return (
+      <h3 style={{ margin: "auto" }}>
+        {"Sorry, you don't have access to view this page!"}
+      </h3>
+    );
+  }
 
   return (
     <>

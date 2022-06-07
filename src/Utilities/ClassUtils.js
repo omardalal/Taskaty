@@ -36,6 +36,14 @@ export const getClasses = async (userId) => {
   return classes;
 };
 
+// get class data by id
+export const getClassById = async (classRoomID) => {
+  const classDocRef = doc(getFirebaseDb(), "Class", classRoomID);
+  const classDoc = await getDoc(classDocRef);
+  const classData = classDoc.data();
+  return classData;
+};
+
 // return sections in specific class
 export const returnSections = async (classRoomID) => {
   const classDocRef = doc(getFirebaseDb(), "Class", classRoomID);
@@ -105,6 +113,7 @@ export const addGroupInvitation = async (fromUserId, toUserId, groupId) => {
     toUser: toUserRef
   });
 };
+
 // create class , has empty sections and announcements
 export const createClass = async (
   className,
@@ -119,7 +128,8 @@ export const createClass = async (
     courseCode: classCode,
     courseDesc: description,
     courseName: className,
-    instructor: instructorRef
+    instructor: instructorRef,
+    students: []
   });
 };
 
@@ -158,17 +168,22 @@ export const createSection = async (
 export const createGroupForSection = async (
   groupName,
   userId,
-  // projectId,
+  projectId,
   classId,
   sectionNumber
 ) => {
   const classRef = doc(getFirebaseDb(), "Class", classId);
-  // const projectRef = doc(getFirebaseDb(), "Project", projectId);
+  let projectRef;
+  if (projectId) {
+    projectRef = doc(getFirebaseDb(), "Project", projectId);
+  }
   const userRef = doc(getFirebaseDb(), "users", userId);
   const groupRef = await addDoc(collection(getFirebaseDb(), "Group"), {
     groupName: groupName,
-    // project: projectRef,
-    students: [{ userRef: userRef }]
+    project: projectRef ?? "",
+    students: [{ userRef: userRef }],
+    classRef,
+    sectionNumber
   });
   const sectionArr = (await getDoc(classRef)).data().Sections;
   const groupArr = sectionArr[sectionNumber - 1].groups;
@@ -213,7 +228,7 @@ export const isInClass = async (classId, userId) => {
   const students = classData.students;
 
   let student;
-  students.forEach((Student) => {
+  students?.forEach((Student) => {
     const studentId = Student.studentRef;
 
     if (studentId.path === userRef.path) {

@@ -10,9 +10,12 @@ import CreateTaskModal from "../../Components/ProjectModals/CreateTaskModal";
 import SuggestedUserPage from "./SuggestedUserPage";
 import GradeProjectModal from "../../Components/ProjectModals/GradeProjectModal";
 import SubmitProjectModal from "../../Components/ProjectModals/SubmitProjectModal";
-import { getProjectByID } from "../../Utilities/ProjectUtils";
-
-const INS = true;
+import {
+  getProjectByID,
+  getProjectGroup,
+  isPartOfProject
+} from "../../Utilities/ProjectUtils";
+import { getClassById } from "../../Utilities/ClassUtils";
 
 const ProjectPage = () => {
   const { projectId } = useParams();
@@ -22,12 +25,47 @@ const ProjectPage = () => {
   const [createTaskModalVisible, setCreateTaskModalVisible] = useState(false);
   const [gradeModalVisible, setGradeModalVisible] = useState(false);
   const [projectData, setProjectData] = useState({});
+  const [isInstructor, setIsInstructor] = useState(false);
+  const [isInClass, setIsInClass] = useState(false);
+  const [isUserAuthorized, setIsUserAuthorized] = useState(true);
 
   useEffect(() => {
+    const checkUserAuth = async () => {
+      return await isPartOfProject(loggedUser?.user?.email, projectId);
+    };
+
     const getProjects = async () => {
       const prj = await getProjectByID(projectId);
       return { ...prj, ...{ id: projectId } };
     };
+
+    const getProjectClass = async () => {
+      const projectGroup = await getProjectGroup(projectId);
+      if (projectGroup == null) {
+        return null;
+      }
+      setIsInClass(true);
+      const projectClass = getClassById(projectGroup?.classRef?.id);
+      return projectClass;
+    };
+
+    getProjectClass()
+      .then((projectClass) => {
+        setIsInstructor(
+          loggedUser?.user?.email === projectClass?.instructor?.id
+        );
+      })
+      .catch((err) =>
+        console.error(`Failed to get project class, Error: ${err}`)
+      );
+
+    checkUserAuth()
+      .then((auth) => {
+        setIsUserAuthorized(auth || isInstructor);
+      })
+      .catch((err) =>
+        console.error(`Failed to get user access, Error: ${err}`)
+      );
 
     getProjects()
       .then((projects) => {
@@ -36,7 +74,15 @@ const ProjectPage = () => {
       .catch((err) =>
         console.error(`Failed to get user projects, Error: ${err}`)
       );
-  }, []);
+  }, [loggedUser, isInstructor]);
+
+  if (!isUserAuthorized) {
+    return (
+      <h3 style={{ margin: "auto" }}>
+        {"Sorry, you don't have access to view this page!"}
+      </h3>
+    );
+  }
 
   const getCreateTaskModal = () => (
     <CreateTaskModal
@@ -49,7 +95,7 @@ const ProjectPage = () => {
 
   const getGradeModal = () => (
     <>
-      {INS ? (
+      {isInstructor ? (
         <GradeProjectModal
           visible={gradeModalVisible}
           onDismissPress={() => setGradeModalVisible(false)}
@@ -78,7 +124,10 @@ const ProjectPage = () => {
         }}
       >
         <TabsManager
-          tabTitles={["Home", "Tasks", "Grading", "Suggested Users"]}
+          tabTitles={(() =>
+            isInClass
+              ? ["Home", "Tasks", "Grading", "Suggested Users"]
+              : ["Home", "Tasks", "Suggested Users"])()}
           selectedIndex={selectedIndex}
           setSelectedIndex={setSelectedIndex}
         />
@@ -91,15 +140,16 @@ const ProjectPage = () => {
             />
           )}
           {selectedIndex === 2 && (
-            <GradesPage
-              setGradeModalVisible={setGradeModalVisible}
-              projectData={projectData}
-            />
-          )}
-          {selectedIndex === 3 && (
             <SuggestedUserPage
               projectData={projectData}
               loggedUser={loggedUser}
+            />
+          )}
+          {selectedIndex === 3 && (
+            <GradesPage
+              setGradeModalVisible={setGradeModalVisible}
+              projectData={projectData}
+              isInstructor={isInstructor}
             />
           )}
         </div>

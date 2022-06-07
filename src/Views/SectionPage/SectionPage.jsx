@@ -9,7 +9,7 @@ import CreateAnnouncementModal from "../../Components/ClassModals/CreateAnnounce
 import CreateGroupModal from "../../Components/ClassModals/CreateGroupModal";
 import GroupsPage from "./GroupsPage";
 import { useFetchClasses } from "../../CustomHooks/useFetchClasses";
-import { getGroup } from "../../Utilities/ClassUtils";
+import { getGroup, isInClass } from "../../Utilities/ClassUtils";
 
 const SectionPage = () => {
   const loggedUser = useAuthRedirect(true);
@@ -22,9 +22,13 @@ const SectionPage = () => {
     refreshFetch,
     setDoneFetchClassDetails
   );
-
   const [sectionGroups, setSectionGroups] = useState([]);
   const [availableList, setAvailableList] = useState([]);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [createAnnouncementModalVisible, setCreateAnnouncementModalVisible] =
+    useState(false);
+  const [createGroupModalVisible, setCreateGroupModalVisible] = useState(false);
+  const [isUserAuthorized, setIsUserAuthorized] = useState(false);
 
   useEffect(() => {
     if (!classDetails || !doneFetchClassDetails) {
@@ -66,20 +70,42 @@ const SectionPage = () => {
       return { groups: groups ?? [], availableList: allStudentsInSection };
     };
 
+    const userHasAccess = async () => {
+      if (classDetails.instructor?.id === loggedUser?.user?.email) {
+        return true;
+      }
+      return await isInClass(classId, loggedUser?.user?.email);
+    };
+
     getGroupsBySection(classDetails.students, sectionDetails?.groups)
       .then((groupsInfo) => {
         setSectionGroups(groupsInfo.groups);
         setAvailableList(groupsInfo.availableList);
       })
       .catch((err) => console.error(`Failed to fetch groups, Error=${err}`));
+
+    userHasAccess()
+      .then((hasAccess) => {
+        let isInSection = false;
+        if (hasAccess?.sectionNumber) {
+          isInSection = hasAccess?.sectionNumber === Number(sectionId);
+        } else if (hasAccess) {
+          isInSection = true;
+        } else {
+          isInSection = false;
+        }
+        setIsUserAuthorized(isInSection);
+      })
+      .catch((err) => console.error(`Failed to get user access, Error=${err}`));
   }, [classDetails, refreshFetch, doneFetchClassDetails]);
 
-  const [selectedIndex, setSelectedIndex] = useState(0);
-
-  const [createAnnouncementModalVisible, setCreateAnnouncementModalVisible] =
-    useState(false);
-
-  const [createGroupModalVisible, setCreateGroupModalVisible] = useState(false);
+  if (!classDetails || classDetails?.length === 0 || !isUserAuthorized) {
+    return (
+      <h3 style={{ margin: "auto" }}>
+        {"Sorry, you don't have access to view this page!"}
+      </h3>
+    );
+  }
 
   const getCreateAnnouncementModal = () => (
     <CreateAnnouncementModal

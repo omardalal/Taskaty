@@ -4,10 +4,9 @@ import CustomButton from "../../Components/CustomButton/CustomButton";
 import Attachment from "../../Components/Attachment/Attachment";
 import PropTypes from "prop-types";
 
-const INS = true;
 const beforeDeadline = true;
 
-const GradesPage = ({ setGradeModalVisible, projectData }) => {
+const GradesPage = ({ setGradeModalVisible, projectData, isInstructor }) => {
   const getSubmittedFilesBox = () => {
     return (
       <div style={styles.boxContainer} className={"defaultBoxShadowBlack"}>
@@ -17,21 +16,21 @@ const GradesPage = ({ setGradeModalVisible, projectData }) => {
             fileName={"File Name"}
             fileType={"Plain/Text"}
             showDownloadBtn
-            showDeleteBtn={beforeDeadline && !INS}
+            showDeleteBtn={beforeDeadline && !isInstructor}
           />
           <div style={{ margin: "0 2.5px" }} />
           <Attachment
             fileName={"File Name"}
             fileType={"Plain/Text"}
             showDownloadBtn
-            showDeleteBtn={beforeDeadline && !INS}
+            showDeleteBtn={beforeDeadline && !isInstructor}
           />
           <div style={{ margin: "0 2.5px" }} />
           <Attachment
             fileName={"File Name"}
             fileType={"Plain/Text"}
             showDownloadBtn
-            showDeleteBtn={beforeDeadline && !INS}
+            showDeleteBtn={beforeDeadline && !isInstructor}
           />
         </div>
       </div>
@@ -68,9 +67,9 @@ const GradesPage = ({ setGradeModalVisible, projectData }) => {
         <div style={styles.titleRightBtnContainer}>
           <CustomButton
             blackButton
-            text={INS ? "Grade Project" : "Submit Project"}
+            text={isInstructor ? "Grade Project" : "Submit Project"}
             onClick={() => setGradeModalVisible(true)}
-            disabled={!beforeDeadline && !INS}
+            disabled={!beforeDeadline && !isInstructor}
           />
         </div>
       </div>
@@ -84,7 +83,8 @@ const GradesPage = ({ setGradeModalVisible, projectData }) => {
 
 GradesPage.propTypes = {
   setGradeModalVisible: PropTypes.func,
-  projectData: PropTypes.object
+  projectData: PropTypes.object,
+  isInstructor: PropTypes.bool
 };
 
 export default GradesPage;

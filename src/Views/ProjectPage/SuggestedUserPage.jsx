@@ -42,7 +42,7 @@ const SuggestedUserPage = ({ loggedUser, projectData }) => {
   const getOptionsBox = () => (
     <>
       <Dropdown
-        titleText={"Most Important Factort"}
+        titleText={"Most Important Factor"}
         label={"Select Factor"}
         items={["", "Skills", "Interests", "University", "Major", "Location"]}
         itemToString={(item) => item || ""}

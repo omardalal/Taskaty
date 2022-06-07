@@ -159,3 +159,23 @@ export async function getProjectByID(projectID) {
 
   return data;
 }
+
+export const getProjectGroup = async (projectId) => {
+  const groupsRef = collection(getFirebaseDb(), "Group");
+  let group = null;
+  await getDocs(groupsRef)
+    .then((snapshot) => {
+      const targetGroup = snapshot.docs.find((doc) => {
+        const prj = doc.get("project");
+        if (prj?.id === projectId) {
+          return true;
+        }
+        return false;
+      });
+      group = targetGroup?.data() ?? null;
+    })
+    .catch((err) => {
+      console.error(`Failed to get project group, Error: ${err}`);
+    });
+  return group;
+};
