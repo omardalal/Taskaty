@@ -28,7 +28,21 @@ export const programmingLanguages = [
   "Python",
   "Bash"
 ];
-
+export const notificationTypes = [
+  "Group Invitation",
+  "Project Invitation",
+  "New Meeting",
+  "New Deadline",
+  "New Message",
+  "New Task",
+  "New Announcement",
+  "Task Submission Comment",
+  "New Task Submission",
+  "Task Assigned",
+  "Near Deadline",
+  "Near Meeting",
+  "Approved Task Submission"
+];
 export const majors = [
   "Computer Science",
   "Computer Engineering",
