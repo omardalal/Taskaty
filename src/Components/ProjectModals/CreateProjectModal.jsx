@@ -13,13 +13,15 @@ import Modal from "../Modal/Modal";
 import { useAOS } from "../../CustomHooks/useAOS";
 import { generalSkills, projectTypes } from "../../Constants/lookupConstants";
 import { addNewProject } from "../../Utilities/ProjectUtils";
+import { setGroupProject } from "../../Utilities/ClassUtils";
 
 const CreateProjectModal = ({
   visible,
   onOverlayClick,
   onDismissPress,
   onSuccess,
-  loggedUser
+  loggedUser,
+  groupId
 }) => {
   const formInitialState = {
     projectName: "",
@@ -54,7 +56,7 @@ const CreateProjectModal = ({
       return;
     }
     try {
-      await addNewProject(
+      const createPrj = await addNewProject(
         formData.projectName,
         formData.projectDescription,
         formData.projectSkills,
@@ -62,6 +64,9 @@ const CreateProjectModal = ({
         formData.projectType,
         loggedUser?.user?.email
       );
+      if (groupId) {
+        await setGroupProject(groupId, createPrj?.id);
+      }
       setSuccessMessage(true);
       setAlertMessage("Project Created!");
       setTimeout(() => {
@@ -168,7 +173,8 @@ CreateProjectModal.propTypes = {
   onDismissPress: PropTypes.func,
   onOverlayClick: PropTypes.func,
   onSuccess: PropTypes.func,
-  loggedUser: PropTypes.object
+  loggedUser: PropTypes.object,
+  groupId: PropTypes.string
 };
 
 export default CreateProjectModal;

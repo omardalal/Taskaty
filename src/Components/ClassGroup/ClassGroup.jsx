@@ -3,30 +3,62 @@ import strings from "../../Constants/strings";
 import { styles } from "./styles.ts";
 import PropTypes from "prop-types";
 import { UserFollow20 } from "@carbon/icons-react";
+import { useNavigate } from "react-router-dom";
+import { createInvitation } from "../../Utilities/InvitationUtils";
+import { InvitationType } from "../../Views/NotificationsPage/NotificationsPage";
 
-// usersArray: Array of {firstName, lastName, userId}
+// usersArray: Array of {firstName, lastName, id}
 const ClassGroup = ({
   groupId,
   groupName,
+  projectId,
   usersArray,
   long,
   hideLeftBtn,
   hideRightBtn,
-  rightBtnDisabled
+  rightBtnDisabled,
+  setCreateProjectModalVisible,
+  loggedUser,
+  loggedUserGroup,
+  setNotif,
+  isPrj
 }) => {
   const [rightBtnFocused, setRightBtnFocused] = useState(false);
   const [leftBtnFocused, setLeftBtnFocused] = useState(false);
+
+  const navigate = useNavigate();
 
   const getUserRow = (username, userId) => (
     <div style={styles.nameRow}>
       <h4 style={styles.nameText}>{username}</h4>
       <div
-        onClick={() => {
-          console.log(`Request from user (loggedId) to user ${userId}`);
+        onClick={async () => {
+          try {
+            await createInvitation(
+              loggedUser?.user?.email,
+              userId,
+              isPrj ? InvitationType.Project : InvitationType.Group,
+              loggedUserGroup
+            );
+            setNotif({
+              type: "success",
+              visible: true,
+              title: "Invitation Sent",
+              subtitle: `You invited ${userId} to join your group`
+            });
+          } catch (err) {
+            setNotif({
+              type: "error",
+              visible: true,
+              title: "Invitation Failed",
+              subtitle: "There was a problem sending your invitation"
+            });
+            console.error("Failed to send Invitation, Error: " + err);
+          }
         }}
         style={styles.iconBtnContainer}
       >
-        {!groupId && <UserFollow20 />}
+        {!groupId && loggedUserGroup && <UserFollow20 />}
       </div>
     </div>
   );
@@ -55,7 +87,14 @@ const ClassGroup = ({
               onMouseEnter={() => setLeftBtnFocused(true)}
               onMouseLeave={() => setLeftBtnFocused(false)}
               onClick={() => {
-                console.log("Visit Project");
+                if (!projectId) {
+                  setCreateProjectModalVisible({
+                    visible: true,
+                    groupId: groupId
+                  });
+                  return;
+                }
+                navigate(`/project/${projectId}`, { replace: true });
               }}
             >
               {strings.visitProject}
@@ -66,11 +105,26 @@ const ClassGroup = ({
               style={styles.rightBtn(rightBtnFocused, rightBtnDisabled)}
               onMouseEnter={() => setRightBtnFocused(true)}
               onMouseLeave={() => setRightBtnFocused(false)}
-              onClick={() => {
-                if (rightBtnDisabled) {
+              onClick={async () => {
+                if (usersArray?.length < 1) {
                   return;
                 }
-                console.log(`Request to join group with Id: ${groupId}`);
+                try {
+                  await createInvitation(
+                    loggedUser?.user?.email,
+                    usersArray[0].id,
+                    InvitationType.Group,
+                    groupId
+                  );
+                  setNotif({
+                    type: "success",
+                    visible: true,
+                    title: "Invitation Sent",
+                    subtitle: `You asked to join group ${groupName}`
+                  });
+                } catch (err) {
+                  console.error("Failed to send request, Error: " + err);
+                }
               }}
             >
               {strings.requestToJoin}
@@ -86,10 +140,16 @@ ClassGroup.propTypes = {
   usersArray: PropTypes.array,
   groupId: PropTypes.string,
   groupName: PropTypes.string,
+  projectId: PropTypes.string,
   long: PropTypes.bool,
   hideLeftBtn: PropTypes.bool,
   hideRightBtn: PropTypes.bool,
-  rightBtnDisabled: PropTypes.bool
+  rightBtnDisabled: PropTypes.bool,
+  setCreateProjectModalVisible: PropTypes.func,
+  loggedUser: PropTypes.object,
+  loggedUserGroup: PropTypes.string,
+  setNotif: PropTypes.func,
+  isPrj: PropTypes.bool
 };
 
 export default ClassGroup;

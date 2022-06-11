@@ -14,6 +14,7 @@ import NotificationsPage from "./Views/NotificationsPage/NotificationsPage";
 import ProjectPage from "./Views/ProjectPage/ProjectPage";
 import TaskPage from "./Views/TaskPage/TaskPage";
 import SubmissionPage from "./Views/SubmissionPage/SubmissionPage";
+import ProfilePage from "./Views/ProfilePage/ProfilePage";
 
 const App = () => {
   useAuth();
@@ -30,6 +31,7 @@ const App = () => {
         <Route path="/project/:projectId" element={<ProjectPage />} />
         <Route path="/projects" element={<ProjectsPage />} />
         <Route path="/notifications" element={<NotificationsPage />} />
+        <Route path="/profile/:userId" element={<ProfilePage />} />
         <Route path="/task/:taskId" element={<TaskPage />} />
         <Route path="/submission/:submissionId" element={<SubmissionPage />} />
         <Route exact path="/" element={<LandingPage />} />

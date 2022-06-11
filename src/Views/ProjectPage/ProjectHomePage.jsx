@@ -34,7 +34,7 @@ const ProjectHomePage = ({ projectData }) => {
   const getTagsBox = (title, type) => {
     const members = projectData?.members;
     const skills = projectData?.skills;
-    const tags = type === TagType.skills ? skills : members;
+    const tags = type === TagType.Skills ? skills : members;
     return (
       <div style={styles.boxContainer} className={"defaultBoxShadowBlack"}>
         <h2 style={{ ...styles.homeHeader2, ...styles.tagsTitle }}>{title}</h2>
@@ -53,7 +53,7 @@ const ProjectHomePage = ({ projectData }) => {
     <div style={styles.homeMainContainer}>
       {getDescBox()}
       <div style={styles.homeRightContainer}>
-        {getTagsBox("Project Skills", TagType.skills)}
+        {getTagsBox("Project Skills", TagType.Skills)}
         {getTagsBox("Project Members", TagType.Members)}
       </div>
     </div>

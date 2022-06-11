@@ -139,17 +139,23 @@ const ProjectPage = () => {
               projectData={projectData}
             />
           )}
-          {selectedIndex === 2 && (
+          {selectedIndex === 3 && isInClass && (
             <SuggestedUserPage
               projectData={projectData}
               loggedUser={loggedUser}
             />
           )}
-          {selectedIndex === 3 && (
+          {selectedIndex === 2 && isInClass && (
             <GradesPage
               setGradeModalVisible={setGradeModalVisible}
               projectData={projectData}
               isInstructor={isInstructor}
+            />
+          )}
+          {selectedIndex === 2 && !isInClass && (
+            <SuggestedUserPage
+              projectData={projectData}
+              loggedUser={loggedUser}
             />
           )}
         </div>

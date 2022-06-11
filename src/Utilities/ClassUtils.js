@@ -173,14 +173,10 @@ export const createGroupForSection = async (
   sectionNumber
 ) => {
   const classRef = doc(getFirebaseDb(), "Class", classId);
-  let projectRef;
-  if (projectId) {
-    projectRef = doc(getFirebaseDb(), "Project", projectId);
-  }
   const userRef = doc(getFirebaseDb(), "users", userId);
   const groupRef = await addDoc(collection(getFirebaseDb(), "Group"), {
     groupName: groupName,
-    project: projectRef ?? "",
+    project: projectId ?? "",
     students: [{ userRef: userRef }],
     classRef,
     sectionNumber
@@ -241,4 +237,12 @@ export const isInClass = async (classId, userId) => {
     }
   });
   return student;
+};
+
+export const setGroupProject = async (groupId, projectID) => {
+  const groupRef = doc(getFirebaseDb(), "Group", groupId);
+
+  return await updateDoc(groupRef, {
+    project: projectID
+  });
 };

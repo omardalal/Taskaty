@@ -6,6 +6,7 @@ import TabsManager from "../../Components/TabsManager/TabsManager";
 import SectionHomePage from "./SectionHomePage";
 import AnnouncementsPage from "./AnnouncementsPage";
 import CreateAnnouncementModal from "../../Components/ClassModals/CreateAnnouncementModal";
+import CreateProjectModal from "../../Components/ProjectModals/CreateProjectModal";
 import CreateGroupModal from "../../Components/ClassModals/CreateGroupModal";
 import GroupsPage from "./GroupsPage";
 import { useFetchClasses } from "../../CustomHooks/useFetchClasses";
@@ -27,6 +28,10 @@ const SectionPage = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [createAnnouncementModalVisible, setCreateAnnouncementModalVisible] =
     useState(false);
+  const [createProjectModalVisible, setCreateProjectModalVisible] = useState({
+    visible: false,
+    groupId: ""
+  });
   const [createGroupModalVisible, setCreateGroupModalVisible] = useState(false);
   const [isUserAuthorized, setIsUserAuthorized] = useState(false);
 
@@ -135,10 +140,28 @@ const SectionPage = () => {
     />
   );
 
+  const getCreateProjectModal = () => (
+    <CreateProjectModal
+      visible={createProjectModalVisible.visible}
+      onDismissPress={() =>
+        setCreateProjectModalVisible({ visible: false, groupId: "" })
+      }
+      onOverlayClick={() =>
+        setCreateProjectModalVisible({ visible: false, groupId: "" })
+      }
+      onSuccess={() =>
+        setCreateProjectModalVisible({ visible: false, groupId: "" })
+      }
+      loggedUser={loggedUser}
+      groupId={createProjectModalVisible.groupId}
+    />
+  );
+
   return (
     <>
       {getCreateAnnouncementModal()}
       {getCreateGroupModal()}
+      {getCreateProjectModal()}
       <div style={styles.mainContainer}>
         <TabsManager
           tabTitles={["Home", "Groups", "Announcements"]}
@@ -156,6 +179,7 @@ const SectionPage = () => {
             <GroupsPage
               classDetails={classDetails}
               setCreateGroupModalVisible={setCreateGroupModalVisible}
+              setCreateProjectModalVisible={setCreateProjectModalVisible}
               sectionId={sectionId}
               availableList={availableList}
               sectionGroups={sectionGroups}

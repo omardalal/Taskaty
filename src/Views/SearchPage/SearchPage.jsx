@@ -195,7 +195,8 @@ const SearchPage = () => {
                   title: `${result.firstName} ${result.lastName}`,
                   subtitle: result.university,
                   city: result.city,
-                  buttonText: strings.visitProfile
+                  buttonText: strings.visitProfile,
+                  visitURL: `/profile/${result.email}`
                 });
               });
               setResults(users);

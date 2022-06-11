@@ -1,9 +1,10 @@
 /* eslint-disable indent */
-import React from "react";
+import React, { useState } from "react";
 import { styles } from "./styles.ts";
 import PropTypes from "prop-types";
 import CustomButton from "../../Components/CustomButton/CustomButton";
 import ClassGroup from "../../Components/ClassGroup/ClassGroup";
+import { InlineNotification } from "carbon-components-react";
 
 const GroupsPage = ({
   classDetails,
@@ -12,13 +13,30 @@ const GroupsPage = ({
   isInstructor,
   availableList,
   sectionGroups,
-  setCreateGroupModalVisible
+  setCreateGroupModalVisible,
+  setCreateProjectModalVisible
 }) => {
+  const [notif, setNotif] = useState({
+    type: "success",
+    visible: false,
+    title: "Invitation Sent",
+    subtitle: "You invited userId to join your group"
+  });
+
   const getAvailableList = () => (
     <ClassGroup
       usersArray={availableList}
       groupName={"Available Students"}
       long
+      loggedUser={loggedUser}
+      loggedUserGroup={
+        sectionGroups.find((group) =>
+          group.students?.some(
+            (student) => student.id === loggedUser?.user?.email
+          )
+        )?.id
+      }
+      setNotif={setNotif}
     />
   );
 
@@ -32,7 +50,10 @@ const GroupsPage = ({
           <ClassGroup
             usersArray={group.students}
             groupId={group.id}
+            projectId={group.project}
+            loggedUser={loggedUser}
             groupName={group.groupName}
+            setNotif={setNotif}
             key={index}
             hideLeftBtn={
               !group.students?.some(
@@ -45,6 +66,7 @@ const GroupsPage = ({
             rightBtnDisabled={
               group.students?.length >= getSectionDetails()?.maxStudentsInGroup
             }
+            setCreateProjectModalVisible={setCreateProjectModalVisible}
           />
         ))
       ) : (
@@ -52,6 +74,12 @@ const GroupsPage = ({
       )}
     </>
   );
+
+  const isStudentInGroup = () => {
+    return sectionGroups.some((group) =>
+      group.students?.some((student) => student.id === loggedUser?.user?.email)
+    );
+  };
 
   return (
     <>
@@ -62,13 +90,22 @@ const GroupsPage = ({
             <CustomButton
               blackButton
               disabled={
-                sectionGroups?.length >= getSectionDetails()?.maxNumOfGroups
+                sectionGroups?.length >= getSectionDetails()?.maxNumOfGroups ||
+                isStudentInGroup()
               }
               text="Create new group"
               onClick={() => setCreateGroupModalVisible(true)}
             />
           </div>
         </div>
+        {notif.visible && (
+          <InlineNotification
+            title={notif.title}
+            kind={notif.type}
+            subtitle={notif.subtitle}
+            onCloseButtonClick={() => setNotif({ ...notif, visible: false })}
+          />
+        )}
         <div style={styles.groupsPageBodyContainer}>
           <div style={styles.groupsContainer}>{getGroups()}</div>
           <div style={styles.availableListContainer}>{getAvailableList()}</div>
@@ -82,6 +119,7 @@ GroupsPage.propTypes = {
   classDetails: PropTypes.object,
   sectionId: PropTypes.string,
   setCreateGroupModalVisible: PropTypes.func,
+  setCreateProjectModalVisible: PropTypes.func,
   availableList: PropTypes.array,
   sectionGroups: PropTypes.array,
   loggedUser: PropTypes.object,
