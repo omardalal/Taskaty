@@ -43,8 +43,8 @@ const LandingPage = () => {
       <h3>{strings.landingPageSignUpDescription}</h3>
       {loggedUser?.user ? (
         <CustomButton
-          to="/"
-          text={strings.visitYourProfile}
+          to="/projects"
+          text={"Visit your projects"}
           blackButton={true}
         />
       ) : (

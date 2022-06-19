@@ -1,29 +1,108 @@
 /* eslint-disable indent */
-import { Dropdown, TextArea, TextInput } from "carbon-components-react";
-import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import {
+  Dropdown,
+  InlineNotification,
+  TextArea,
+  TextInput
+} from "carbon-components-react";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Attachment from "../../Components/Attachment/Attachment";
 import CustomButton from "../../Components/CustomButton/CustomButton";
 import useAuthRedirect from "../../CustomHooks/useAuthRedirect";
 import { TaskStatus } from "../ProjectPage/TasksPage";
 import { styles } from "./styles.ts";
 import { CheckmarkFilled16, PendingFilled16 } from "@carbon/icons-react";
-import { gray10 } from "@carbon/colors";
 import AddFilesModal from "../../Components/ProjectModals/AddFilesModal";
+import {
+  deleteFileFromTask,
+  editTask,
+  getTask
+} from "../../Utilities/TaskUtils";
+import { useFetchProjectData } from "../../CustomHooks/useFetchProjectData";
+import SubmitTaskModal from "../../Components/ProjectModals/SubmitTaskModal";
 
 const TaskPage = () => {
   const { taskId } = useParams();
   const loggedUser = useAuthRedirect(true);
 
-  const taskInitialValues = {
-    assignedTo: "User 1",
-    status: TaskStatus.New,
-    description: "Very Cool Task lol!",
-    name: "Task Name"
-  };
+  const [taskInitialValues, setTaskInitialValues] = useState({});
+  const [notif, setNotif] = useState({
+    type: "success",
+    visible: false,
+    title: "Changes saved",
+    subtitle: "Your changes have been saved successfully!"
+  });
 
-  const [taskValues, setTaskValues] = useState(taskInitialValues);
+  const navigate = useNavigate();
+
+  const [taskValues, setTaskValues] = useState({
+    assignedTo: "",
+    createdBy: "",
+    status: TaskStatus.New,
+    description: "",
+    name: "",
+    createdOn: "",
+    files: []
+  });
   const [addFilesModalVisible, setAddFilesModalVisible] = useState(false);
+  const [submitModalVisible, setSubmitModalVisible] = useState(false);
+  const [refreshData, setRefreshData] = useState(0);
+
+  useEffect(() => {
+    const getTaskData = async () => await getTask(taskId);
+
+    getTaskData()
+      .then((taskData) => {
+        setTaskValues(taskData);
+        setTaskInitialValues(taskData);
+      })
+      .catch((err) => console.error("Failed to get task data, Error: " + err));
+  }, [loggedUser]);
+
+  const [
+    isInstructor,
+    isInClass,
+    isUserAuthorized,
+    tasks,
+    projectData,
+    taskSubmissions
+  ] = useFetchProjectData(
+    loggedUser,
+    taskValues?.projectId,
+    taskId,
+    refreshData
+  );
+
+  if (!isUserAuthorized) {
+    return (
+      <h3 style={{ margin: "auto" }}>
+        {"Sorry, you don't have access to view this page!"}
+      </h3>
+    );
+  }
+
+  const getAssignedToDropDown = () => {
+    const items = ["Unassigned", ...(projectData.members ?? [])];
+    return (
+      <div style={styles.taskInfoRow}>
+        <h2 style={styles.header2}>{"Assigned To"}</h2>
+        <Dropdown
+          style={styles.dropdown}
+          items={items}
+          itemToString={(item) => item || ""}
+          initialSelectedItem={taskValues.assignedTo}
+          onChange={(item) => {
+            setTaskValues({
+              ...taskValues,
+              assignedTo: item.selectedItem
+            });
+          }}
+          light
+        />
+      </div>
+    );
+  };
 
   const getTaskInfoBox = () => {
     return (
@@ -32,38 +111,23 @@ const TaskPage = () => {
           <TextInput
             style={styles.taskName}
             data-modal-primary-focus
-            defaultValue={taskInitialValues.name}
+            defaultValue={taskValues.name}
             placeholder={"Task Name"}
             onChange={(evt) => {
               setTaskValues({ ...taskValues, name: evt.target?.value });
             }}
             light
           />
-          <h2 style={styles.header2}>{"#34"}</h2>
+          <h2 style={styles.header2}>{taskValues.id}</h2>
         </div>
-        <div style={styles.taskInfoRow}>
-          <h2 style={styles.header2}>{"Assigned To"}</h2>
-          <Dropdown
-            style={styles.dropdown}
-            items={["Unassigned", "User 1", "User 2", "User 3"]}
-            itemToString={(item) => item || ""}
-            initialSelectedItem={taskInitialValues.assignedTo}
-            onChange={(item) => {
-              setTaskValues({
-                ...taskValues,
-                assignedTo: item.selectedItem
-              });
-            }}
-            light
-          />
-        </div>
+        {getAssignedToDropDown()}
         <div style={styles.taskInfoRow}>
           <h2 style={styles.header2}>{"Status"}</h2>
           <Dropdown
             style={styles.dropdown}
             items={[TaskStatus.New, TaskStatus.Active, TaskStatus.Closed]}
             itemToString={(item) => item || ""}
-            initialSelectedItem={taskInitialValues.status}
+            initialSelectedItem={taskValues.status}
             onChange={(item) => {
               setTaskValues({
                 ...taskValues,
@@ -75,11 +139,13 @@ const TaskPage = () => {
         </div>
         <div style={styles.taskInfoRow}>
           <h2 style={styles.header2}>{"Created By"}</h2>
-          <h2 style={styles.header2}>{"User Name"}</h2>
+          <h2 style={styles.header2}>{taskValues.createdBy}</h2>
         </div>
         <div style={styles.taskInfoRow}>
           <h2 style={styles.header2}>{"Created On"}</h2>
-          <h2 style={styles.header2}>{"12-02-2021"}</h2>
+          <h2 style={styles.header2}>
+            {taskValues.createdOn?.toDate()?.toDateString()}
+          </h2>
         </div>
       </div>
     );
@@ -91,7 +157,7 @@ const TaskPage = () => {
         <h2 style={styles.boxTitle}>{"Task Description"}</h2>
         <TextArea
           style={styles.taskDescriptionBody}
-          defaultValue={taskInitialValues.description}
+          defaultValue={taskValues.description}
           data-modal-primary-focus
           placeholder={"Task Description"}
           onChange={(evt) => {
@@ -104,7 +170,7 @@ const TaskPage = () => {
   };
 
   const getAttachmentsBox = () => {
-    const attachments = [""];
+    const attachments = taskValues.files;
     return (
       <div style={styles.boxContainer} className={"defaultBoxShadowBlack"}>
         <div style={styles.titleBtnContainer}>
@@ -116,30 +182,31 @@ const TaskPage = () => {
           />
         </div>
         <div style={styles.attachmentsRow}>
-          {attachments.length > 0 ? (
-            <>
-              <Attachment
-                fileName={"File Name"}
-                fileType={"Plain/Text"}
-                showDownloadBtn
-                showDeleteBtn
-              />
-              <div style={{ margin: "0 2.5px" }} />
-              <Attachment
-                fileName={"File Name"}
-                fileType={"Plain/Text"}
-                showDownloadBtn
-                showDeleteBtn
-              />
-              <div style={{ margin: "0 2.5px" }} />
-              <Attachment
-                fileName={"File Name"}
-                fileType={"Plain/Text"}
-                showDownloadBtn
-                showDeleteBtn
-              />
-              <div style={{ margin: "0 2.5px" }} />
-            </>
+          {attachments?.length > 0 ? (
+            attachments.map((attachment, index) => (
+              <>
+                <Attachment
+                  fileName={attachment.fileName}
+                  fileType={"Plain/Text"}
+                  showDownloadBtn
+                  showDeleteBtn
+                  onDeletePress={async () => {
+                    try {
+                      await deleteFileFromTask(taskId, index);
+                      setTaskValues({
+                        ...taskValues,
+                        files: taskValues.files?.filter(
+                          (f, indx) => indx !== index
+                        )
+                      });
+                    } catch (err) {
+                      console.error("Failed to delete file, Error: " + err);
+                    }
+                  }}
+                />
+                <div style={{ margin: "0 2.5px" }} />
+              </>
+            ))
           ) : (
             <p style={styles.header2}>{"No attachments added."}</p>
           )}
@@ -149,27 +216,21 @@ const TaskPage = () => {
   };
 
   const getSubmissionsBox = () => {
-    const submissions = [
-      {
-        attachments: ["", "", ""],
-        submittedBy: "User Name!",
-        submissionStatus: "Pending",
-        submissionDate: "12-04-2022"
-      },
-      {
-        attachments: ["", "", ""],
-        submittedBy: "User Name!",
-        submissionStatus: "Approved",
-        submissionDate: "08-04-2022"
-      },
-      {
-        attachments: ["", "", ""],
-        submittedBy: "User Name!",
-        submissionStatus: "Approved",
-        submissionDate: "08-04-2022"
-      }
-    ];
-    // ****Sort by date****
+    const submissions = taskSubmissions
+      ?.map((sub) => ({
+        attachments: sub.files,
+        submittedBy: sub.submittedBy,
+        submissionStatus: projectData.members
+          ?.filter((member) => member !== sub.submittedBy)
+          ?.some((member) => !sub.approvedBy?.includes(member))
+          ? "Pending"
+          : "Approved",
+        submissionDate: sub.submittedOn?.toDate()?.toDateString(),
+        id: sub.id,
+        compareDate: sub.submittedOn?.seconds
+      }))
+      ?.sort((sub1, sub2) => sub2.compareDate - sub1.compareDate);
+
     return (
       <div style={styles.boxContainer} className={"defaultBoxShadowBlack"}>
         <h3 style={styles.boxTitle}>{"Submissions"}</h3>
@@ -185,7 +246,7 @@ const TaskPage = () => {
                 </h3>
               </div>
               <div style={styles.submissionStatusRow}>
-                {submission.submissionStatus.toLowerCase() ===
+                {submission.submissionStatus?.toLowerCase() ===
                 "Approved".toLowerCase() ? (
                   <CheckmarkFilled16
                     style={styles.submissionStatusIcon(
@@ -196,7 +257,7 @@ const TaskPage = () => {
                 ) : (
                   <PendingFilled16
                     style={styles.submissionStatusIcon(
-                      submission.submissionStatus.toLowerCase() ===
+                      submission.submissionStatus?.toLowerCase() ===
                         "Approved".toLowerCase()
                     )}
                   />
@@ -206,7 +267,11 @@ const TaskPage = () => {
                   <CustomButton
                     blackButton
                     text="Open"
-                    onClick={() => alert("SUBMISSION!")}
+                    onClick={() =>
+                      navigate(`/submission/${submission.id}`, {
+                        replace: true
+                      })
+                    }
                   />
                 </div>
               </div>
@@ -221,8 +286,8 @@ const TaskPage = () => {
                   {submission.attachments?.map((attachment) => (
                     <>
                       <Attachment
-                        fileName={"File Name"}
-                        fileType={"Plain/Text"}
+                        fileName={attachment.fileName}
+                        fileType={attachment.fileType}
                         showDownloadBtn
                         light
                       />
@@ -253,31 +318,86 @@ const TaskPage = () => {
     />
   );
 
+  const getSubmitModal = () => (
+    <SubmitTaskModal
+      visible={submitModalVisible}
+      onDismissPress={() => setSubmitModalVisible(false)}
+      onOverlayClick={() => setSubmitModalVisible(false)}
+      onSuccess={() => {
+        setSubmitModalVisible(false);
+        setRefreshData((prv) => prv + 1);
+      }}
+      loggedUser={loggedUser}
+      projectId={taskValues?.projectId}
+      taskId={taskId}
+    />
+  );
+
   return (
     <>
       {getAddFilesModal()}
+      {getSubmitModal()}
       <div style={styles.mainContainer}>
+        {notif.visible && (
+          <InlineNotification
+            title={notif.title}
+            kind={notif.type}
+            subtitle={notif.subtitle}
+            onCloseButtonClick={() => setNotif({ ...notif, visible: false })}
+          />
+        )}
         <div style={styles.saveBtnContainer}>
           <CustomButton
             blackButton
-            text="Go to Task Board"
-            onClick={() => alert("Task Board!")}
-          />
-          <CustomButton
-            blackButton
-            text="Save Changes"
-            onClick={() => {
-              console.log(taskValues);
-            }}
-            disabled={
-              JSON.stringify(taskValues) === JSON.stringify(taskInitialValues)
+            text="Go back to project"
+            onClick={
+              taskValues.projectId
+                ? () =>
+                    navigate(`/project/${taskValues?.projectId}`, {
+                      replace: true
+                    })
+                : undefined
             }
           />
+          <div style={styles.topRightBtnContainer}>
+            <CustomButton
+              blackButton
+              text="Add Submission"
+              onClick={() => setSubmitModalVisible(true)}
+            />
+            <div style={{ marginRight: 5 }} />
+            <CustomButton
+              blackButton
+              text="Save Changes"
+              onClick={async () => {
+                try {
+                  await editTask(taskId, taskValues);
+                  setNotif({
+                    type: "success",
+                    visible: true,
+                    title: "Changes saved",
+                    subtitle: "Your changes have been saved successfully!"
+                  });
+                } catch (err) {
+                  setNotif({
+                    type: "error",
+                    visible: true,
+                    title: "Changes not saved",
+                    subtitle: "Failed to save your changes!"
+                  });
+                  console.error("Failed to edit task, Error: " + err);
+                }
+              }}
+              disabled={
+                JSON.stringify(taskValues) === JSON.stringify(taskInitialValues)
+              }
+            />
+          </div>
         </div>
         <div style={styles.rowContainer}>
           <div style={styles.leftContainer}>
-            {getTaskInfoBox()}
-            {getDescriptionBox()}
+            {projectData.name && getTaskInfoBox()}
+            {projectData.description && getDescriptionBox()}
             {getAttachmentsBox()}
           </div>
           <div style={styles.rightContainer}>{getSubmissionsBox()}</div>

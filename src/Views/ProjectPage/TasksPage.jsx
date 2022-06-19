@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import CustomButton from "../../Components/CustomButton/CustomButton";
 import TaskBox from "../../Components/TaskBox/TaskBox";
 import { styles } from "./styles.ts";
@@ -10,24 +10,8 @@ export const TaskStatus = {
   Closed: "Closed"
 };
 
-const TasksPage = ({ setCreateTaskModalVisible, projectData }) => {
-  useEffect(() => {
-    console.log(projectData);
-  }, []);
+const TasksPage = ({ setCreateTaskModalVisible, projectData, tasks }) => {
   const getTaskBoard = (taskStatus) => {
-    const task = {
-      username: "Omar Dalal",
-      taskNumber: 22,
-      taskName: "Landing Page FE",
-      status: TaskStatus.New,
-      date: "12-02-2022"
-    };
-    const tasks = [];
-    for (let i = 0; i < 5; i++) {
-      tasks.push(task);
-      tasks.push({ ...task, ...{ status: TaskStatus.Active } });
-      tasks.push({ ...task, ...{ status: TaskStatus.Closed } });
-    }
     return (
       <div style={styles.taskBoard} className={"defaultBoxShadowBlack"}>
         <h3 style={styles.taskBoardTitle}>{taskStatus}</h3>
@@ -65,7 +49,8 @@ const TasksPage = ({ setCreateTaskModalVisible, projectData }) => {
 
 TasksPage.propTypes = {
   setCreateTaskModalVisible: PropTypes.func,
-  projectData: PropTypes.object
+  projectData: PropTypes.object,
+  tasks: PropTypes.array
 };
 
 export default TasksPage;

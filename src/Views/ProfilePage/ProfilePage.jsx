@@ -24,7 +24,7 @@ const ProfilePage = () => {
     type: "success",
     visible: false,
     title: "Invitation Sent",
-    subtitle: "You invited userId to join your group"
+    subtitle: "You invited userId to join your project"
   });
 
   useEffect(() => {

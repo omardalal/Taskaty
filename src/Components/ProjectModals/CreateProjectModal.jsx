@@ -131,8 +131,8 @@ const CreateProjectModal = ({
       />
       <div style={{ marginBottom: "1rem" }} />
       <MultiSelect
-        label={`${strings.select} ${strings.interests}`}
-        titleText={strings.interests}
+        label={`${strings.select} ${strings.skills}`}
+        titleText={strings.skills}
         items={generalSkills.sort()}
         itemToString={(item) => item || ""}
         selectionFeedback="top-after-reopen"

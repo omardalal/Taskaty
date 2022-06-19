@@ -64,7 +64,8 @@ const GroupsPage = ({
               (student) => student.id === loggedUser?.user?.email
             )}
             rightBtnDisabled={
-              group.students?.length >= getSectionDetails()?.maxStudentsInGroup
+              group.students?.length >=
+                getSectionDetails()?.maxStudentsInGroup || isStudentInGroup()
             }
             setCreateProjectModalVisible={setCreateProjectModalVisible}
           />

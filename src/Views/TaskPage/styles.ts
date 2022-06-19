@@ -1,4 +1,4 @@
-import { blue60, gray10, green40, red50, yellow30 } from "@carbon/colors";
+import { gray10, green40, green50, red50, yellow30 } from "@carbon/colors";
 import { CSSProperties } from "react";
 
 export const styles = {
@@ -30,7 +30,11 @@ export const styles = {
   } as CSSProperties,
   header2Light: { fontSize: 16 } as CSSProperties,
   header2: { fontSize: 16, fontWeight: "500" },
-  taskDescriptionBody: { fontSize: 14.75 } as CSSProperties,
+  taskDescriptionBody: {
+    fontSize: 14.75,
+    padding: 0,
+    minHeight: 250
+  } as CSSProperties,
   rowContainer: {
     display: "flex",
     paddingTop: 5,
@@ -47,7 +51,12 @@ export const styles = {
     minWidth: 500
   } as CSSProperties,
   dropdown: { minWidth: "40%" } as CSSProperties,
-  taskName: { maxWidth: "60%", minWidth: 250 } as CSSProperties,
+  taskName: {
+    maxWidth: "60%",
+    minWidth: 250,
+    fontSize: 24,
+    padding: 0
+  } as CSSProperties,
   attachmentsRow: {
     display: "flex",
     flex: 1,
@@ -72,7 +81,7 @@ export const styles = {
   } as CSSProperties,
   submissionStatusIcon: (checkMark: boolean) =>
     ({
-      color: checkMark ? blue60 : yellow30,
+      color: checkMark ? green50 : yellow30,
       marginRight: 5
     } as CSSProperties),
   submissionVersionTag: (checkMark: boolean) =>
@@ -97,5 +106,8 @@ export const styles = {
     display: "flex",
     justifyContent: "space-between",
     marginBottom: 5
+  } as CSSProperties,
+  topRightBtnContainer: {
+    display: "flex"
   } as CSSProperties
 };

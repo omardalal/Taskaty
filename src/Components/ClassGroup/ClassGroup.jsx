@@ -31,35 +31,37 @@ const ClassGroup = ({
   const getUserRow = (username, userId) => (
     <div style={styles.nameRow}>
       <h4 style={styles.nameText}>{username}</h4>
-      <div
-        onClick={async () => {
-          try {
-            await createInvitation(
-              loggedUser?.user?.email,
-              userId,
-              isPrj ? InvitationType.Project : InvitationType.Group,
-              loggedUserGroup
-            );
-            setNotif({
-              type: "success",
-              visible: true,
-              title: "Invitation Sent",
-              subtitle: `You invited ${userId} to join your group`
-            });
-          } catch (err) {
-            setNotif({
-              type: "error",
-              visible: true,
-              title: "Invitation Failed",
-              subtitle: "There was a problem sending your invitation"
-            });
-            console.error("Failed to send Invitation, Error: " + err);
-          }
-        }}
-        style={styles.iconBtnContainer}
-      >
-        {!groupId && loggedUserGroup && <UserFollow20 />}
-      </div>
+      {!groupId && loggedUserGroup && (
+        <div
+          onClick={async () => {
+            try {
+              await createInvitation(
+                loggedUser?.user?.email,
+                userId,
+                isPrj ? InvitationType.Project : InvitationType.Group,
+                loggedUserGroup
+              );
+              setNotif({
+                type: "success",
+                visible: true,
+                title: "Invitation Sent",
+                subtitle: `You invited ${userId} to join your group`
+              });
+            } catch (err) {
+              setNotif({
+                type: "error",
+                visible: true,
+                title: "Invitation Failed",
+                subtitle: "There was a problem sending your invitation"
+              });
+              console.error("Failed to send Invitation, Error: " + err);
+            }
+          }}
+          style={styles.iconBtnContainer}
+        >
+          <UserFollow20 />
+        </div>
+      )}
     </div>
   );
 
@@ -106,7 +108,7 @@ const ClassGroup = ({
               onMouseEnter={() => setRightBtnFocused(true)}
               onMouseLeave={() => setRightBtnFocused(false)}
               onClick={async () => {
-                if (usersArray?.length < 1) {
+                if (usersArray?.length < 1 || rightBtnDisabled) {
                   return;
                 }
                 try {

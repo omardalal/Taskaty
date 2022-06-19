@@ -28,13 +28,16 @@ const AnnouncementsPage = ({
               <h5 style={styles.announcementH5}>{"Attachments"}</h5>
               <div style={styles.announcementAttachments}>
                 {announcement.files?.map((file, index) => (
-                  <Attachment
-                    key={index}
-                    fileName={file.fileName}
-                    fileType={file.fileType}
-                    showDownloadBtn
-                    showDeleteBtn={false}
-                  />
+                  <>
+                    <Attachment
+                      key={index}
+                      fileName={file.fileName}
+                      fileType={file.fileType}
+                      showDownloadBtn
+                      showDeleteBtn={false}
+                    />
+                    <div style={{ marginRight: 5 }} />
+                  </>
                 ))}
               </div>
             </div>

@@ -1,22 +1,26 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { TextArea, TextInput, Dropdown } from "carbon-components-react";
+import { TextArea } from "carbon-components-react";
 import strings from "../../Constants/strings";
 import { styles } from "./styles.ts";
 import InputForm from "../InputForm/InputForm";
 import Modal from "../Modal/Modal";
 import { useAOS } from "../../CustomHooks/useAOS";
 import FileUploader from "../FileUploader/FileUploader";
+import { addSubmission } from "../../Utilities/TaskUtils";
 
-const AddFilesModal = ({
+const SubmitTaskModal = ({
   visible,
   onOverlayClick,
   onDismissPress,
   onSuccess,
   loggedUser,
-  onSubmit
+  projectId,
+  taskId
 }) => {
-  const formInitialState = {};
+  const formInitialState = {
+    description: ""
+  };
 
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [formData, setFormData] = useState(formInitialState);
@@ -29,19 +33,27 @@ const AddFilesModal = ({
     setShowError(false);
     setAlertMessage("");
     setSuccessMessage(false);
+    setUploadedFiles([]);
   }, [visible]);
 
   useAOS();
 
   const handleSubmitPress = async () => {
-    if (!uploadedFiles.length) {
+    if (!formData.description || uploadedFiles?.length < 1) {
       setShowError(true);
+      setAlertMessage("Please enter at least 1 file!");
       return;
     }
     try {
-      await onSubmit();
+      await addSubmission(
+        loggedUser?.user?.email,
+        taskId,
+        projectId,
+        formData.description,
+        []
+      );
       setSuccessMessage(true);
-      setAlertMessage("Files Added!");
+      setAlertMessage("Task Submission Added!");
       setTimeout(() => {
         onSuccess?.();
       }, 600);
@@ -52,6 +64,18 @@ const AddFilesModal = ({
 
   const getForm = () => (
     <>
+      <TextArea
+        invalid={showError && !formData.description}
+        invalidText={strings.fieldRequired}
+        data-modal-primary-focus
+        labelText={"Submission Description"}
+        placeholder={"Submission Description"}
+        onChange={(evt) => {
+          setFormData({ ...formData, description: evt.target?.value });
+        }}
+        light
+      />
+      <div style={{ marginBottom: "1rem" }} />
       <FileUploader
         filesArray={uploadedFiles}
         setFilesArray={setUploadedFiles}
@@ -65,8 +89,8 @@ const AddFilesModal = ({
     <Modal visible={visible} onOverlayClick={onOverlayClick}>
       <div style={styles.formContainer} data-aos="fade-up">
         <InputForm
-          titleText={"Add Files"}
-          descriptionText={"Choose Files!"}
+          titleText={"Submit Task"}
+          descriptionText={"Add new task submission!"}
           buttonText={"Add"}
           buttonOnClick={handleSubmitPress}
           FormElement={getForm()}
@@ -82,13 +106,14 @@ const AddFilesModal = ({
   );
 };
 
-AddFilesModal.propTypes = {
+SubmitTaskModal.propTypes = {
   visible: PropTypes.bool,
   onDismissPress: PropTypes.func,
   onOverlayClick: PropTypes.func,
   onSuccess: PropTypes.func,
   loggedUser: PropTypes.object,
-  onSubmit: PropTypes.func
+  projectId: PropTypes.string,
+  taskId: PropTypes.string
 };
 
-export default AddFilesModal;
+export default SubmitTaskModal;

@@ -198,8 +198,12 @@ const NotificationsPage = () => {
     return (
       <div style={styles.notifBox} className={"defaultBoxShadowBlack"}>
         <h3 style={styles.notifBoxTitle}>{title}</h3>
-        {notifications?.map((notif) =>
-          getNotification(notif.fromUserId === loggedUser?.user?.email, notif)
+        {notifications?.length > 0 ? (
+          notifications?.map((notif) =>
+            getNotification(notif.fromUserId === loggedUser?.user?.email, notif)
+          )
+        ) : (
+          <h5>{"No invitations yet!"}</h5>
         )}
       </div>
     );

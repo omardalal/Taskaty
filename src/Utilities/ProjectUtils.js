@@ -147,7 +147,7 @@ export async function isPartOfProject(memberEmail, projectID) {
 
   if (docSnap.exists()) {
     const projectMembers = await docSnap.get("members");
-    isPart = projectMembers.includes(memberEmail);
+    isPart = projectMembers?.includes(memberEmail);
   }
   return isPart;
 }
@@ -167,7 +167,7 @@ export const getProjectGroup = async (projectId) => {
     .then((snapshot) => {
       const targetGroup = snapshot.docs.find((doc) => {
         const prj = doc.get("project");
-        if (prj?.id === projectId) {
+        if (prj === projectId) {
           return true;
         }
         return false;

@@ -95,7 +95,7 @@ const SearchPage = () => {
         <MultiSelect
           label={`${strings.select} ${strings.interests}`}
           titleText={strings.interests}
-          items={generalSkills.sort()}
+          items={["", ...generalSkills.sort()]}
           itemToString={(item) => item || ""}
           selectionFeedback="top-after-reopen"
           light
@@ -112,7 +112,7 @@ const SearchPage = () => {
         <Dropdown
           titleText={strings.major}
           label={`${strings.select} ${strings.major}`}
-          items={majors.sort()}
+          items={["", ...majors.sort()]}
           itemToString={(item) => item || ""}
           onChange={(item) => {
             setFiltersValues({
@@ -128,7 +128,7 @@ const SearchPage = () => {
         <Dropdown
           titleText={strings.university}
           label={`${strings.select} ${strings.university}`}
-          items={universities.sort()}
+          items={["", ...universities.sort()]}
           itemToString={(item) => item || ""}
           onChange={(item) => {
             setFiltersValues({
@@ -144,7 +144,7 @@ const SearchPage = () => {
         <Dropdown
           titleText={strings.city}
           label={`${strings.select} ${strings.city}`}
-          items={cities.sort()}
+          items={["", ...cities.sort()]}
           itemToString={(item) => item || ""}
           onChange={(item) => {
             setFiltersValues({
@@ -189,16 +189,13 @@ const SearchPage = () => {
               const searchResults = await getSearchResultsByFilters(
                 filtersValues
               );
-              const users = [];
-              searchResults.forEach((result) => {
-                users.push({
-                  title: `${result.firstName} ${result.lastName}`,
-                  subtitle: result.university,
-                  city: result.city,
-                  buttonText: strings.visitProfile,
-                  visitURL: `/profile/${result.email}`
-                });
-              });
+              const users = searchResults.map((result) => ({
+                title: `${result.firstName} ${result.lastName}`,
+                subtitle: result.university,
+                city: result.city,
+                buttonText: strings.visitProfile,
+                visitURL: `/profile/${result.email}`
+              }));
               setResults(users);
             } catch (err) {}
           }}
