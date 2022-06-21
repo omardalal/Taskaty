@@ -18,7 +18,8 @@ export const styles = {
       minWidth: 305,
       margin: long ? "0 0 15px 0" : "0 15px 15px 0",
       ...(!long && { height: 295 }),
-      ...(long && { width: "100%" })
+      ...(long && { width: "100%" }),
+      overflow: "hidden"
     } as CSSProperties),
   nameRow: {
     backgroundColor: gray10,
@@ -28,7 +29,8 @@ export const styles = {
     justifyContent: "space-between"
   } as CSSProperties,
   nameText: {
-    fontSize: 18
+    fontSize: 18,
+    cursor: "pointer"
   } as CSSProperties,
   groupTitleContainer: {
     display: "flex",

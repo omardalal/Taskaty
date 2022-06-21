@@ -8,7 +8,8 @@ export const styles = {
       flex: 1,
       marginBottom: 5,
       backgroundColor: light ? "white" : gray10,
-      borderRadius: 10
+      borderRadius: 10,
+      maxHeight: 100
     } as CSSProperties),
   infoContainer: {
     flex: 1,
@@ -18,7 +19,9 @@ export const styles = {
   } as CSSProperties,
   fileName: {
     lineHeight: 1.2,
-    fontSize: 16
+    fontSize: 16,
+    wordBreak: "break-all",
+    overflow: "hidden"
   } as CSSProperties,
   fileType: {
     lineHeight: 1.2,

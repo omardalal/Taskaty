@@ -40,7 +40,7 @@ const TopBar = () => {
       >
         <Switcher aria-label="Switcher Container">
           <Link
-            to={"/"}
+            to={`/profile/${loggedUser?.user?.email}`}
             style={styles.rightBoxLink}
             onClick={() => setRightMenuVisible(false)}
           >

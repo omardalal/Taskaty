@@ -1,29 +1,28 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { TextInput, TextArea } from "carbon-components-react";
+import { TextArea } from "carbon-components-react";
 import strings from "../../Constants/strings";
 import { styles } from "./styles.ts";
 import InputForm from "../InputForm/InputForm";
 import Modal from "../Modal/Modal";
 import { useAOS } from "../../CustomHooks/useAOS";
 import FileUploader from "../FileUploader/FileUploader";
-import { createAnnouncement } from "../../Utilities/ClassUtils";
-import { uploadFileForAnnouncement } from "../../Utilities/TaskUtils";
+import { addSubmission } from "../../Utilities/TaskUtils";
 
-const CreateAnnouncementModal = ({
+const SubmitTaskModal = ({
   visible,
   onOverlayClick,
   onDismissPress,
   onSuccess,
-  classId
+  loggedUser,
+  projectId,
+  taskId
 }) => {
   const formInitialState = {
-    subject: "",
     description: ""
   };
 
   const [uploadedFiles, setUploadedFiles] = useState([]);
-
   const [formData, setFormData] = useState(formInitialState);
   const [showError, setShowError] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
@@ -40,39 +39,37 @@ const CreateAnnouncementModal = ({
   useAOS();
 
   const handleSubmitPress = async () => {
-    if (!formData.subject || !formData.description) {
+    if (!formData.description || uploadedFiles?.length < 1) {
       setShowError(true);
+      setAlertMessage("Please enter at least 1 file!");
       return;
     }
     try {
-      await createAnnouncement(formData.subject, formData.description, classId);
-      await uploadFileForAnnouncement(uploadedFiles, classId);
+      await addSubmission(
+        loggedUser?.user?.email,
+        taskId,
+        projectId,
+        formData.description,
+        []
+      );
+      setSuccessMessage(true);
+      setAlertMessage("Task Submission Added!");
+      setTimeout(() => {
+        onSuccess?.();
+      }, 600);
     } catch (error) {
-      console.error("Failed to create announcement, Error: " + error);
+      setAlertMessage("Something went wrong!");
     }
-    onSuccess({ ...formData, uploadedFiles: uploadedFiles });
   };
 
   const getForm = () => (
     <>
-      <TextInput
-        invalid={showError && !formData.subject}
-        invalidText={strings.fieldRequired}
-        data-modal-primary-focus
-        labelText={"Subject"}
-        placeholder={"Subject"}
-        onChange={(evt) => {
-          setFormData({ ...formData, subject: evt.target?.value });
-        }}
-        light
-      />
-      <div style={{ marginBottom: "1rem" }} />
       <TextArea
         invalid={showError && !formData.description}
         invalidText={strings.fieldRequired}
         data-modal-primary-focus
-        labelText={"Description"}
-        placeholder={"Description"}
+        labelText={"Submission Description"}
+        placeholder={"Submission Description"}
         onChange={(evt) => {
           setFormData({ ...formData, description: evt.target?.value });
         }}
@@ -92,9 +89,9 @@ const CreateAnnouncementModal = ({
     <Modal visible={visible} onOverlayClick={onOverlayClick}>
       <div style={styles.formContainer} data-aos="fade-up">
         <InputForm
-          titleText={"Create new announcement"}
-          descriptionText={"Enter announcement info"}
-          buttonText={strings.create}
+          titleText={"Submit Task"}
+          descriptionText={"Add new task submission!"}
+          buttonText={"Add"}
           buttonOnClick={handleSubmitPress}
           FormElement={getForm()}
           minHeight={300}
@@ -109,12 +106,14 @@ const CreateAnnouncementModal = ({
   );
 };
 
-CreateAnnouncementModal.propTypes = {
+SubmitTaskModal.propTypes = {
   visible: PropTypes.bool,
   onDismissPress: PropTypes.func,
   onOverlayClick: PropTypes.func,
   onSuccess: PropTypes.func,
-  classId: PropTypes.string
+  loggedUser: PropTypes.object,
+  projectId: PropTypes.string,
+  taskId: PropTypes.string
 };
 
-export default CreateAnnouncementModal;
+export default SubmitTaskModal;

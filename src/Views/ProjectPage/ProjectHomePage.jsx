@@ -2,36 +2,39 @@ import React from "react";
 import { styles } from "./styles.ts";
 import { Tag } from "carbon-components-react";
 import { User16 } from "@carbon/icons-react";
+import PropTypes from "prop-types";
 
 const TagType = { Members: "Members", Skills: "Skills" };
 
-const ProjectHomePage = () => {
+const ProjectHomePage = ({ projectData }) => {
   const getDescBox = () => {
     return (
       <div style={styles.boxContainer} className={"defaultBoxShadowBlack"}>
-        <h1 style={styles.projectDescTitle}>{"Project Name"}</h1>
-        <h2 style={styles.homeHeader2Light}>{"Project Subject"}</h2>
-        <h2 style={styles.homeHeader2Light}>{"Project Type"}</h2>
+        <h1 style={styles.projectDescTitle}>
+          {projectData?.name ?? "Project Name"}
+        </h1>
+        <h2 style={styles.homeHeader2Light}>
+          {projectData?.subject ?? "Project Subject"}
+        </h2>
+        <h2 style={styles.homeHeader2Light}>
+          {projectData?.type ?? "Project Type"}
+        </h2>
         <h2
           style={{ ...styles.homeHeader2, ...styles.projectDescriptionTitle }}
         >
           Description
         </h2>
         <p style={styles.projectDescriptionBody}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam vel
-          lacinia sem. Vivamus sodales leo fermentum lectus condimentum, id
-          vestibulum ex maximus. Nam lobortis id mi eget interdum. Etiam quis
-          ultrices eros. Sed nec dui ultrices, euismod lectus sit amet, auctor
-          sapien. Nunc venenatis leo sed lorem venenatis, a blandit odio mollis.
+          {projectData?.description ?? "Project Description"}
         </p>
       </div>
     );
   };
 
   const getTagsBox = (title, type) => {
-    const members = ["Omar Dalal", "Omar Dalal", "Omar Dalal", "Omar Dalal"];
-    const skills = ["Data Structure", "A.I", "Coding", "Design"];
-    const tags = type === TagType.skills ? skills : members;
+    const members = projectData?.members;
+    const skills = projectData?.skills;
+    const tags = type === TagType.Skills ? skills : members;
     return (
       <div style={styles.boxContainer} className={"defaultBoxShadowBlack"}>
         <h2 style={{ ...styles.homeHeader2, ...styles.tagsTitle }}>{title}</h2>
@@ -50,11 +53,15 @@ const ProjectHomePage = () => {
     <div style={styles.homeMainContainer}>
       {getDescBox()}
       <div style={styles.homeRightContainer}>
-        {getTagsBox("Project Skills", TagType.skills)}
+        {getTagsBox("Project Skills", TagType.Skills)}
         {getTagsBox("Project Members", TagType.Members)}
       </div>
     </div>
   );
+};
+
+ProjectHomePage.propTypes = {
+  projectData: PropTypes.object
 };
 
 export default ProjectHomePage;

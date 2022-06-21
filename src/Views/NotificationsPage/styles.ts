@@ -1,5 +1,7 @@
+/* eslint-disable indent */
 import { CSSProperties } from "react";
-import { gray10, green50, red50 } from "@carbon/colors";
+import { gray10, green50, red50, yellow30 } from "@carbon/colors";
+import { NotificationStatus } from "./NotificationsPage";
 
 export const styles = {
   mainContainer: {
@@ -11,19 +13,21 @@ export const styles = {
   pageTitle: { fontSize: 36, marginBottom: 15 } as CSSProperties,
   notificationsContainer: {
     display: "flex",
-    flexWrap: "wrap"
+    flexWrap: "wrap",
+    flex: 1
   } as CSSProperties,
   notification: {
-    backgroundColor: gray10,
+    backgroundColor: "white",
     padding: "10px 15px",
     borderRadius: 10,
     display: "flex",
-    margin: "10px 5px",
-    width: 450,
+    margin: "10px 0",
+    minWidth: 300,
     minHeight: 100,
     flexWrap: "wrap",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    boxShadow: "0 0 3px 0 rgba(0 0 0 / 0.25)"
   } as CSSProperties,
   notificationBody: {
     display: "flex",
@@ -38,12 +42,30 @@ export const styles = {
     justifyContent: "space-between",
     overflow: "clip"
   } as CSSProperties,
-  requestIcon: (accept: boolean) =>
+  requestIcon: (status: string, pressable: boolean) =>
     ({
       margin: "auto 5",
-      color: accept ? green50 : red50,
+      color:
+        status === NotificationStatus.Accepted
+          ? green50
+          : status === NotificationStatus.Rejected
+          ? red50
+          : yellow30,
       minWidth: 15,
       minHeight: 15,
-      cursor: "pointer"
-    } as CSSProperties)
+      ...(pressable && { cursor: "pointer" })
+    } as CSSProperties),
+  notifBox: {
+    display: "flex",
+    flexDirection: "column",
+    minWidth: 350,
+    padding: 15,
+    borderRadius: 10,
+    minHeight: 100,
+    marginRight: 15,
+    marginBottom: 15,
+    backgroundColor: gray10,
+    flex: 1
+  } as CSSProperties,
+  notifBoxTitle: { fontSize: 22, marginBottom: 10 } as CSSProperties
 };

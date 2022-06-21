@@ -55,7 +55,9 @@ const SectionHomePage = ({ classDetails, sectionId }) => {
   const getInfoBox = () => {
     const sectionDetails = classDetails.Sections?.[Number(sectionId) - 1];
     const groupsLength = sectionDetails?.groups?.length ?? 0;
-    const studentsLength = getStudentsBySection()?.length ?? 0;
+    const studentsLength =
+      getStudentsBySection(classDetails.students, sectionDetails?.sectionNumber)
+        ?.length ?? 0;
 
     return (
       <div style={styles.boxContainer} className={"defaultBoxShadowBlack"}>

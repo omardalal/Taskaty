@@ -29,6 +29,7 @@ const AddFilesModal = ({
     setShowError(false);
     setAlertMessage("");
     setSuccessMessage(false);
+    setUploadedFiles([]);
   }, [visible]);
 
   useAOS();
@@ -39,7 +40,7 @@ const AddFilesModal = ({
       return;
     }
     try {
-      await onSubmit();
+      await onSubmit(uploadedFiles);
       setSuccessMessage(true);
       setAlertMessage("Files Added!");
       setTimeout(() => {
@@ -67,7 +68,7 @@ const AddFilesModal = ({
         <InputForm
           titleText={"Add Files"}
           descriptionText={"Choose Files!"}
-          buttonText={strings.create}
+          buttonText={"Add"}
           buttonOnClick={handleSubmitPress}
           FormElement={getForm()}
           minHeight={300}

@@ -44,10 +44,11 @@ const CreateGroupModal = ({
       await createGroupForSection(
         formData.groupName,
         loggedUser?.user?.email,
+        "",
         classId,
         sectionNumber
       );
-      onSuccess(formData.groupName);
+      onSuccess();
     } catch (err) {
       console.error("Failed to fetch groups, Error: " + err);
     }

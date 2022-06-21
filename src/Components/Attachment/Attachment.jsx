@@ -6,10 +6,10 @@ import PropTypes from "prop-types";
 const Attachment = ({
   fileName,
   fileType,
+  link,
   showDeleteBtn,
   showDownloadBtn,
   onDeletePress,
-  onDownloadPress,
   light
 }) => {
   const [downloadHovered, setDownloadHovered] = useState(false);
@@ -43,7 +43,12 @@ const Attachment = ({
           }}
           onMouseEnter={() => setDownloadHovered(true)}
           onMouseLeave={() => setDownloadHovered(false)}
-          onClick={onDownloadPress}
+          onClick={() => {
+            if (!link) {
+              return;
+            }
+            window.location.href = link;
+          }}
         >
           <Download20 />
         </div>
@@ -57,9 +62,9 @@ Attachment.propTypes = {
   fileType: PropTypes.string,
   showDeleteBtn: PropTypes.bool,
   onDeletePress: PropTypes.func,
-  onDownloadPress: PropTypes.func,
   light: PropTypes.bool,
-  showDownloadBtn: PropTypes.bool
+  showDownloadBtn: PropTypes.bool,
+  link: PropTypes.string
 };
 
 export default Attachment;

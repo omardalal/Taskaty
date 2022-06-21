@@ -73,7 +73,7 @@ export const useFetchClasses = (classId, refreshState, setDoneFetch) => {
     getUserClasses()
       .then((classes) => {
         setUserClasses(classes);
-        setDoneFetch(true);
+        setDoneFetch?.(true);
       })
       .catch((err) =>
         console.error(`Failed to get user classes, Error: ${err}`)

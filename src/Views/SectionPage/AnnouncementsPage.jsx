@@ -7,7 +7,8 @@ import CustomButton from "../../Components/CustomButton/CustomButton";
 const AnnouncementsPage = ({
   classDetails,
   setCreateAnnouncementModalVisible,
-  isInstructor
+  isInstructor,
+  setRefresh
 }) => {
   const getAnnouncements = () => {
     return (
@@ -28,13 +29,17 @@ const AnnouncementsPage = ({
               <h5 style={styles.announcementH5}>{"Attachments"}</h5>
               <div style={styles.announcementAttachments}>
                 {announcement.files?.map((file, index) => (
-                  <Attachment
-                    key={index}
-                    fileName={file.fileName}
-                    fileType={file.fileType}
-                    showDownloadBtn
-                    showDeleteBtn={false}
-                  />
+                  <>
+                    <Attachment
+                      key={index}
+                      fileName={file.fileName}
+                      fileType={file.fileType}
+                      link={file.link}
+                      showDownloadBtn
+                      showDeleteBtn={false}
+                    />
+                    <div style={{ marginRight: 5 }} />
+                  </>
                 ))}
               </div>
             </div>
@@ -72,7 +77,8 @@ const AnnouncementsPage = ({
 AnnouncementsPage.propTypes = {
   classDetails: PropTypes.object,
   setCreateAnnouncementModalVisible: PropTypes.func,
-  isInstructor: PropTypes.bool
+  isInstructor: PropTypes.bool,
+  setRefresh: PropTypes.func
 };
 
 export default AnnouncementsPage;

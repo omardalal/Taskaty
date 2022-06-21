@@ -20,8 +20,9 @@ const ClassPage = () => {
   const [createSectionModalVisible, setCreateSectionModalVisible] =
     useState(false);
   const [refreshFetch, setRefreshFetch] = useState(0);
+  const [doneFetch, setDoneFetch] = useState(false);
 
-  const classDetails = useFetchClasses(classId, refreshFetch);
+  const classDetails = useFetchClasses(classId, refreshFetch, setDoneFetch);
 
   const getCreateAnnouncementModal = () => (
     <CreateAnnouncementModal
@@ -48,6 +49,14 @@ const ClassPage = () => {
       }}
     />
   );
+
+  if ((!classDetails || classDetails?.length === 0) && doneFetch) {
+    return (
+      <h3 style={{ margin: "auto" }}>
+        {"Sorry, you don't have access to view this page!"}
+      </h3>
+    );
+  }
 
   return (
     <>

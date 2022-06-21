@@ -129,5 +129,16 @@ export const styles = {
   gradeRow: {
     display: "flex",
     justifyContent: "space-between"
-  } as CSSProperties
+  } as CSSProperties,
+  // Suggestions Page
+  suggestionsMainContainer: {
+    width: "100%",
+    display: "flex",
+    padding: 15,
+    flexWrap: "wrap"
+  } as CSSProperties,
+  suggestionsSettingsContainer: {
+    flex: 1
+  } as CSSProperties,
+  suggestedUserContainer: { flex: 2, marginRight: 25 } as CSSProperties
 };

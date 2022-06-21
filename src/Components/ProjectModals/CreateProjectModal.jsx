@@ -12,13 +12,16 @@ import InputForm from "../InputForm/InputForm";
 import Modal from "../Modal/Modal";
 import { useAOS } from "../../CustomHooks/useAOS";
 import { generalSkills, projectTypes } from "../../Constants/lookupConstants";
+import { addNewProject } from "../../Utilities/ProjectUtils";
+import { setGroupProject } from "../../Utilities/ClassUtils";
 
 const CreateProjectModal = ({
   visible,
   onOverlayClick,
   onDismissPress,
   onSuccess,
-  loggedUser
+  loggedUser,
+  groupId
 }) => {
   const formInitialState = {
     projectName: "",
@@ -53,7 +56,17 @@ const CreateProjectModal = ({
       return;
     }
     try {
-      //
+      const createPrj = await addNewProject(
+        formData.projectName,
+        formData.projectDescription,
+        formData.projectSkills,
+        formData.projectSubject,
+        formData.projectType,
+        loggedUser?.user?.email
+      );
+      if (groupId) {
+        await setGroupProject(groupId, createPrj?.id);
+      }
       setSuccessMessage(true);
       setAlertMessage("Project Created!");
       setTimeout(() => {
@@ -103,8 +116,8 @@ const CreateProjectModal = ({
       />
       <div style={{ marginBottom: "1rem" }} />
       <Dropdown
-        titleText={strings.major}
-        label={`${strings.select} ${strings.major}`}
+        titleText={"Type"}
+        label={"Select Type"}
         items={projectTypes}
         itemToString={(item) => item || ""}
         onChange={(item) => {
@@ -118,8 +131,8 @@ const CreateProjectModal = ({
       />
       <div style={{ marginBottom: "1rem" }} />
       <MultiSelect
-        label={`${strings.select} ${strings.interests}`}
-        titleText={strings.interests}
+        label={`${strings.select} ${strings.skills}`}
+        titleText={strings.skills}
         items={generalSkills.sort()}
         itemToString={(item) => item || ""}
         selectionFeedback="top-after-reopen"
@@ -160,7 +173,8 @@ CreateProjectModal.propTypes = {
   onDismissPress: PropTypes.func,
   onOverlayClick: PropTypes.func,
   onSuccess: PropTypes.func,
-  loggedUser: PropTypes.object
+  loggedUser: PropTypes.object,
+  groupId: PropTypes.string
 };
 
 export default CreateProjectModal;

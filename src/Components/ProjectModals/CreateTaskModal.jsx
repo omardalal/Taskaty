@@ -7,13 +7,16 @@ import InputForm from "../InputForm/InputForm";
 import Modal from "../Modal/Modal";
 import { useAOS } from "../../CustomHooks/useAOS";
 import FileUploader from "../FileUploader/FileUploader";
+import { createTask } from "../../Utilities/TaskUtils";
 
 const CreateTaskModal = ({
   visible,
   onOverlayClick,
   onDismissPress,
   onSuccess,
-  loggedUser
+  loggedUser,
+  projectId,
+  usersList
 }) => {
   const formInitialState = {
     name: "",
@@ -41,8 +44,15 @@ const CreateTaskModal = ({
       setShowError(true);
       return;
     }
-    // Check if unassigned, then set assignedTo = empty
     try {
+      await createTask(
+        formData.name,
+        projectId,
+        formData.description,
+        formData.assignedTo ?? "Unassigned",
+        uploadedFiles,
+        loggedUser?.user?.email
+      );
       setSuccessMessage(true);
       setAlertMessage("Task Created!");
       setTimeout(() => {
@@ -82,7 +92,7 @@ const CreateTaskModal = ({
       <Dropdown
         titleText={"Assigned To"}
         label={"Select User"}
-        items={["Unassigned", "User 1", "User 2", "User 3"]}
+        items={["Unassigned", ...usersList]}
         itemToString={(item) => item || ""}
         onChange={(item) => {
           setFormData({
@@ -128,7 +138,9 @@ CreateTaskModal.propTypes = {
   onDismissPress: PropTypes.func,
   onOverlayClick: PropTypes.func,
   onSuccess: PropTypes.func,
-  loggedUser: PropTypes.object
+  loggedUser: PropTypes.object,
+  projectId: PropTypes.string,
+  usersList: PropTypes.array
 };
 
 export default CreateTaskModal;

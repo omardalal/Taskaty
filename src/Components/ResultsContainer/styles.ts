@@ -25,7 +25,8 @@ export const styles = {
     margin: "15px 25px",
     display: "flex",
     flexWrap: "wrap",
-    overflowY: "scroll"
+    overflowY: "scroll",
+    maxHeight: 800
   } as CSSProperties,
   resultItemChevronContainer: {
     marginLeft: "auto",

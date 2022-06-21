@@ -2,37 +2,52 @@ import React from "react";
 import { styles } from "./styles.ts";
 import CustomButton from "../../Components/CustomButton/CustomButton";
 import Attachment from "../../Components/Attachment/Attachment";
-import { PropTypes } from "prop-types";
+import PropTypes from "prop-types";
+import { deleteFileFromProjectSubmission } from "../../Utilities/TaskUtils";
 
-const INS = true;
 const beforeDeadline = true;
 
-const GradesPage = ({ setGradeModalVisible }) => {
+const GradesPage = ({
+  setGradeModalVisible,
+  gradingData,
+  isInstructor,
+  submittedFiles,
+  setSubmittedFiles
+}) => {
   const getSubmittedFilesBox = () => {
     return (
       <div style={styles.boxContainer} className={"defaultBoxShadowBlack"}>
         <h3 style={styles.gradingBoxTitle}>{"Submitted Files"}</h3>
         <div style={styles.gradingAttachments}>
-          <Attachment
-            fileName={"File Name"}
-            fileType={"Plain/Text"}
-            showDownloadBtn
-            showDeleteBtn={beforeDeadline && !INS}
-          />
-          <div style={{ margin: "0 2.5px" }} />
-          <Attachment
-            fileName={"File Name"}
-            fileType={"Plain/Text"}
-            showDownloadBtn
-            showDeleteBtn={beforeDeadline && !INS}
-          />
-          <div style={{ margin: "0 2.5px" }} />
-          <Attachment
-            fileName={"File Name"}
-            fileType={"Plain/Text"}
-            showDownloadBtn
-            showDeleteBtn={beforeDeadline && !INS}
-          />
+          {submittedFiles?.length > 0 ? (
+            submittedFiles?.map((attachment, index) => (
+              <>
+                <Attachment
+                  fileName={attachment.fileName}
+                  fileType={attachment.fileType}
+                  link={attachment.link}
+                  showDownloadBtn
+                  showDeleteBtn={!isInstructor}
+                  onDeletePress={async () => {
+                    try {
+                      await deleteFileFromProjectSubmission(
+                        gradingData.id,
+                        index
+                      );
+                      setSubmittedFiles(
+                        submittedFiles?.filter((f, indx) => indx !== index)
+                      );
+                    } catch (err) {
+                      console.error("Failed to delete file, Error: " + err);
+                    }
+                  }}
+                />
+                <div style={{ margin: "0 2.5px" }} />
+              </>
+            ))
+          ) : (
+            <h5>{"No files submitted yet!"}</h5>
+          )}
         </div>
       </div>
     );
@@ -43,7 +58,7 @@ const GradesPage = ({ setGradeModalVisible }) => {
       <div style={styles.boxContainer} className={"defaultBoxShadowBlack"}>
         <div style={styles.gradeRow}>
           <h2 style={styles.homeHeader2}>{"Final Grade"}</h2>
-          <h2 style={styles.homeHeader2}>{"85%"}</h2>
+          <h2 style={styles.homeHeader2}>{gradingData?.grade ?? "N/A"}</h2>
         </div>
         <h2
           style={{ ...styles.homeHeader2, ...styles.projectDescriptionTitle }}
@@ -51,11 +66,7 @@ const GradesPage = ({ setGradeModalVisible }) => {
           {"Instructor Comment"}
         </h2>
         <p style={styles.projectDescriptionBody}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam vel
-          lacinia sem. Vivamus sodales leo fermentum lectus condimentum, id
-          vestibulum ex maximus. Nam lobortis id mi eget interdum. Etiam quis
-          ultrices eros. Sed nec dui ultrices, euismod lectus sit amet, auctor
-          sapien. Nunc venenatis leo sed lorem venenatis, a blandit odio mollis.
+          {gradingData?.comment ?? "No comment yet!"}
         </p>
       </div>
     );
@@ -68,9 +79,9 @@ const GradesPage = ({ setGradeModalVisible }) => {
         <div style={styles.titleRightBtnContainer}>
           <CustomButton
             blackButton
-            text={INS ? "Grade Project" : "Submit Project"}
+            text={isInstructor ? "Grade Project" : "Submit Project"}
             onClick={() => setGradeModalVisible(true)}
-            disabled={!beforeDeadline && !INS}
+            disabled={!beforeDeadline && !isInstructor}
           />
         </div>
       </div>
@@ -83,7 +94,11 @@ const GradesPage = ({ setGradeModalVisible }) => {
 };
 
 GradesPage.propTypes = {
-  setGradeModalVisible: PropTypes.func
+  setGradeModalVisible: PropTypes.func,
+  gradingData: PropTypes.object,
+  isInstructor: PropTypes.bool,
+  submittedFiles: PropTypes.array,
+  setSubmittedFiles: PropTypes.func
 };
 
 export default GradesPage;
