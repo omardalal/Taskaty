@@ -30,7 +30,12 @@ const ClassGroup = ({
 
   const getUserRow = (username, userId) => (
     <div style={styles.nameRow}>
-      <h4 style={styles.nameText}>{username}</h4>
+      <h4
+        style={styles.nameText}
+        onClick={() => navigate(`/profile/${userId}`, { replace: true })}
+      >
+        {username}
+      </h4>
       {!groupId && loggedUserGroup && (
         <div
           onClick={async () => {

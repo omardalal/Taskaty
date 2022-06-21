@@ -33,7 +33,7 @@ const SectionPage = () => {
     groupId: ""
   });
   const [createGroupModalVisible, setCreateGroupModalVisible] = useState(false);
-  const [isUserAuthorized, setIsUserAuthorized] = useState(false);
+  const [isUserAuthorized, setIsUserAuthorized] = useState(true);
 
   useEffect(() => {
     if (!classDetails || !doneFetchClassDetails) {
@@ -104,7 +104,15 @@ const SectionPage = () => {
       .catch((err) => console.error(`Failed to get user access, Error=${err}`));
   }, [classDetails, refreshFetch, doneFetchClassDetails]);
 
-  if (!classDetails || classDetails?.length === 0 || !isUserAuthorized) {
+  if ((!classDetails || classDetails?.length === 0) && doneFetchClassDetails) {
+    return (
+      <h3 style={{ margin: "auto" }}>
+        {"Sorry, couldn't find the page you're looking for!"}
+      </h3>
+    );
+  }
+
+  if (!isUserAuthorized && doneFetchClassDetails) {
     return (
       <h3 style={{ margin: "auto" }}>
         {"Sorry, you don't have access to view this page!"}

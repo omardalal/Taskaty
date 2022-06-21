@@ -10,9 +10,8 @@ import {
   NumberInput,
   InlineNotification
 } from "carbon-components-react";
-import CustomButton from "../../Components/CustomButton/CustomButton";
 
-const SuggestedUserPage = ({ loggedUser, projectData }) => {
+const SuggestedUserPage = ({ loggedUser, projectData, classId }) => {
   const defaultFilterSettings = {
     mostImportantFactor: "",
     useUniversity: true,
@@ -33,6 +32,7 @@ const SuggestedUserPage = ({ loggedUser, projectData }) => {
     return await getSuggestions(
       loggedUser?.user?.email,
       projectData?.id,
+      classId,
       filterSettings.suggestionsCount,
       filterSettings.mostImportantFactor,
       filterSettings.useUniversity,
@@ -180,7 +180,8 @@ const SuggestedUserPage = ({ loggedUser, projectData }) => {
 
 SuggestedUserPage.propTypes = {
   loggedUser: PropTypes.object,
-  projectData: PropTypes.object
+  projectData: PropTypes.object,
+  classId: PropTypes.string
 };
 
 export default SuggestedUserPage;

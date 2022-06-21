@@ -30,7 +30,7 @@ export const styles = {
   } as CSSProperties,
   header2Light: { fontSize: 16 } as CSSProperties,
   header2: { fontSize: 16, fontWeight: "500" },
-  taskDescriptionBody: { fontSize: 14.75 } as CSSProperties,
+  taskDescriptionBody: { fontSize: 14.75, minHeight: 250 } as CSSProperties,
   rowContainer: {
     display: "flex",
     paddingTop: 5,
@@ -44,7 +44,7 @@ export const styles = {
   rightContainer: {
     display: "flex",
     flex: 1,
-    minWidth: 500,
+    minWidth: 350,
     flexDirection: "column"
   } as CSSProperties,
   attachmentsRow: {

@@ -8,6 +8,7 @@ import Modal from "../Modal/Modal";
 import { useAOS } from "../../CustomHooks/useAOS";
 import FileUploader from "../FileUploader/FileUploader";
 import { createAnnouncement } from "../../Utilities/ClassUtils";
+import { uploadFileForAnnouncement } from "../../Utilities/TaskUtils";
 
 const CreateAnnouncementModal = ({
   visible,
@@ -45,6 +46,7 @@ const CreateAnnouncementModal = ({
     }
     try {
       await createAnnouncement(formData.subject, formData.description, classId);
+      await uploadFileForAnnouncement(uploadedFiles, classId);
     } catch (error) {
       console.error("Failed to create announcement, Error: " + error);
     }
@@ -112,7 +114,7 @@ CreateAnnouncementModal.propTypes = {
   onDismissPress: PropTypes.func,
   onOverlayClick: PropTypes.func,
   onSuccess: PropTypes.func,
-  classId: PropTypes.func
+  classId: PropTypes.string
 };
 
 export default CreateAnnouncementModal;

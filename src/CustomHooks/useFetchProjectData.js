@@ -6,6 +6,7 @@ import {
   isPartOfProject
 } from "../Utilities/ProjectUtils";
 import {
+  getProjectSubmissionByProjectId,
   getProjectTasks,
   getSubmissionsByProjectId,
   getSubmissionsByTaskId
@@ -13,35 +14,26 @@ import {
 
 export const useFetchProjectData = (loggedUser, projectId, taskId, refresh) => {
   const [isInstructor, setIsInstructor] = useState(false);
-  const [isInClass, setIsInClass] = useState(false);
+  const [isInClass, setIsInClass] = useState(undefined);
   const [isUserAuthorized, setIsUserAuthorized] = useState(true);
   const [tasks, setTasks] = useState([]);
   const [projectData, setProjectData] = useState({});
   const [submissions, setSubmissions] = useState([]);
+  const [gradingData, setGradingData] = useState([]);
 
   useEffect(() => {
     const checkUserAuth = async () => {
       return await isPartOfProject(loggedUser?.user?.email, projectId);
     };
 
-    const getProject = async () => {
-      const prj = await getProjectByID(projectId);
-      return { ...prj, ...{ id: projectId } };
-    };
-
     const getTasks = async () => await getProjectTasks(projectId);
-
-    const getSubmissions = async () =>
-      taskId
-        ? await getSubmissionsByTaskId(taskId)
-        : await getSubmissionsByProjectId(projectId);
 
     const getProjectClass = async () => {
       const projectGroup = await getProjectGroup(projectId);
       if (projectGroup == null) {
         return null;
       }
-      setIsInClass(true);
+      setIsInClass(projectGroup?.classRef?.id);
       const projectClass = getClassById(projectGroup?.classRef?.id);
       return projectClass;
     };
@@ -71,6 +63,24 @@ export const useFetchProjectData = (loggedUser, projectId, taskId, refresh) => {
       .catch((err) =>
         console.error(`Failed to get project tasks, Error: ${err}`)
       );
+  }, [loggedUser, isInstructor, refresh]);
+
+  useEffect(() => {
+    if (!projectId) {
+      return;
+    }
+    const getProject = async () => {
+      const prj = await getProjectByID(projectId);
+      return { ...prj, ...{ id: projectId } };
+    };
+
+    const getSubmissions = async () =>
+      taskId
+        ? await getSubmissionsByTaskId(taskId)
+        : await getSubmissionsByProjectId(projectId);
+
+    const getGradingData = async () =>
+      await getProjectSubmissionByProjectId(projectId);
 
     getProject()
       .then((projects) => {
@@ -85,7 +95,13 @@ export const useFetchProjectData = (loggedUser, projectId, taskId, refresh) => {
       .catch((err) =>
         console.error("Failed to fetch task submissions, Error: " + err)
       );
-  }, [loggedUser, isInstructor, refresh]);
+
+    getGradingData()
+      .then((grading) => setGradingData(grading))
+      .catch((err) =>
+        console.error("Failed to fetch project final submission, Error: " + err)
+      );
+  }, [projectId, taskId]);
 
   return [
     isInstructor,
@@ -93,6 +109,7 @@ export const useFetchProjectData = (loggedUser, projectId, taskId, refresh) => {
     isUserAuthorized,
     tasks,
     projectData,
-    submissions
+    submissions,
+    gradingData
   ];
 };

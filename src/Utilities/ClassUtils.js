@@ -139,7 +139,8 @@ export const createAnnouncement = async (title, body, classId) => {
   return await updateDoc(classRef, {
     announcements: arrayUnion({
       title: title,
-      body: body
+      body: body,
+      files: []
     })
   });
 };

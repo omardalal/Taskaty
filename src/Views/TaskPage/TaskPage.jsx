@@ -17,7 +17,8 @@ import AddFilesModal from "../../Components/ProjectModals/AddFilesModal";
 import {
   deleteFileFromTask,
   editTask,
-  getTask
+  getTask,
+  uploadFileForTask
 } from "../../Utilities/TaskUtils";
 import { useFetchProjectData } from "../../CustomHooks/useFetchProjectData";
 import SubmitTaskModal from "../../Components/ProjectModals/SubmitTaskModal";
@@ -187,9 +188,10 @@ const TaskPage = () => {
               <>
                 <Attachment
                   fileName={attachment.fileName}
-                  fileType={"Plain/Text"}
+                  fileType={attachment.fileType}
+                  link={attachment.link}
                   showDownloadBtn
-                  showDeleteBtn
+                  showDeleteBtn={!isInstructor}
                   onDeletePress={async () => {
                     try {
                       await deleteFileFromTask(taskId, index);
@@ -288,6 +290,7 @@ const TaskPage = () => {
                       <Attachment
                         fileName={attachment.fileName}
                         fileType={attachment.fileType}
+                        link={attachment.link}
                         showDownloadBtn
                         light
                       />
@@ -314,7 +317,21 @@ const TaskPage = () => {
       onDismissPress={() => setAddFilesModalVisible(false)}
       onOverlayClick={() => setAddFilesModalVisible(false)}
       onSuccess={() => setAddFilesModalVisible(false)}
-      onSubmit={() => console.log("Enter async func here")}
+      onSubmit={async (uploadedFiles) => {
+        try {
+          await uploadFileForTask(uploadedFiles, taskId);
+          const newFiles = uploadedFiles?.map((file) => ({
+            fileName: file.name,
+            fileType: file.type
+          }));
+          setTaskValues({
+            ...taskValues,
+            files: [...taskValues?.files, ...newFiles]
+          });
+        } catch (err) {
+          console.error("Failed to upload files, Error: " + err);
+        }
+      }}
     />
   );
 

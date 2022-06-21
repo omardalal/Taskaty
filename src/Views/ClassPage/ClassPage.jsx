@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { styles } from "./styles.ts";
 import CreateAnnouncementModal from "../../Components/ClassModals/CreateAnnouncementModal";
 import TabsManager from "../../Components/TabsManager/TabsManager";
@@ -8,7 +8,6 @@ import ClassSectionsPage from "./ClassSectionsPage";
 import CreateSectionModal from "../../Components/ClassModals/CreateSectionModal";
 import { useFetchClasses } from "../../CustomHooks/useFetchClasses";
 import useAuthRedirect from "../../CustomHooks/useAuthRedirect";
-import { isInClass } from "../../Utilities/ClassUtils";
 
 const ClassPage = () => {
   const { classId } = useParams();
@@ -21,8 +20,9 @@ const ClassPage = () => {
   const [createSectionModalVisible, setCreateSectionModalVisible] =
     useState(false);
   const [refreshFetch, setRefreshFetch] = useState(0);
+  const [doneFetch, setDoneFetch] = useState(false);
 
-  const classDetails = useFetchClasses(classId, refreshFetch);
+  const classDetails = useFetchClasses(classId, refreshFetch, setDoneFetch);
 
   const getCreateAnnouncementModal = () => (
     <CreateAnnouncementModal
@@ -50,7 +50,7 @@ const ClassPage = () => {
     />
   );
 
-  if (!classDetails || classDetails?.length === 0) {
+  if ((!classDetails || classDetails?.length === 0) && doneFetch) {
     return (
       <h3 style={{ margin: "auto" }}>
         {"Sorry, you don't have access to view this page!"}

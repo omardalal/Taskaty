@@ -29,7 +29,8 @@ export const styles = {
     justifyContent: "space-between"
   } as CSSProperties,
   nameText: {
-    fontSize: 18
+    fontSize: 18,
+    cursor: "pointer"
   } as CSSProperties,
   groupTitleContainer: {
     display: "flex",

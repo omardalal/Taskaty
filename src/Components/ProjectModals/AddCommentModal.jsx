@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { TextArea, TextInput } from "carbon-components-react";
+import { TextArea } from "carbon-components-react";
 import strings from "../../Constants/strings";
 import { styles } from "./styles.ts";
 import InputForm from "../InputForm/InputForm";
 import Modal from "../Modal/Modal";
 import { useAOS } from "../../CustomHooks/useAOS";
+import { addSubmissionComment } from "../../Utilities/TaskUtils";
+import { Timestamp } from "firebase/firestore";
 
 const AddCommentModal = ({
   visible,
   onOverlayClick,
   onDismissPress,
   onSuccess,
-  loggedUser
+  loggedUser,
+  submissionId
 }) => {
   const formInitialState = {
     body: ""
@@ -38,11 +41,19 @@ const AddCommentModal = ({
       return;
     }
     try {
-      //
+      await addSubmissionComment(
+        loggedUser?.user?.email,
+        submissionId,
+        formData.body
+      );
       setSuccessMessage(true);
-      setAlertMessage("Project Graded!");
+      setAlertMessage("Comment Added!");
       setTimeout(() => {
-        onSuccess?.();
+        onSuccess?.({
+          body: formData.body,
+          date: Timestamp.now(),
+          user: loggedUser?.user?.email
+        });
       }, 600);
     } catch (error) {
       setAlertMessage("Something went wrong!");
@@ -69,7 +80,7 @@ const AddCommentModal = ({
         <InputForm
           titleText={"Add Comment"}
           descriptionText={"Enter your comment!"}
-          buttonText={strings.create}
+          buttonText={"Add"}
           buttonOnClick={handleSubmitPress}
           FormElement={getForm()}
           minHeight={300}
@@ -89,7 +100,8 @@ AddCommentModal.propTypes = {
   onDismissPress: PropTypes.func,
   onOverlayClick: PropTypes.func,
   onSuccess: PropTypes.func,
-  loggedUser: PropTypes.object
+  loggedUser: PropTypes.object,
+  submissionId: PropTypes.string
 };
 
 export default AddCommentModal;

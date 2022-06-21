@@ -7,7 +7,8 @@ import CustomButton from "../../Components/CustomButton/CustomButton";
 const AnnouncementsPage = ({
   classDetails,
   setCreateAnnouncementModalVisible,
-  isInstructor
+  isInstructor,
+  setRefresh
 }) => {
   const getAnnouncements = () => {
     return (
@@ -33,6 +34,7 @@ const AnnouncementsPage = ({
                       key={index}
                       fileName={file.fileName}
                       fileType={file.fileType}
+                      link={file.link}
                       showDownloadBtn
                       showDeleteBtn={false}
                     />
@@ -75,7 +77,8 @@ const AnnouncementsPage = ({
 AnnouncementsPage.propTypes = {
   classDetails: PropTypes.object,
   setCreateAnnouncementModalVisible: PropTypes.func,
-  isInstructor: PropTypes.bool
+  isInstructor: PropTypes.bool,
+  setRefresh: PropTypes.func
 };
 
 export default AnnouncementsPage;

@@ -1,28 +1,13 @@
 /* eslint-disable no-unreachable */
 import { getDocs, collection } from "firebase/firestore";
-import { getUser } from "./ClassUtils";
+import { getUser, isInClass } from "./ClassUtils";
 import { getFirebaseDb } from "./FirebaseUtils";
 import { getProjectByID } from "./ProjectUtils";
-
-/// TargetUser Object will be passed to the function in this format ///
-
-// const targetUser = {
-//   city: "ramallah",
-//   major: "Computer Science",
-//   university: "Birzeit",
-//   interests :["drawing"]
-// };
-
-/* 
-  Function will be called this way and it will return a sorted array 
-  (based on the score for each user) of the desired size. 
- */
-
-// getSuggestions(targetUser, 2, "city", true, true, true);
 
 export const getSuggestions = async (
   targetUserId,
   targetProjectId,
+  classId,
   suggestionsCount,
   mostImportantFactor,
   useUniversity,
@@ -84,7 +69,17 @@ export const getSuggestions = async (
   // sorting the (users, score) map based on the score of each user
 
   let users = Array.from(mapSort1.keys());
-  users = users.slice(0, suggestionsCount);
+  users = users?.slice(0, suggestionsCount);
 
-  return users.slice(0, suggestionsCount);
+  if (classId) {
+    users = await Promise.all(
+      users?.map(async (user) => {
+        const inClass = await isInClass(classId, user.email);
+        return { ...user, inClass };
+      })
+    );
+    return users?.filter((user) => user.inClass);
+  }
+
+  return users;
 };
