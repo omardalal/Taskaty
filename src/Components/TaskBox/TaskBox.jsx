@@ -17,7 +17,7 @@ const TaskBox = ({ task }) => {
   const [userInfo, setUserInfo] = useState({ firstName: "", lastName: "" });
 
   useEffect(() => {
-    const getUserInfo = async () => await getUser(task.assignedTo?.id);
+    const getUserInfo = async () => await getUser(task.assignedTo);
     getUserInfo()
       .then((user) => setUserInfo(user))
       .catch((err) => console.error("Failed to get user info, Error: " + err));
