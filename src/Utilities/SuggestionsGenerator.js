@@ -63,13 +63,12 @@ export const getSuggestions = async (
       console.log(err.message);
     });
 
+  // sorting the (users, score) map based on the score of each user
   const mapSort1 = new Map(
     [...suggestedUsers.entries()].sort((a, b) => b[1] - a[1])
   );
-  // sorting the (users, score) map based on the score of each user
 
   let users = Array.from(mapSort1.keys());
-  users = users?.slice(0, suggestionsCount);
 
   if (classId) {
     users = await Promise.all(
@@ -81,5 +80,6 @@ export const getSuggestions = async (
     return users?.filter((user) => user.inClass);
   }
 
+  users = users?.slice(0, suggestionsCount);
   return users;
 };
