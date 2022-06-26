@@ -347,3 +347,11 @@ export const uploadFileForAnnouncement = async (file, classId, index) => {
     }
   }
 };
+
+export const gradeProject = async (submissionId, comment, grade) => {
+  const taskRef = doc(getFirebaseDb(), "ProjectSubmission", submissionId);
+  return await updateDoc(taskRef, {
+    comment: comment ?? "",
+    grade: grade ?? 0
+  });
+};

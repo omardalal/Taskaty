@@ -6,13 +6,15 @@ import { styles } from "./styles.ts";
 import InputForm from "../InputForm/InputForm";
 import Modal from "../Modal/Modal";
 import { useAOS } from "../../CustomHooks/useAOS";
+import { gradeProject } from "../../Utilities/TaskUtils";
 
 const GradeProjectModal = ({
   visible,
   onOverlayClick,
   onDismissPress,
   onSuccess,
-  loggedUser
+  loggedUser,
+  prjSubmissionId
 }) => {
   const formInitialState = {
     grade: "",
@@ -39,11 +41,11 @@ const GradeProjectModal = ({
       return;
     }
     try {
-      //
+      await gradeProject(prjSubmissionId, formData.description, formData.grade);
       setSuccessMessage(true);
       setAlertMessage("Project Graded!");
       setTimeout(() => {
-        onSuccess?.();
+        onSuccess?.({ grade: formData.grade, comment: formData.description });
       }, 600);
     } catch (error) {
       setAlertMessage("Something went wrong!");
@@ -82,7 +84,7 @@ const GradeProjectModal = ({
         <InputForm
           titleText={"Grade Project"}
           descriptionText={"Enter project grade!"}
-          buttonText={strings.create}
+          buttonText={"Grade"}
           buttonOnClick={handleSubmitPress}
           FormElement={getForm()}
           minHeight={300}
@@ -102,7 +104,8 @@ GradeProjectModal.propTypes = {
   onDismissPress: PropTypes.func,
   onOverlayClick: PropTypes.func,
   onSuccess: PropTypes.func,
-  loggedUser: PropTypes.object
+  loggedUser: PropTypes.object,
+  prjSubmissionId: PropTypes.string
 };
 
 export default GradeProjectModal;

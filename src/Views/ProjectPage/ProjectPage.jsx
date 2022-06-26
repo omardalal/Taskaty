@@ -22,6 +22,7 @@ const ProjectPage = () => {
   const [gradeModalVisible, setGradeModalVisible] = useState(false);
   const [refreshData, setRefreshData] = useState(0);
   const [submittedFiles, setSubmittedFiles] = useState([]);
+  const [gradingDataState, setGradingDataState] = useState({});
 
   const [
     isInstructor,
@@ -35,6 +36,7 @@ const ProjectPage = () => {
 
   useEffect(() => {
     setSubmittedFiles(gradingData?.files);
+    setGradingDataState(gradingData);
   }, [gradingData]);
 
   if (!isUserAuthorized) {
@@ -67,7 +69,15 @@ const ProjectPage = () => {
           visible={gradeModalVisible}
           onDismissPress={() => setGradeModalVisible(false)}
           onOverlayClick={() => setGradeModalVisible(false)}
-          onSuccess={() => setGradeModalVisible(false)}
+          onSuccess={(data) => {
+            setGradeModalVisible(false);
+            setGradingDataState({
+              ...gradingDataState,
+              grade: data.grade,
+              comment: data.comment
+            });
+          }}
+          prjSubmissionId={gradingData?.id}
         />
       ) : (
         <AddFilesModal
@@ -110,7 +120,9 @@ const ProjectPage = () => {
         <TabsManager
           tabTitles={(() =>
             isInClass
-              ? ["Home", "Tasks", "Grading", "Suggested Users"]
+              ? isInstructor
+                ? ["Home", "Tasks", "Grading"]
+                : ["Home", "Tasks", "Grading", "Suggested Users"]
               : ["Home", "Tasks", "Suggested Users"])()}
           selectedIndex={selectedIndex}
           setSelectedIndex={setSelectedIndex}
@@ -136,7 +148,7 @@ const ProjectPage = () => {
               setGradeModalVisible={setGradeModalVisible}
               projectData={projectData}
               isInstructor={isInstructor}
-              gradingData={gradingData}
+              gradingData={gradingDataState}
               submittedFiles={submittedFiles}
               setSubmittedFiles={setSubmittedFiles}
             />
