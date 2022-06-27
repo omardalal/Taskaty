@@ -21,25 +21,29 @@ const ClassSectionsPage = ({
     const studentsCount = classDetails.students?.length;
     return (
       <>
-        {classDetails.Sections?.map((section, index) => {
-          const groupCount = section.groups?.length ?? 0;
-          return (
-            <ResultItem
-              key={index}
-              btnDisabled={getUserSection() !== index + 1 && !isInstructor}
-              title={`Section ${section.sectionNumber}`}
-              subtitle={`${studentsCount} ${
-                studentsCount === 1 ? "Student" : "Students"
-              }`}
-              extraInfo={`${groupCount} ${
-                groupCount === 1 ? "Group" : "Groups"
-              }`}
-              buttonText={"Visit Section"}
-              resultIconType={ResultIconTypes.Class}
-              onPressGoToUrl={`/class/${classDetails.id}/${section.sectionNumber}`}
-            />
-          );
-        })}
+        {classDetails?.Sections?.length > 0 ? (
+          classDetails.Sections?.map((section, index) => {
+            const groupCount = section.groups?.length ?? 0;
+            return (
+              <ResultItem
+                key={index}
+                btnDisabled={getUserSection() !== index + 1 && !isInstructor}
+                title={`Section ${section.sectionNumber}`}
+                subtitle={`${studentsCount} ${
+                  studentsCount === 1 ? "Student" : "Students"
+                }`}
+                extraInfo={`${groupCount} ${
+                  groupCount === 1 ? "Group" : "Groups"
+                }`}
+                buttonText={"Visit Section"}
+                resultIconType={ResultIconTypes.Class}
+                onPressGoToUrl={`/class/${classDetails.id}/${section.sectionNumber}`}
+              />
+            );
+          })
+        ) : (
+          <h5>{"No sections made yet!"}</h5>
+        )}
       </>
     );
   };
