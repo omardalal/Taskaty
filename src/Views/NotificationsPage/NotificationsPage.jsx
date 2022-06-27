@@ -14,7 +14,6 @@ import {
   getAllInvitations,
   rejectInvitation
 } from "../../Utilities/InvitationUtils";
-import { limitToLast } from "firebase/firestore";
 import { addToGroup } from "../../Utilities/ClassUtils";
 import { addMemberToProject } from "../../Utilities/ProjectUtils";
 
@@ -31,12 +30,15 @@ export const InvitationType = {
 
 const NotificationsPage = () => {
   const loggedUser = useAuthRedirect(true);
-  const [notifs, setNotifs] = useState([]);
+  const [notifs, setNotifs] = useState();
   const [fetchedNotifs, setFetchedNotifs] = useState(false);
   const [fullyFetchedNotifs, setFullyFetchedNotifs] = useState(false);
-  const [refresh, setRefresh] = useState(0);
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
+    if (notifs && !refresh) {
+      return;
+    }
     const getNotifications = async () => {
       return await getAllInvitations(loggedUser?.user?.email);
     };
@@ -44,6 +46,7 @@ const NotificationsPage = () => {
       .then((notifications) => {
         setNotifs(notifications);
         setFetchedNotifs(true);
+        setRefresh(false);
       })
       .catch((err) =>
         console.error("Failed to get user notifications, Error: " + err)
@@ -79,8 +82,9 @@ const NotificationsPage = () => {
               onClick={async () => {
                 try {
                   await acceptInvitation(notif.id);
-                  setRefresh((prv) => prv + 1);
+                  setRefresh(true);
                   setFetchedNotifs(false);
+                  setFullyFetchedNotifs(false);
                   if (notif?.type === InvitationType.Group) {
                     return await addToGroup(
                       notif?.targetId,
@@ -100,7 +104,14 @@ const NotificationsPage = () => {
             />
             <CloseFilled24
               onClick={async () => {
-                await rejectInvitation(notif.id);
+                try {
+                  await rejectInvitation(notif.id);
+                  setRefresh(true);
+                  setFetchedNotifs(false);
+                  setFullyFetchedNotifs(false);
+                } catch (err) {
+                  console.error("Failed to reject invite, Error: " + err);
+                }
               }}
               style={styles.requestIcon(NotificationStatus.Rejected, true)}
             />
