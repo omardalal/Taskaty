@@ -13,7 +13,12 @@ export const generalSkills = [
   "Math",
   "Algorithms",
   "Data Structures",
-  "Object Oriented"
+  "Object Oriented",
+  "Quality Assurance",
+  "Manual Testing",
+  "Automation Testing",
+  "System Design",
+  "System Analysis"
 ];
 
 export const programmingLanguages = [
