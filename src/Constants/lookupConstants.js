@@ -6,7 +6,8 @@ export const generalSkills = [
   "AI",
   "Machine Learning",
   "Game Design",
-  "Modelling",
+  "2D Modeling",
+  "3D Modeling",
   "Drawing",
   "Statistics",
   "Math",
@@ -66,7 +67,8 @@ export const cities = [
   "Qalqilyah",
   "Tulkarm",
   "Hebron",
-  "Jericho"
+  "Jericho",
+  "Nablus"
 ];
 
 export const projectTypes = ["Personal", "Educational", "Work"];
