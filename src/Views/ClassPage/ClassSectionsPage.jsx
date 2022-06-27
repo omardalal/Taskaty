@@ -18,12 +18,14 @@ const ClassSectionsPage = ({
     )?.sectionNumber;
 
   const getSections = () => {
-    const studentsCount = classDetails.students?.length;
     return (
       <>
         {classDetails?.Sections?.length > 0 ? (
           classDetails.Sections?.map((section, index) => {
             const groupCount = section.groups?.length ?? 0;
+            const studentsCount = classDetails.students?.filter(
+              (student) => student.sectionNumber - 1 === index
+            )?.length;
             return (
               <ResultItem
                 key={index}
