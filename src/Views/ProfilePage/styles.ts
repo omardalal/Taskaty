@@ -46,7 +46,7 @@ export const styles = {
   } as CSSProperties,
   prjBox: {
     display: "flex",
-    width: 200,
+    width: 250,
     justifyContent: "space-between",
     margin: "3px 10px 3px 0",
     padding: "7.5px 10px",

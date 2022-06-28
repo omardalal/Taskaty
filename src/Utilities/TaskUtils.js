@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import {
   addDoc,
   collection,
@@ -181,18 +182,19 @@ export const createTask = async (
   projectId,
   description,
   assignedTo,
-  files,
-  createdBy
+  createdBy,
+  taskNumber
 ) => {
   return await addDoc(collection(getFirebaseDb(), "Task"), {
     name,
     projectId,
     status: "New",
     createdOn: Timestamp.now(),
-    files: files ?? [],
+    files: [],
     assignedTo,
     description,
-    createdBy
+    createdBy,
+    taskNumber
   });
 };
 
@@ -276,16 +278,22 @@ export const uploadFileForTaskSubmission = async (file, taskSubmissionId) => {
     });
   }
 };
+
 // upload files for specific project submission
 export const uploadFileForProjectSubmission = async (
   file,
-  projectSubmissionId
+  projectSubmissionId,
+  projectId
 ) => {
-  const projectSubmissionRef = doc(
-    getFirebaseDb(),
-    "ProjectSubmission",
-    projectSubmissionId
-  );
+  const projectSubmissionRef = projectSubmissionId
+    ? doc(getFirebaseDb(), "ProjectSubmission", projectSubmissionId)
+    : await addDoc(collection(getFirebaseDb(), "ProjectSubmission"), {
+        projectId,
+        comment: "",
+        grade: 0,
+        files: []
+      });
+
   for (var i = 0; i < file.length; i++) {
     const fileExtension = file[i].name?.substring(
       file[i].name?.lastIndexOf("."),

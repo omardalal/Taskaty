@@ -101,7 +101,7 @@ export const useFetchProjectData = (loggedUser, projectId, taskId, refresh) => {
       .catch((err) =>
         console.error("Failed to fetch project final submission, Error: " + err)
       );
-  }, [projectId, taskId]);
+  }, [projectId, taskId, refresh]);
 
   return [
     isInstructor,

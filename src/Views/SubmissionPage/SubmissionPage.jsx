@@ -30,10 +30,10 @@ const SubmissionPage = () => {
   const navigate = useNavigate();
 
   const taskInfo = {
-    assignedTo: "User 1",
+    assignedTo: "",
     status: TaskStatus.New,
-    description: "Very Cool Task lol!",
-    name: "Task Name"
+    description: "",
+    name: ""
   };
 
   const submissionInitialValues = {
@@ -100,7 +100,7 @@ const SubmissionPage = () => {
     return (
       <div style={styles.boxContainer} className={"defaultBoxShadowBlack"}>
         <div style={styles.taskInfoRow}>
-          <h2>{taskInfo.name}</h2>
+          <h2>{taskValues?.name}</h2>
         </div>
         <div style={styles.taskInfoRow}>
           <h2 style={styles.header2}>{"Assigned To"}</h2>

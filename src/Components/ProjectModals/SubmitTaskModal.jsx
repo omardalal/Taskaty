@@ -7,7 +7,10 @@ import InputForm from "../InputForm/InputForm";
 import Modal from "../Modal/Modal";
 import { useAOS } from "../../CustomHooks/useAOS";
 import FileUploader from "../FileUploader/FileUploader";
-import { addSubmission } from "../../Utilities/TaskUtils";
+import {
+  addSubmission,
+  uploadFileForTaskSubmission
+} from "../../Utilities/TaskUtils";
 
 const SubmitTaskModal = ({
   visible,
@@ -45,13 +48,14 @@ const SubmitTaskModal = ({
       return;
     }
     try {
-      await addSubmission(
+      const response = await addSubmission(
         loggedUser?.user?.email,
         taskId,
         projectId,
         formData.description,
         []
       );
+      await uploadFileForTaskSubmission(uploadedFiles, response.id);
       setSuccessMessage(true);
       setAlertMessage("Task Submission Added!");
       setTimeout(() => {

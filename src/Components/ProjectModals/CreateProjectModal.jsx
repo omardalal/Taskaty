@@ -13,7 +13,7 @@ import Modal from "../Modal/Modal";
 import { useAOS } from "../../CustomHooks/useAOS";
 import { generalSkills, projectTypes } from "../../Constants/lookupConstants";
 import { addNewProject } from "../../Utilities/ProjectUtils";
-import { setGroupProject } from "../../Utilities/ClassUtils";
+import { setGroupProject, getGroup } from "../../Utilities/ClassUtils";
 
 const CreateProjectModal = ({
   visible,
@@ -56,13 +56,21 @@ const CreateProjectModal = ({
       return;
     }
     try {
+      let initialMembers = [];
+      if (groupId) {
+        const response = await getGroup(groupId);
+        initialMembers = response?.students?.map(
+          (student) => student.userRef?.id
+        );
+      }
       const createPrj = await addNewProject(
         formData.projectName,
         formData.projectDescription,
         formData.projectSkills,
         formData.projectSubject,
         formData.projectType,
-        loggedUser?.user?.email
+        loggedUser?.user?.email,
+        initialMembers
       );
       if (groupId) {
         await setGroupProject(groupId, createPrj?.id);

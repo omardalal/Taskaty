@@ -18,7 +18,10 @@ export const generalSkills = [
   "Manual Testing",
   "Automation Testing",
   "System Design",
-  "System Analysis"
+  "System Analysis",
+  "Database",
+  "SQL Database",
+  "Non-SQL Database"
 ];
 
 export const programmingLanguages = [

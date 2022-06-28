@@ -126,7 +126,7 @@ const ProfilePage = () => {
         {prjs?.length > 0 ? (
           prjs?.map((prj, index) => (
             <div style={styles.prjBox} key={index}>
-              <h5 style={{ fontWeight: 400 }}>{prj.name}</h5>
+              <h5 style={{ fontWeight: 400, marginRight: 15 }}>{prj.name}</h5>
               <CustomButton
                 blackButton
                 text={"Invite"}

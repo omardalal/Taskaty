@@ -139,11 +139,13 @@ const SuggestedUserPage = ({ loggedUser, projectData, classId }) => {
       <div style={styles.suggestionsMainContainer}>
         <div style={styles.suggestedUserContainer}>
           <ClassGroup
-            usersArray={suggestedUsers.map((user) => ({
-              firstName: user.firstName,
-              lastName: user.lastName,
-              id: user.email
-            }))}
+            usersArray={suggestedUsers
+              ?.slice(0, filterSettings.suggestionsCount)
+              ?.map((user) => ({
+                firstName: user.firstName,
+                lastName: user.lastName,
+                id: user.email
+              }))}
             groupName={"Suggested Users"}
             long
             loggedUserGroup={projectData.id}
@@ -159,8 +161,6 @@ const SuggestedUserPage = ({ loggedUser, projectData, classId }) => {
             buttonOnClick={async () => {
               getSuggestedUsers()
                 .then((users) => {
-                  console.log(filterSettings.suggestionsCount);
-                  console.log(users);
                   setSuggestedUsers(users);
                 })
                 .catch((err) =>

@@ -16,7 +16,10 @@ const GradesPage = ({
 }) => {
   const getSubmittedFilesBox = () => {
     return (
-      <div style={styles.boxContainer} className={"defaultBoxShadowBlack"}>
+      <div
+        style={{ ...styles.boxContainer, marginBottom: 12.5 }}
+        className={"defaultBoxShadowBlack"}
+      >
         <h3 style={styles.gradingBoxTitle}>{"Submitted Files"}</h3>
         <div style={styles.gradingAttachments}>
           {submittedFiles?.length > 0 ? (
@@ -58,7 +61,11 @@ const GradesPage = ({
       <div style={styles.boxContainer} className={"defaultBoxShadowBlack"}>
         <div style={styles.gradeRow}>
           <h2 style={styles.homeHeader2}>{"Final Grade"}</h2>
-          <h2 style={styles.homeHeader2}>{gradingData?.grade ?? "N/A"}</h2>
+          <h2 style={styles.homeHeader2}>
+            {gradingData?.grade || gradingData?.grade === -1
+              ? "Not Graded"
+              : gradingData?.grade}
+          </h2>
         </div>
         <h2
           style={{ ...styles.homeHeader2, ...styles.projectDescriptionTitle }}

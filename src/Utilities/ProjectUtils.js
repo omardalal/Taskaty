@@ -36,9 +36,13 @@ export const addNewProject = async (
   skills,
   subject,
   type,
-  userId
+  userId,
+  initialMembers
 ) => {
-  const members = [userId];
+  const members = [...initialMembers];
+  if (!members.includes(userId)) {
+    members.push(userId);
+  }
 
   return await addDoc(collection(getFirebaseDb(), "Project"), {
     name,

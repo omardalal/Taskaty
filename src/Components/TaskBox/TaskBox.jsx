@@ -17,11 +17,15 @@ const TaskBox = ({ task }) => {
   const [userInfo, setUserInfo] = useState({ firstName: "", lastName: "" });
 
   useEffect(() => {
+    if (!task.assignedTo || task.assignedTo === "Unassigned") {
+      setUserInfo({ firstName: "Unassigned", lastName: "" });
+      return;
+    }
     const getUserInfo = async () => await getUser(task.assignedTo);
     getUserInfo()
       .then((user) => setUserInfo(user))
       .catch((err) => console.error("Failed to get user info, Error: " + err));
-  }, []);
+  }, [task]);
 
   return (
     <div
@@ -31,7 +35,7 @@ const TaskBox = ({ task }) => {
       onClick={() => navigate(`/task/${task.id}`, { replace: true })}
     >
       <div style={styles.taskBoxCol}>
-        <p style={styles.taskBoxTaskNumber}>{task.id}</p>
+        <p style={styles.taskBoxTaskNumber}>{`#${task.taskNumber}`}</p>
         <p style={styles.taskBoxTaskName}>{task.name}</p>
         <p style={styles.taskBoxTaskUser}>
           {userInfo.firstName + " " + userInfo.lastName}

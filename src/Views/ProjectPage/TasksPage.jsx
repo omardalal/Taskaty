@@ -12,14 +12,17 @@ export const TaskStatus = {
 
 const TasksPage = ({ setCreateTaskModalVisible, projectData, tasks }) => {
   const getTaskBoard = (taskStatus) => {
+    const boardTasks = tasks
+      ?.filter((task) => task.status === taskStatus)
+      ?.sort((task1, task2) => task2?.taskNumber - task1?.taskNumber);
     return (
       <div style={styles.taskBoard} className={"defaultBoxShadowBlack"}>
         <h3 style={styles.taskBoardTitle}>{taskStatus}</h3>
-        {tasks
-          .filter((task) => task.status === taskStatus)
-          .map((task, index) => (
-            <TaskBox key={index} task={task} />
-          ))}
+        {boardTasks?.length > 0 ? (
+          boardTasks.map((task, index) => <TaskBox key={index} task={task} />)
+        ) : (
+          <h5 style={{ margin: "5px 0 0 15px" }}>{"No tasks yet!"}</h5>
+        )}
       </div>
     );
   };

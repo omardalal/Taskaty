@@ -92,7 +92,9 @@ const TaskPage = () => {
           style={styles.dropdown}
           items={items}
           itemToString={(item) => item || ""}
-          initialSelectedItem={taskValues.assignedTo}
+          initialSelectedItem={
+            taskValues.assignedTo !== "" ? taskValues.assignedTo : "Unassigned"
+          }
           onChange={(item) => {
             setTaskValues({
               ...taskValues,

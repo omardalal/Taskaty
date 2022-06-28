@@ -35,7 +35,7 @@ const ProjectPage = () => {
   ] = useFetchProjectData(loggedUser, projectId, undefined, refreshData);
 
   useEffect(() => {
-    setSubmittedFiles(gradingData?.files);
+    setSubmittedFiles(gradingData?.files ?? []);
     setGradingDataState(gradingData);
   }, [gradingData]);
 
@@ -59,6 +59,7 @@ const ProjectPage = () => {
       projectId={projectId}
       loggedUser={loggedUser}
       usersList={projectData.members ?? []}
+      taskNumber={tasks?.length + 1}
     />
   );
 
@@ -89,7 +90,8 @@ const ProjectPage = () => {
             try {
               await uploadFileForProjectSubmission(
                 uploadedFiles,
-                gradingData?.id
+                gradingData?.id,
+                projectId
               );
               setSubmittedFiles([
                 ...submittedFiles,

@@ -7,7 +7,7 @@ import InputForm from "../InputForm/InputForm";
 import Modal from "../Modal/Modal";
 import { useAOS } from "../../CustomHooks/useAOS";
 import FileUploader from "../FileUploader/FileUploader";
-import { createTask } from "../../Utilities/TaskUtils";
+import { createTask, uploadFileForTask } from "../../Utilities/TaskUtils";
 
 const CreateTaskModal = ({
   visible,
@@ -16,7 +16,8 @@ const CreateTaskModal = ({
   onSuccess,
   loggedUser,
   projectId,
-  usersList
+  usersList,
+  taskNumber
 }) => {
   const formInitialState = {
     name: "",
@@ -35,6 +36,7 @@ const CreateTaskModal = ({
     setShowError(false);
     setAlertMessage("");
     setSuccessMessage(false);
+    setUploadedFiles([]);
   }, [visible]);
 
   useAOS();
@@ -45,20 +47,22 @@ const CreateTaskModal = ({
       return;
     }
     try {
-      await createTask(
+      const response = await createTask(
         formData.name,
         projectId,
         formData.description,
         formData.assignedTo ?? "Unassigned",
-        uploadedFiles,
-        loggedUser?.user?.email
+        loggedUser?.user?.email,
+        taskNumber
       );
+      await uploadFileForTask(uploadedFiles, response.id);
       setSuccessMessage(true);
       setAlertMessage("Task Created!");
       setTimeout(() => {
         onSuccess?.();
       }, 600);
     } catch (error) {
+      console.error("Failed to create task, Error: " + error);
       setAlertMessage("Something went wrong!");
     }
   };
@@ -140,7 +144,8 @@ CreateTaskModal.propTypes = {
   onSuccess: PropTypes.func,
   loggedUser: PropTypes.object,
   projectId: PropTypes.string,
-  usersList: PropTypes.array
+  usersList: PropTypes.array,
+  taskNumber: PropTypes.number
 };
 
 export default CreateTaskModal;
