@@ -34,7 +34,7 @@ const ClassGroup = ({
         style={styles.nameText}
         onClick={() => navigate(`/profile/${userId}`, { replace: true })}
       >
-        {userId}
+        {username}
       </h4>
       {!groupId && loggedUserGroup && (
         <div
