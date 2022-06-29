@@ -13,7 +13,7 @@ import {
 } from "../Utilities/TaskUtils";
 
 export const useFetchProjectData = (loggedUser, projectId, taskId, refresh) => {
-  const [isInstructor, setIsInstructor] = useState(false);
+  const [isInstructor, setIsInstructor] = useState(true);
   const [isInClass, setIsInClass] = useState(undefined);
   const [isUserAuthorized, setIsUserAuthorized] = useState(true);
   const [tasks, setTasks] = useState([]);
