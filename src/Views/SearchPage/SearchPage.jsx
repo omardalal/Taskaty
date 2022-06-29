@@ -192,7 +192,7 @@ const SearchPage = () => {
               const users = searchResults.map((result) => ({
                 title: `${result.firstName} ${result.lastName}`,
                 subtitle: result.university,
-                city: result.city,
+                extraInfo: result.city,
                 buttonText: strings.visitProfile,
                 visitURL: `/profile/${result.email}`
               }));
