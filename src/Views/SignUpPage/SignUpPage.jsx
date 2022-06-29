@@ -255,10 +255,10 @@ const SignUpPage = () => {
               });
             }}
           >
-            <RadioButton labelText={strings.graduate} value="graduate" />
+            <RadioButton labelText={strings.graduate} value="Graduate" />
             <RadioButton
               labelText={strings.undergraduate}
-              value="undergraduate"
+              value="Undergraduate"
             />
             <RadioButton labelText={strings.none} value="none" />
           </RadioButtonGroup>

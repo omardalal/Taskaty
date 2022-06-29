@@ -68,7 +68,7 @@ const ProfilePage = () => {
         {getInfoRow("University", userData?.university)}
         {getInfoRow("Major", userData?.major)}
         {getInfoRow("City", userData?.city)}
-        {getInfoRow("Graduated", userData?.graduate ? "Yes" : "No")}
+        {getInfoRow("Academic Status", userData?.graduate ?? "none")}
         {getInfoRow("Works At", userData?.work)}
       </div>
     );
