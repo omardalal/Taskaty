@@ -11,7 +11,7 @@ export const createUser = async (email, password) => {
   if (!email || !password) return;
   return await createUserWithEmailAndPassword(
     getFirebaseAuth(),
-    email,
+    email?.toLowerCase(),
     password
   );
 };
@@ -38,8 +38,8 @@ export const addUserToFirestore = async (
   skills,
   interests
 ) => {
-  return await setDoc(doc(getFirebaseDb(), "users", email), {
-    email,
+  return await setDoc(doc(getFirebaseDb(), "users", email?.toLowerCase()), {
+    email: email?.toLowerCase(),
     firstName,
     lastName,
     university,

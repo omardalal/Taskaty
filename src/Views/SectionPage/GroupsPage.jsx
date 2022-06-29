@@ -60,9 +60,11 @@ const GroupsPage = ({
                 (student) => student.id === loggedUser?.user?.email
               ) && !isInstructor
             }
-            hideRightBtn={group.students?.some(
-              (student) => student.id === loggedUser?.user?.email
-            )}
+            hideRightBtn={
+              group.students?.some(
+                (student) => student.id === loggedUser?.user?.email
+              ) || isInstructor
+            }
             rightBtnDisabled={
               group.students?.length >=
                 getSectionDetails()?.maxStudentsInGroup || isStudentInGroup()
