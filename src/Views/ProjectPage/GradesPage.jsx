@@ -62,7 +62,7 @@ const GradesPage = ({
         <div style={styles.gradeRow}>
           <h2 style={styles.homeHeader2}>{"Final Grade"}</h2>
           <h2 style={styles.homeHeader2}>
-            {gradingData?.grade || gradingData?.grade === -1
+            {!gradingData?.grade || gradingData?.grade === -1
               ? "Not Graded"
               : gradingData?.grade}
           </h2>

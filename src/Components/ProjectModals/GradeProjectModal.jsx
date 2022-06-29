@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { TextArea, TextInput } from "carbon-components-react";
+import { TextArea, NumberInput } from "carbon-components-react";
 import strings from "../../Constants/strings";
 import { styles } from "./styles.ts";
 import InputForm from "../InputForm/InputForm";
@@ -54,8 +54,9 @@ const GradeProjectModal = ({
 
   const getForm = () => (
     <>
-      <TextInput
+      <NumberInput
         invalid={showError && !formData.grade}
+        hideSteppers
         invalidText={strings.fieldRequired}
         data-modal-primary-focus
         labelText={"Project Grade"}
