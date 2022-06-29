@@ -31,7 +31,7 @@ const TasksPage = ({ setCreateTaskModalVisible, projectData, tasks }) => {
     <div style={styles.homeMainContainer}>
       <div style={styles.tasksPageContainer}>
         <div style={styles.pageTitleContainer}>
-          <h1 style={styles.pageTitle}>{"Class Groups"}</h1>
+          <h1 style={styles.pageTitle}>{"Task Board"}</h1>
           <div style={styles.titleRightBtnContainer}>
             <CustomButton
               blackButton
