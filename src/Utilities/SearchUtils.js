@@ -1,6 +1,7 @@
 import { getFirebaseDb } from "./FirebaseUtils";
 import { collection, query, getDocs, where } from "firebase/firestore";
 
+// Eblaaaaaaa3
 export const getSearchResultsByFilters = async ({
   name,
   academicLevel,
